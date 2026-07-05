@@ -18,11 +18,15 @@
  *      `trans/<code>_<edge>` frame (Civ5-style edge blending, no shaders).
  *   4. A near-white macro tint sheet (multiplied over the map at runtime)
  *      breaks up wallpaper repetition at low zoom.
+ *   5. A continuous deep-ocean sheet (mirror-tiled D art × low-freq noise)
+ *      replaces the per-tile deep-sea sprites at runtime, killing the tiled
+ *      look of open water.
  */
 import { readdir, mkdir, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
+import { ISO_SQUASH, WORLD_H, WORLD_W } from '../src/lib/hex.ts';
 import {
   ANCHORS,
   BLEED,
@@ -64,6 +68,10 @@ const NOISE_MIN = 128; // noise luma floor → factor range [0.5, 1.0]
 const VARIANT_TARGET = { land: 6, sea: 4, feature: 4 };
 const JITTER = { brightness: 0.05, saturation: 0.08, hue: 8 };
 
+/* Feature drop shadow, baked under the art: blurred alpha silhouette,
+ * offset SE (the spec's light comes from the NW). */
+const SHADOW = { blur: 5, alpha: 0.35, dx: 6, dy: 8, pad: 12 };
+
 /* Transition strips: extend band ends past the hex corners so adjacent
  * strips still meet at full alpha after the σ=TRANS_BLUR feather. */
 const STRIP_END_EXT = TRANS_BLUR;
@@ -77,6 +85,18 @@ const MACRO = {
   lumaMax: 255,
   chroma: 3,
   seed: hashStringSeed('macro-tint-v1'),
+};
+
+/* Continuous deep-ocean sheet: mirror-tiled D art (seams match by mirror
+ * symmetry) multiplied by low-freq noise so the kaleidoscope repetition
+ * never reads. Runtime stretches ONE sprite over the world rect and skips
+ * per-tile D sprites. 10 native cells wide keeps ~1.5 sheet px per world px
+ * (soft but fine for smooth water under the shimmer at max zoom 6). */
+const OCEAN = {
+  w: 2880, // 10 × 288 native D cells; height follows the iso world aspect
+  grid: { w: 40, h: 14 },
+  lumaMin: 215, // multiply floor → up to ~16% darkening mottling
+  seed: hashStringSeed('ocean-v1'),
 };
 
 /* ------------------------------------------------------------------ */
@@ -273,7 +293,28 @@ async function processBase(frame) {
   return applyAlphaMask(art, mask, w, h);
 }
 
-/** Feature: jitter, trim, fit inside the canvas, bottom-align on the footprint. */
+/** Blurred-silhouette drop shadow of an RGBA buffer (padded so the blur
+ * never hard-clips at the art bbox). Returns a black PNG with soft alpha. */
+async function dropShadow(artBuf) {
+  const { pad, blur, alpha } = SHADOW;
+  const padded = await sharp(artBuf)
+    .extend({ top: pad, bottom: pad, left: pad, right: pad, background: { r: 0, g: 0, b: 0, alpha: 0 } })
+    .png()
+    .toBuffer();
+  const meta = await sharp(padded).metadata();
+  const a = await sharp(padded).ensureAlpha().extractChannel(3).blur(blur).raw().toBuffer();
+  for (let i = 0; i < a.length; i++) a[i] = Math.round(a[i] * alpha);
+  const buf = await sharp({
+    create: { width: meta.width, height: meta.height, channels: 3, background: '#000' },
+  })
+    .joinChannel(a, { raw: { width: meta.width, height: meta.height, channels: 1 } })
+    .png()
+    .toBuffer();
+  return { buf, w: meta.width, h: meta.height };
+}
+
+/** Feature: jitter, trim, fit inside the canvas, bottom-align on the
+ * footprint, with a baked drop shadow composited underneath. */
 async function processFeature(frame) {
   const { w, h } = CANVAS_SIZES.feature;
   let src = sharp(frame.file);
@@ -287,8 +328,28 @@ async function processFeature(frame) {
   const footprintBottom = Math.round(h * ANCHORS.feature.y + FOOTPRINT_H / 2);
   const top = Math.max(0, Math.min(h - fh, footprintBottom - fh));
   const left = Math.round((w - fw) / 2);
+  const art = await sharp(trimmed).resize(fw, fh).png().toBuffer();
+
+  // Shadow layer: offset SE from the art, cropped to the canvas bounds.
+  const shadow = await dropShadow(art);
+  let sl = left + SHADOW.dx - SHADOW.pad;
+  let st = top + SHADOW.dy - SHADOW.pad;
+  const cropL = Math.max(0, -sl);
+  const cropT = Math.max(0, -st);
+  sl = Math.max(0, sl);
+  st = Math.max(0, st);
+  const shW = Math.min(shadow.w - cropL, w - sl);
+  const shH = Math.min(shadow.h - cropT, h - st);
+  const shadowCropped = await sharp(shadow.buf)
+    .extract({ left: cropL, top: cropT, width: shW, height: shH })
+    .png()
+    .toBuffer();
+
   return sharp({ create: { width: w, height: h, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } } })
-    .composite([{ input: await sharp(trimmed).resize(fw, fh).png().toBuffer(), left, top }])
+    .composite([
+      { input: shadowCropped, left: sl, top: st },
+      { input: art, left, top },
+    ])
     .png()
     .toBuffer();
 }
@@ -342,44 +403,23 @@ function stripMaskSvg(edge) {
 /**
  * Continuous flat-canvas texture sheet from a code's `_0` art (no hex mask).
  *
- * Tile art (today's especially) paints rims/bevels near the hex edge and is
- * transparent outside it, so strips sample the CENTRAL HALF of the source —
- * pure interior texture — stretched to the canvas (a ~2x zoom window; fine
- * for a soft blend band, and equally valid for edge-to-edge continuous art).
- * All 6 edges share this one sheet, so strips agree where corners overlap.
- * Hills aspect-crop against the hill canvas: the central half then ends at
- * 75% of the art height, above the southern skirt (top 224/286 ≈ 78%).
+ * Sources are seamless edge-to-edge textures (terrain-art-spec), so the
+ * full canvas is sampled directly — strip texture scale matches the base
+ * tiles exactly. All 6 edges share this one sheet, so strips agree where
+ * corners overlap. Hills resize onto the hill canvas first and keep only
+ * the flat top region, so the southern skirt can never bleed into a strip.
  */
-async function stripArt(code, file) {
+function stripArt(code, file) {
   const { w, h } = CANVAS_SIZES.flat;
-  const canvas = code === 'h' ? CANVAS_SIZES.hill : CANVAS_SIZES.flat;
-  const meta = await sharp(file).metadata();
-  // Centered cover-crop of the source to the canvas aspect...
-  let sw = meta.width;
-  let sh = meta.height;
-  let sx = 0;
-  let sy = 0;
-  if (sw / sh > canvas.w / canvas.h) {
-    const cw = Math.round((sh * canvas.w) / canvas.h);
-    sx = Math.floor((sw - cw) / 2);
-    sw = cw;
-  } else {
-    const ch = Math.round((sw * canvas.h) / canvas.w);
-    sy = Math.floor((sh - ch) / 2);
-    sh = ch;
+  if (code === 'h') {
+    const hill = CANVAS_SIZES.hill;
+    return sharp(file)
+      .resize(hill.w, hill.h, { fit: 'cover' })
+      .extract({ left: 0, top: 0, width: w, height: h })
+      .png()
+      .toBuffer();
   }
-  // ...then its central half, stretched onto the flat canvas.
-  return sharp(file)
-    .extract({
-      left: sx + Math.floor(sw / 4),
-      top: sy + Math.floor(sh / 4),
-      width: Math.floor(sw / 2),
-      height: Math.floor(sh / 2),
-    })
-    // mitchell: soft 2x upscale without lanczos ringing on fine paint strokes
-    .resize(w, h, { fit: 'fill', kernel: 'mitchell' })
-    .png()
-    .toBuffer();
+  return sharp(file).resize(w, h, { fit: 'cover' }).png().toBuffer();
 }
 
 /** Bake the `trans/<code>_<edge>` frame: band-mask the art, crop tight. */
@@ -416,6 +456,61 @@ async function writeMacroTint() {
     .png()
     .toFile(join(OUT, 'macro-tint.png'));
   console.log(`wrote public/terrain/macro-tint.png (${w}x${h})`);
+}
+
+/* ------------------------------------------------------------------ */
+/* continuous deep-ocean sheet                                         */
+
+/** Mirror-tile the deep-sea `_0` art across the world-aspect sheet and
+ * multiply low-freq noise over it. Written to public/terrain/ocean.png. */
+async function writeOcean(dFile) {
+  const cw = CANVAS_SIZES.flat.w;
+  const ch = CANVAS_SIZES.flat.h;
+  const w = OCEAN.w;
+  const h = Math.round((w * WORLD_H * ISO_SQUASH) / WORLD_W);
+
+  const cell = await sharp(dFile).resize(cw, ch, { fit: 'cover' }).removeAlpha().png().toBuffer();
+  // Variant index = (i%2) + 2*(j%2): flop odd columns, flip odd rows —
+  // every internal seam then meets its own mirror image.
+  const cells = [
+    cell,
+    await sharp(cell).flop().png().toBuffer(),
+    await sharp(cell).flip().png().toBuffer(),
+    await sharp(cell).flop().flip().png().toBuffer(),
+  ];
+
+  const composites = [];
+  for (let j = 0; j * ch < h; j++) {
+    for (let i = 0; i * cw < w; i++) {
+      const cellW = Math.min(cw, w - i * cw);
+      const cellH = Math.min(ch, h - j * ch);
+      let input = cells[(i % 2) + 2 * (j % 2)];
+      if (cellW < cw || cellH < ch) {
+        input = await sharp(input).extract({ left: 0, top: 0, width: cellW, height: cellH }).png().toBuffer();
+      }
+      composites.push({ input, left: i * cw, top: j * ch });
+    }
+  }
+
+  const rng = mulberry32(OCEAN.seed);
+  const noiseBuf = Buffer.alloc(OCEAN.grid.w * OCEAN.grid.h * 3);
+  for (let i = 0; i < OCEAN.grid.w * OCEAN.grid.h; i++) {
+    // Equal channels: darken-only mottling without shifting the water hue.
+    const luma = Math.round(OCEAN.lumaMin + rng() * (255 - OCEAN.lumaMin));
+    noiseBuf[i * 3] = noiseBuf[i * 3 + 1] = noiseBuf[i * 3 + 2] = luma;
+  }
+  const noise = await sharp(noiseBuf, { raw: { width: OCEAN.grid.w, height: OCEAN.grid.h, channels: 3 } })
+    .resize(w, h, { kernel: 'cubic', fit: 'fill' })
+    .png()
+    .toBuffer();
+
+  await sharp({ create: { width: w, height: h, channels: 3, background: '#000' } })
+    .composite([...composites, { input: noise, blend: 'multiply' }])
+    // Palette PNG: 5x smaller; dithering + the runtime shimmer/macro tint
+    // hide the quantization on this low-chroma water.
+    .png({ palette: true, quality: 90 })
+    .toFile(join(OUT, 'ocean.png'));
+  console.log(`wrote public/terrain/ocean.png (${w}x${h})`);
 }
 
 /* ------------------------------------------------------------------ */
@@ -529,6 +624,7 @@ await sharp(await atlas.png().toBuffer())
   .png()
   .toFile(join(OUT, 'contact-sheet.png'));
 await writeMacroTint();
+await writeOcean(sources.base.get('D')[0].file);
 
 console.log(
   `wrote public/terrain/atlas.png (${layout.width}x${layout.height}, ` +

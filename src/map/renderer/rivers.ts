@@ -1,13 +1,17 @@
 /**
  * River rendering: smoothed polylines through tile centers, stroked in
- * three passes (dark bank, water channel, thin highlight). The same path
- * builder feeds the white river strokes of the water shimmer mask.
+ * layered passes — two wide low-alpha feather underlays (poor-man's blur;
+ * no filter blend modes on this GL stack), dark bank, water channel, thin
+ * highlight. The same path builder feeds the white river strokes of the
+ * water shimmer mask.
  */
 import { Graphics } from 'pixi.js';
 import { tiles } from '../../data';
 import { tileIsoCenter, type IsoPoint } from '../iso';
 import { terrainAt } from './terrain';
 
+const FEATHER_OUTER = { width: 6.0, color: 0x2c4a66, alpha: 0.15 };
+const FEATHER_INNER = { width: 4.6, color: 0x2c4a66, alpha: 0.25 };
 const BANK = { width: 3.4, color: 0x2c4a66, alpha: 0.85 };
 const WATER = { width: 2.0, color: 0x3f6f9e, alpha: 1 };
 const HIGHLIGHT = { width: 0.7, color: 0x7fa8cc, alpha: 0.7 };
@@ -48,6 +52,8 @@ export function strokeRivers(g: Graphics, style: StrokeStyle): Graphics {
 
 export function buildRiversGraphics(): Graphics {
   const g = new Graphics();
+  strokeRivers(g, FEATHER_OUTER);
+  strokeRivers(g, FEATHER_INNER);
   strokeRivers(g, BANK);
   strokeRivers(g, WATER);
   strokeRivers(g, HIGHLIGHT);

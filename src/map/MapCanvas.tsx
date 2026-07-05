@@ -4,7 +4,7 @@ import { snapshots } from '../data';
 import { snapshotForYear } from '../lib/timeline';
 import { useAppStore } from '../state/store';
 import { ISO_SQUASH, WORLD_H, WORLD_W } from '../lib/hex';
-import { loadTerrainAtlas, loadMacroTintTexture } from './renderer/atlas';
+import { loadTerrainAtlas, loadMacroTintTexture, loadOceanTexture } from './renderer/atlas';
 import { buildTerrainLayers } from './renderer/terrainSprites';
 import { buildRiversGraphics, strokeRiversMask } from './renderer/rivers';
 import { createShimmer, type Shimmer } from './renderer/water';
@@ -31,9 +31,10 @@ export function MapCanvas() {
     (async () => {
       const pixi = new Application();
       await pixi.init({ backgroundAlpha: 0, antialias: true, resizeTo: host });
-      const [atlas, macroTint] = await Promise.all([
+      const [atlas, macroTint, ocean] = await Promise.all([
         loadTerrainAtlas(pixi.renderer),
         loadMacroTintTexture(),
+        loadOceanTexture(),
       ]);
       if (disposed) {
         pixi.destroy(true);
@@ -48,11 +49,19 @@ export function MapCanvas() {
       app = pixi;
       host.appendChild(pixi.canvas);
 
-      // Layer stack (bottom → top): water, shimmer, land, macro tint,
-      // rivers, territoryHost (crossfades happen inside it), cities.
+      // Layer stack (bottom → top): ocean sheet, water, shimmer, land,
+      // macro tint, rivers, territoryHost (crossfades inside it), cities.
       const world = new Container();
       pixi.stage.addChild(world);
-      const { water, land } = buildTerrainLayers(atlas);
+      const { water, land } = buildTerrainLayers(atlas, { deepSeaSheet: ocean !== null });
+      if (ocean) {
+        // One static sprite of continuous deep water replaces ~1.7k tiled
+        // D sprites; shelf tiles and s-over-D strips blend into it above.
+        const oceanSprite = new Sprite(ocean);
+        oceanSprite.width = WORLD_W;
+        oceanSprite.height = WORLD_H * ISO_SQUASH;
+        world.addChild(oceanSprite);
+      }
       world.addChild(water);
       shimmer = createShimmer(pixi.renderer, pixi.ticker, strokeRiversMask);
       world.addChild(shimmer.container);

@@ -129,3 +129,20 @@ export async function loadMacroTintTexture(): Promise<Texture | null> {
     return null;
   }
 }
+
+/**
+ * Continuous deep-ocean sheet stretched over the world rect beneath the
+ * water layer; when it loads, per-tile deep-sea sprites are skipped. Same
+ * missing-file → null contract as the macro tint (the per-tile sprites then
+ * stay — also the procedural-atlas path).
+ */
+export async function loadOceanTexture(): Promise<Texture | null> {
+  try {
+    return await Assets.load<Texture>({
+      src: 'terrain/ocean.png',
+      data: { autoGenerateMipmaps: true },
+    });
+  } catch {
+    return null;
+  }
+}

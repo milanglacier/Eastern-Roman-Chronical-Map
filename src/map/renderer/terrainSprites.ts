@@ -17,7 +17,16 @@ import type { TerrainAtlas } from './atlas';
 
 const TREE_THRESHOLD = 0.82;
 
-export function buildTerrainLayers(atlas: TerrainAtlas): { water: Container; land: Container } {
+export interface TerrainLayerOptions {
+  /** A continuous ocean sheet renders below this layer — skip the per-tile
+   * deep-sea (`D`) base sprites. Shelf tiles and s-over-D strips stay. */
+  deepSeaSheet?: boolean;
+}
+
+export function buildTerrainLayers(
+  atlas: TerrainAtlas,
+  options: TerrainLayerOptions = {},
+): { water: Container; land: Container } {
   const water = new Container();
   const land = new Container();
   const scale = HEX_W / atlas.manifest.footprintWidth;
@@ -40,7 +49,9 @@ export function buildTerrainLayers(atlas: TerrainAtlas): { water: Container; lan
       const name = variants[variantIndex(variants.length, col, row)];
       const isLand = isLandTile(code);
 
-      (isLand ? land : water).addChild(makeSprite(name, col, row, code));
+      if (!(code === 'D' && options.deepSeaSheet)) {
+        (isLand ? land : water).addChild(makeSprite(name, col, row, code));
+      }
 
       // Baked edge-blend overlays: the strip rides the RECEIVER's tile
       // center/elevation, but lives in its SOURCE code's layer — land-source
