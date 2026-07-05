@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { cwd } from 'node:process';
 import { events, snapshots, cities, tiles, territories } from '../src/data';
 import { eraInterval, eventsForYear } from '../src/lib/timeline';
-import { COLS, ROWS, neighbors } from '../src/lib/hex';
+import { COLS, ROWS, neighbors, lonLatToTile } from '../src/lib/hex';
 import { YEAR_MIN, YEAR_MAX, EVENT_CATEGORIES } from '../src/data/schema';
 
 const DATA_DIR = join(cwd(), 'src', 'data');
@@ -89,6 +89,25 @@ describe('data assets', () => {
         const adjacent = neighbors(pc, pr).some((n) => n.col === c && n.row === r);
         expect(adjacent, `${river.name} step ${i}: ${pc},${pr} -> ${c},${r}`).toBe(true);
       }
+    }
+  });
+
+  it('keeps the great straits open water (no land bridges)', () => {
+    // Channels narrower than a tile are force-opened by the `straits`
+    // entries in terrain-config.json; regressing any of these fuses
+    // landmasses (Iberia–Africa, Corsica–Sardinia, Europe–Asia…).
+    const straits: Record<string, [number, number]> = {
+      gibraltar: [-5.7, 36.0],
+      bonifacio: [8.83, 41.6],
+      messina: [15.24, 38.05],
+      dardanelles: [26.45, 40.71],
+      bosporus: [29.4, 41.15],
+      kerch: [36.39, 45.15],
+    };
+    for (const [name, [lon, lat]] of Object.entries(straits)) {
+      const { col, row } = lonLatToTile(lon, lat);
+      const code = tiles.terrain[row * COLS + col];
+      expect(code === 's' || code === 'D', `${name} at ${col},${row} is "${code}"`).toBe(true);
     }
   });
 

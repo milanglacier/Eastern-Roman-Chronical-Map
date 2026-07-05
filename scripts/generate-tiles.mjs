@@ -56,6 +56,30 @@ for (let row = 0; row < ROWS; row++) {
   }
 }
 
+// Pass 1.5: force-open straits. Channels narrower than a tile (Gibraltar,
+// Bonifacio, Messina, the imperial straits, Kerch) fall between tile centers
+// and get swallowed into land bridges by pass 1 — carve them back to water.
+for (const strait of config.straits ?? []) {
+  const samples = [...strait.line];
+  for (let i = 0; i + 1 < strait.line.length; i++) {
+    const [ax, ay] = strait.line[i];
+    const [bx, by] = strait.line[i + 1];
+    const steps = Math.ceil(Math.hypot(bx - ax, by - ay) / 0.05);
+    for (let s = 1; s < steps; s++) {
+      samples.push([ax + ((bx - ax) * s) / steps, ay + ((by - ay) * s) / steps]);
+    }
+  }
+  let opened = 0;
+  for (const [lon, lat] of samples) {
+    const { col, row } = lonLatToTile(lon, lat);
+    if (land[row * COLS + col]) {
+      land[row * COLS + col] = false;
+      opened++;
+    }
+  }
+  console.log(`strait ${strait.name}: opened ${opened} tile(s)`);
+}
+
 const isLand = (col, row) =>
   col >= 0 && col < COLS && row >= 0 && row < ROWS && land[row * COLS + col];
 

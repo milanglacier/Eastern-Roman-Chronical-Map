@@ -121,3 +121,100 @@ export function artHexCorners(grow = 0): [number, number][] {
   }
   return corners;
 }
+
+/* ------------------------------------------------------------------ */
+/* Cross-terrain transition strips (baked edge-blend overlays)         */
+
+/** Art px the blend band reaches inward from the shared hex edge. */
+export const TRANS_BAND = 64;
+/** Art px the blend band reaches outward past the edge (into the neighbor). */
+export const TRANS_OUT = BLEED;
+/** Gaussian σ (art px) for the strip mask's soft boundary. */
+export const TRANS_BLUR = 8;
+/** Padding (art px) around the band when cropping the strip frame. */
+export const TRANS_PAD = 20;
+
+export interface TransitionGeometry {
+  /** Edge endpoints in flat-canvas coords (footprint corners edge → edge+1). */
+  a: [number, number];
+  b: [number, number];
+  /** Unit normal of the edge pointing outward (away from the tile center). */
+  normal: [number, number];
+  /** Integer crop rect of the strip frame inside the flat canvas. */
+  crop: { x: number; y: number; w: number; h: number };
+  /** Anchor placing the receiver tile's footprint center; may exit [0,1]. */
+  anchorX: number;
+  anchorY: number;
+}
+
+/**
+ * Geometry of the blend strip along hex edge `edge` (0..5 = E,SE,SW,W,NW,NE,
+ * corners edge → edge+1 — matches edgeNeighbor in src/map/iso.ts). All
+ * coordinates are in flat-canvas space (288x224, footprint center 144,112).
+ */
+export function transitionGeometry(edge: number): TransitionGeometry {
+  const { w: cw, h: ch } = CANVAS_SIZES.flat;
+  const cx = cw / 2;
+  const cy = ch / 2;
+  const corners = artHexCorners(0);
+  const [ax, ay] = corners[edge];
+  const [bx, by] = corners[(edge + 1) % 6];
+
+  const ex = bx - ax;
+  const ey = by - ay;
+  const len = Math.hypot(ex, ey);
+  let nx = -ey / len;
+  let ny = ex / len;
+  // Outward = same side as the edge midpoint seen from the footprint center.
+  const mx = (ax + bx) / 2;
+  const my = (ay + by) / 2;
+  if (nx * mx + ny * my < 0) {
+    nx = -nx;
+    ny = -ny;
+  }
+
+  // Band quad: edge pushed TRANS_OUT outward and TRANS_BAND inward.
+  const quad: [number, number][] = [
+    [ax + nx * TRANS_OUT, ay + ny * TRANS_OUT],
+    [bx + nx * TRANS_OUT, by + ny * TRANS_OUT],
+    [bx - nx * TRANS_BAND, by - ny * TRANS_BAND],
+    [ax - nx * TRANS_BAND, ay - ny * TRANS_BAND],
+  ];
+  const xs = quad.map(([x]) => x + cx);
+  const ys = quad.map(([, y]) => y + cy);
+  const x0 = Math.max(0, Math.floor(Math.min(...xs) - TRANS_PAD));
+  const y0 = Math.max(0, Math.floor(Math.min(...ys) - TRANS_PAD));
+  const x1 = Math.min(cw, Math.ceil(Math.max(...xs) + TRANS_PAD));
+  const y1 = Math.min(ch, Math.ceil(Math.max(...ys) + TRANS_PAD));
+  const crop = { x: x0, y: y0, w: x1 - x0, h: y1 - y0 };
+
+  return {
+    a: [ax + cx, ay + cy],
+    b: [bx + cx, by + cy],
+    normal: [nx, ny],
+    crop,
+    anchorX: (cx - crop.x) / crop.w,
+    anchorY: (cy - crop.y) / crop.h,
+  };
+}
+
+/* ------------------------------------------------------------------ */
+/* Shared deterministic PRNG (art pipeline noise, per-frame seeds)     */
+
+/** FNV-1a hash of a string → 32-bit unsigned seed. */
+export function hashStringSeed(str: string): number {
+  let h = 2166136261;
+  for (let i = 0; i < str.length; i++) h = Math.imul(h ^ str.charCodeAt(i), 16777619);
+  return h >>> 0;
+}
+
+/** mulberry32: tiny deterministic PRNG over [0, 1). */
+export function mulberry32(seed: number): () => number {
+  let s = seed >>> 0;
+  return () => {
+    s = (s + 0x6d2b79f5) | 0;
+    let t = Math.imul(s ^ (s >>> 15), 1 | s);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}

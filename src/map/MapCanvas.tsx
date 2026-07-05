@@ -1,9 +1,10 @@
 import { useEffect, useRef } from 'react';
-import { Application, Container } from 'pixi.js';
+import { Application, Container, Sprite } from 'pixi.js';
 import { snapshots } from '../data';
 import { snapshotForYear } from '../lib/timeline';
 import { useAppStore } from '../state/store';
-import { loadTerrainAtlas } from './renderer/atlas';
+import { ISO_SQUASH, WORLD_H, WORLD_W } from '../lib/hex';
+import { loadTerrainAtlas, loadMacroTintTexture } from './renderer/atlas';
 import { buildTerrainLayers } from './renderer/terrainSprites';
 import { buildRiversGraphics, strokeRiversMask } from './renderer/rivers';
 import { createShimmer, type Shimmer } from './renderer/water';
@@ -30,20 +31,25 @@ export function MapCanvas() {
     (async () => {
       const pixi = new Application();
       await pixi.init({ backgroundAlpha: 0, antialias: true, resizeTo: host });
-      const atlas = await loadTerrainAtlas(pixi.renderer);
-      if (import.meta.env.DEV) {
-        // Dev-console handle for inspecting the atlas and scene.
-        (globalThis as Record<string, unknown>).__ercmDebug = { app: pixi, atlas };
-      }
+      const [atlas, macroTint] = await Promise.all([
+        loadTerrainAtlas(pixi.renderer),
+        loadMacroTintTexture(),
+      ]);
       if (disposed) {
         pixi.destroy(true);
         return;
       }
+      if (import.meta.env.DEV) {
+        // Dev-console handle for inspecting the atlas and scene. Assigned
+        // after the disposed check so a StrictMode-destroyed first mount
+        // never wins the race against the surviving one.
+        (globalThis as Record<string, unknown>).__ercmDebug = { app: pixi, atlas };
+      }
       app = pixi;
       host.appendChild(pixi.canvas);
 
-      // Layer stack (bottom → top): water, shimmer, land, rivers,
-      // territoryHost (crossfades happen inside it), cities.
+      // Layer stack (bottom → top): water, shimmer, land, macro tint,
+      // rivers, territoryHost (crossfades happen inside it), cities.
       const world = new Container();
       pixi.stage.addChild(world);
       const { water, land } = buildTerrainLayers(atlas);
@@ -51,6 +57,16 @@ export function MapCanvas() {
       shimmer = createShimmer(pixi.renderer, pixi.ticker, strokeRiversMask);
       world.addChild(shimmer.container);
       world.addChild(land);
+      if (macroTint) {
+        // Near-white multiply sheet (≈ ±4-7% darken-only mottling) breaking
+        // up terrain repetition at low zoom; one static Sprite, no filters.
+        const macro = new Sprite(macroTint);
+        macro.blendMode = 'multiply';
+        macro.alpha = 0.85;
+        macro.width = WORLD_W;
+        macro.height = WORLD_H * ISO_SQUASH;
+        world.addChild(macro);
+      }
       world.addChild(buildRiversGraphics());
       const territoryHost = new Container();
       world.addChild(territoryHost);

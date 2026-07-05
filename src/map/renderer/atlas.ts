@@ -15,9 +15,13 @@ const AtlasFrameSchema = z.object({
   y: z.number().int().min(0),
   w: z.number().int().positive(),
   h: z.number().int().positive(),
-  /** Normalized position of the hex footprint center inside the frame. */
-  anchorX: z.number().min(0).max(1),
-  anchorY: z.number().min(0).max(1),
+  /**
+   * Normalized position of the hex footprint center inside the frame.
+   * Transition strips are tight crops of one edge band, so their anchor
+   * (the receiver tile's center) may legitimately fall outside [0, 1].
+   */
+  anchorX: z.number().finite(),
+  anchorY: z.number().finite(),
 });
 
 export type AtlasFrame = z.infer<typeof AtlasFrameSchema>;
@@ -44,6 +48,12 @@ export const TerrainAtlasManifestSchema = z.object({
     h: VariantList,
     tree: VariantList,
   }),
+  /**
+   * Optional baked edge-blend strips: source terrain code → 6 frame names
+   * (hex edges 0..5 = E,SE,SW,W,NW,NE). Absent in older manifests and in the
+   * procedural atlas — the renderer simply skips the overlay pass then.
+   */
+  transitions: z.record(z.string(), z.array(z.string().min(1)).length(6)).optional(),
 });
 
 export type TerrainAtlasManifest = z.infer<typeof TerrainAtlasManifestSchema>;
@@ -76,9 +86,13 @@ export function createTerrainAtlas(
   };
 }
 
-/** Every frame name referenced by base/features must exist in `frames`. */
-function validateFrameRefs(manifest: TerrainAtlasManifest): void {
-  const names = [...Object.values(manifest.base), ...Object.values(manifest.features)].flat();
+/** Every frame name referenced by base/features/transitions must exist in `frames`. */
+export function validateFrameRefs(manifest: TerrainAtlasManifest): void {
+  const names = [
+    ...Object.values(manifest.base),
+    ...Object.values(manifest.features),
+    ...Object.values(manifest.transitions ?? {}),
+  ].flat();
   for (const name of names) {
     if (!manifest.frames[name]) throw new Error(`manifest references missing frame "${name}"`);
   }
@@ -90,10 +104,28 @@ export async function loadTerrainAtlas(renderer: Renderer): Promise<TerrainAtlas
     if (!res.ok) throw new Error(`atlas.json: HTTP ${res.status}`);
     const manifest = TerrainAtlasManifestSchema.parse(await res.json());
     validateFrameRefs(manifest);
-    const texture = await Assets.load<Texture>('terrain/atlas.png');
+    // Mipmaps kill the minification shimmer at low zoom; pixi auto-degrades
+    // the request on WebGL1/NPOT, so this is safe everywhere.
+    const texture = await Assets.load<Texture>({
+      src: 'terrain/atlas.png',
+      data: { autoGenerateMipmaps: true },
+    });
     return createTerrainAtlas(manifest, texture.source);
   } catch {
     // No shipped art (or it failed to parse) — build the placeholder atlas.
     return generateProceduralAtlas(renderer);
+  }
+}
+
+/**
+ * Macro-scale tint sheet multiplied over the land/water layers to break up
+ * wallpaper repetition. Independent of the atlas: missing file (dev-server
+ * 404s serve HTML, image decode fails) → null, and the map renders without it.
+ */
+export async function loadMacroTintTexture(): Promise<Texture | null> {
+  try {
+    return await Assets.load<Texture>('terrain/macro-tint.png');
+  } catch {
+    return null;
   }
 }
