@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "generate:tiles": "node scripts/generate-tiles.mjs"
+    "generate:tiles": "node scripts/generate-tiles.mjs",
+    "art:process": "node scripts/process-terrain-art.mjs"
   },
   "dependencies": {
     "@fontsource/cinzel": "^5.1.0",
@@ -29,6 +30,7 @@
     "@vitejs/plugin-react": "^4.3.4",
     "@vitest/ui": "^3.2.6",
     "jsdom": "^25.0.1",
+    "sharp": "^0.35.3",
     "typescript": "^5.7.2",
     "vite": "^6.0.7",
     "vitest": "^3.2.6"

@@ -13,7 +13,7 @@
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { COLS, ROWS, tileCenterLonLat } from '../src/lib/hex.ts';
+import { COLS, ROWS, tileCenterLonLat, lonLatToTile, neighbors } from '../src/lib/hex.ts';
 import { pointInMultiPolygon, pointInRing, nearPolyline } from '../src/lib/geo.ts';
 
 const dir = dirname(fileURLToPath(import.meta.url));
@@ -86,7 +86,80 @@ const counts = {};
 for (const c of terrain) counts[c] = (counts[c] ?? 0) + 1;
 console.log('terrain counts:', counts);
 
-const out = { cols: COLS, rows: ROWS, terrain };
+// Pass 3: trace rivers onto the tile grid.
+const isWaterTile = (col, row) => {
+  const t = terrain[row * COLS + col];
+  return t === 'D' || t === 's';
+};
+
+/** Squared lon/lat distance from a tile center to a target tile center. */
+function tileDistSq(col, row, tcol, trow) {
+  const a = tileCenterLonLat(col, row);
+  const b = tileCenterLonLat(tcol, trow);
+  return (a.lon - b.lon) ** 2 + (a.lat - b.lat) ** 2;
+}
+
+/**
+ * Maps a lon/lat polyline to a connected chain of tiles: densify the line,
+ * snap samples to tiles, and bridge any skips with greedy neighbor steps.
+ * Tracing stops at the first sea tile (the river mouth).
+ */
+function traceRiver(line) {
+  const samples = [];
+  for (let i = 0; i + 1 < line.length; i++) {
+    const [ax, ay] = line[i];
+    const [bx, by] = line[i + 1];
+    const steps = Math.max(1, Math.ceil(Math.hypot(bx - ax, by - ay) / 0.08));
+    for (let s = 0; s < steps; s++) {
+      samples.push([ax + ((bx - ax) * s) / steps, ay + ((by - ay) * s) / steps]);
+    }
+  }
+  samples.push(line[line.length - 1]);
+
+  const path = [];
+  for (const [lon, lat] of samples) {
+    const { col, row } = lonLatToTile(lon, lat);
+    const last = path[path.length - 1];
+    if (!last) {
+      if (isWaterTile(col, row)) continue; // wait for the source to hit land
+      path.push([col, row]);
+      continue;
+    }
+    // Walk from the previous tile to this sample's tile, one neighbor at a time.
+    let [cc, cr] = last;
+    let guard = 0;
+    while ((cc !== col || cr !== row) && guard++ < 64) {
+      let best = null;
+      let bestD = Infinity;
+      for (const n of neighbors(cc, cr)) {
+        const d = tileDistSq(n.col, n.row, col, row);
+        if (d < bestD) {
+          bestD = d;
+          best = n;
+        }
+      }
+      if (!best) break;
+      cc = best.col;
+      cr = best.row;
+      path.push([cc, cr]);
+      if (isWaterTile(cc, cr)) return path; // reached the mouth
+    }
+  }
+  return path;
+}
+
+const rivers = [];
+for (const river of config.rivers ?? []) {
+  const path = traceRiver(river.line);
+  if (path.length < 2) {
+    console.warn(`river ${river.name}: traced path too short, skipped`);
+    continue;
+  }
+  rivers.push({ name: river.name, path });
+}
+console.log(`rivers: ${rivers.map((r) => `${r.name}(${r.path.length})`).join(', ')}`);
+
+const out = { cols: COLS, rows: ROWS, terrain, rivers };
 await mkdir(join(dir, '..', 'src', 'data'), { recursive: true });
 await writeFile(join(dir, '..', 'src', 'data', 'tiles.json'), JSON.stringify(out));
 console.log(`wrote src/data/tiles.json (${COLS}x${ROWS} = ${terrain.length} tiles)`);

@@ -1,4 +1,5 @@
-import { ISO_SQUASH, tileCenterWorld, hexCorners, lonLatToWorld, HEX_SIZE } from '../lib/hex';
+// .ts extension keeps this module importable from plain Node scripts.
+import { ISO_SQUASH, tileCenterWorld, hexCorners, lonLatToWorld, HEX_SIZE } from '../lib/hex.ts';
 import type { TerrainCode } from '../data/schema';
 
 /** Vertical lift (screen px, pre-camera) for raised terrain. */

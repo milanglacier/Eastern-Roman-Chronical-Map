@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { cwd } from 'node:process';
 import { events, snapshots, cities, tiles, territories } from '../src/data';
 import { eraInterval, eventsForYear } from '../src/lib/timeline';
-import { COLS, ROWS } from '../src/lib/hex';
+import { COLS, ROWS, neighbors } from '../src/lib/hex';
 import { YEAR_MIN, YEAR_MAX, EVENT_CATEGORIES } from '../src/data/schema';
 
 const DATA_DIR = join(cwd(), 'src', 'data');
@@ -64,6 +64,32 @@ describe('data assets', () => {
     expect(tiles.cols).toBe(COLS);
     expect(tiles.rows).toBe(ROWS);
     expect(tiles.terrain.length).toBe(COLS * ROWS);
+  });
+
+  it('traces the major rivers', () => {
+    expect(tiles.rivers.length).toBeGreaterThanOrEqual(6);
+    const names = new Set(tiles.rivers.map((r) => r.name));
+    expect(names.size).toBe(tiles.rivers.length);
+  });
+
+  it('keeps every river path tile inside the grid', () => {
+    for (const river of tiles.rivers) {
+      for (const [col, row] of river.path) {
+        expect(col, `${river.name} col`).toBeLessThan(COLS);
+        expect(row, `${river.name} row`).toBeLessThan(ROWS);
+      }
+    }
+  });
+
+  it('keeps consecutive river path tiles adjacent', () => {
+    for (const river of tiles.rivers) {
+      for (let i = 1; i < river.path.length; i++) {
+        const [pc, pr] = river.path[i - 1];
+        const [c, r] = river.path[i];
+        const adjacent = neighbors(pc, pr).some((n) => n.col === c && n.row === r);
+        expect(adjacent, `${river.name} step ${i}: ${pc},${pr} -> ${c},${r}`).toBe(true);
+      }
+    }
   });
 
   it('keeps city year ranges valid', () => {

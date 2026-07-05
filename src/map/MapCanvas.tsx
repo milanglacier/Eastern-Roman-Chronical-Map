@@ -3,7 +3,10 @@ import { Application, Container } from 'pixi.js';
 import { snapshots } from '../data';
 import { snapshotForYear } from '../lib/timeline';
 import { useAppStore } from '../state/store';
-import { buildTerrainGraphics } from './renderer/terrain';
+import { loadTerrainAtlas } from './renderer/atlas';
+import { buildTerrainLayers } from './renderer/terrainSprites';
+import { buildRiversGraphics, strokeRiversMask } from './renderer/rivers';
+import { createShimmer, type Shimmer } from './renderer/water';
 import { buildTerritoryGraphics } from './renderer/territory';
 import { buildCitiesLayer, visibleCities } from './renderer/cities';
 import { createCamera } from './camera';
@@ -22,10 +25,16 @@ export function MapCanvas() {
     let app: Application | null = null;
     let camera: ReturnType<typeof createCamera> | null = null;
     let unsubscribe: (() => void) | null = null;
+    let shimmer: Shimmer | null = null;
 
     (async () => {
       const pixi = new Application();
       await pixi.init({ backgroundAlpha: 0, antialias: true, resizeTo: host });
+      const atlas = await loadTerrainAtlas(pixi.renderer);
+      if (import.meta.env.DEV) {
+        // Dev-console handle for inspecting the atlas and scene.
+        (globalThis as Record<string, unknown>).__ercmDebug = { app: pixi, atlas };
+      }
       if (disposed) {
         pixi.destroy(true);
         return;
@@ -33,14 +42,23 @@ export function MapCanvas() {
       app = pixi;
       host.appendChild(pixi.canvas);
 
+      // Layer stack (bottom → top): water, shimmer, land, rivers,
+      // territoryHost (crossfades happen inside it), cities.
       const world = new Container();
       pixi.stage.addChild(world);
-      world.addChild(buildTerrainGraphics());
+      const { water, land } = buildTerrainLayers(atlas);
+      world.addChild(water);
+      shimmer = createShimmer(pixi.renderer, pixi.ticker, strokeRiversMask);
+      world.addChild(shimmer.container);
+      world.addChild(land);
+      world.addChild(buildRiversGraphics());
+      const territoryHost = new Container();
+      world.addChild(territoryHost);
 
       const state = useAppStore.getState();
       let snapYear = snapshotForYear(snapshots, state.year).year;
       let territoryLayer = buildTerritoryGraphics(snapYear);
-      world.addChild(territoryLayer);
+      territoryHost.addChild(territoryLayer);
 
       let citiesKey = '';
       let citiesLayer: Container | null = null;
@@ -61,7 +79,7 @@ export function MapCanvas() {
         const oldLayer = territoryLayer;
         const newLayer = buildTerritoryGraphics(newSnapYear);
         newLayer.alpha = 0;
-        world.addChildAt(newLayer, 1);
+        territoryHost.addChild(newLayer);
         territoryLayer = newLayer;
         let elapsed = 0;
         const tick = () => {
@@ -71,7 +89,7 @@ export function MapCanvas() {
           oldLayer.alpha = 1 - t;
           if (t >= 1) {
             pixi.ticker.remove(tick);
-            world.removeChild(oldLayer);
+            territoryHost.removeChild(oldLayer);
             oldLayer.destroy();
           }
         };
@@ -98,6 +116,7 @@ export function MapCanvas() {
       disposed = true;
       unsubscribe?.();
       camera?.destroy();
+      shimmer?.destroy();
       if (app) {
         app.destroy(true, { children: true });
         app = null;

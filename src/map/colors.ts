@@ -19,7 +19,9 @@ export const TILE_EDGE = 0x0d1526;
 
 /** Imperial purple territory overlay. */
 export const TERRITORY_FILL = 0x6b2fa0;
-export const TERRITORY_FILL_ALPHA = 0.58;
+// Lowered from 0.58 when terrain moved to textured sprites: the busier
+// ground reads through a lighter tint without muddying the purple.
+export const TERRITORY_FILL_ALPHA = 0.45;
 export const TERRITORY_BORDER = 0xd8b64a; // mosaic gold
 export const TERRITORY_BORDER_ALPHA = 0.95;
 

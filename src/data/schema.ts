@@ -80,10 +80,20 @@ export type City = z.infer<typeof CitySchema>;
 
 export const CitiesFileSchema = z.array(CitySchema);
 
+export const RiverSchema = z.object({
+  /** Internal id (like mountainRanges[].name) — not user-facing copy. */
+  name: z.string().min(1),
+  /** Connected chain of [col, row] tiles from source to mouth. */
+  path: z.array(z.tuple([z.number().int().min(0), z.number().int().min(0)])).min(2),
+});
+
+export type River = z.infer<typeof RiverSchema>;
+
 export const TilesFileSchema = z.object({
   cols: z.number().int().positive(),
   rows: z.number().int().positive(),
   terrain: z.string().regex(/^[Dsgphmd]+$/),
+  rivers: z.array(RiverSchema),
 });
 
 export type TilesFile = z.infer<typeof TilesFileSchema>;
