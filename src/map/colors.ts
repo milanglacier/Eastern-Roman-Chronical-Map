@@ -19,7 +19,7 @@ export const TILE_EDGE = 0x0d1526;
 
 /** Imperial purple territory overlay. */
 export const TERRITORY_FILL = 0x6b2fa0;
-export const TERRITORY_FILL_ALPHA = 0.42;
+export const TERRITORY_FILL_ALPHA = 0.58;
 export const TERRITORY_BORDER = 0xd8b64a; // mosaic gold
 export const TERRITORY_BORDER_ALPHA = 0.95;
 
