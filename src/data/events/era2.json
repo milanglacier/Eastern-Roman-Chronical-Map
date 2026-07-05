@@ -1,0 +1,482 @@
+[
+  {
+    "id": "heraclius-accession-610",
+    "year": 610,
+    "category": "politics",
+    "lonlat": [28.98, 41.01],
+    "importance": 1,
+    "title": {
+      "en": "Accession of Heraclius",
+      "zh": "希拉克略即位"
+    },
+    "summary": {
+      "en": "Heraclius sailed from Africa, overthrew the tyrant Phocas, and was crowned emperor, opening a reign that would refound the Eastern Roman state in its darkest hour.",
+      "zh": "希拉克略自阿非利加渡海起兵，推翻暴君福卡斯登基称帝，在帝国最黑暗的时刻开启了一个再造东罗马国家的时代。"
+    },
+    "detail": {
+      "en": "In October 610 Heraclius, son of the Exarch of Africa, brought his fleet into the harbours of Constantinople. The usurper Phocas, whose eight-year tyranny had plunged the Empire into civil strife, was seized and executed, and on 5 October Heraclius was crowned in the church of St Stephen.\n\nThe state he inherited stood at the edge of ruin. Persian armies were overrunning the eastern provinces, Avars and Slavs flooded the Balkans, and the treasury was empty. Over three decades Heraclius reorganized the armies, rebuilt imperial finances with the help of Church wealth, and became the first emperor in centuries to command in the field in person.\n\nHis reign (610-641) marks the great hinge between the late antique Roman world and the medieval Empire: leaner, Greek-speaking, centred on Anatolia, yet unshakeably Roman in its identity.",
+      "zh": "610年10月，阿非利加总督之子希拉克略率舰队驶入君士坦丁堡诸港。僭主福卡斯八年暴政早已令帝国陷入内乱，他旋即被擒处死；10月5日，希拉克略在圣司提反教堂加冕称帝。\n\n他接手的是一个濒临倾覆的国家：波斯大军席卷东方诸省，阿瓦尔人与斯拉夫人漫过巴尔干，国库空空如也。此后三十余年间，希拉克略重整军队，借助教会财富重建财政，并成为数百年来第一位亲临战阵指挥的皇帝。\n\n其在位期间（610—641年）是晚期古典罗马世界与中古帝国之间的重大转折：此后的帝国更为精悍，以希腊语为常言，以安纳托利亚为腹心，而其罗马认同却始终坚不可摇。"
+    }
+  },
+  {
+    "id": "persian-capture-jerusalem-egypt",
+    "year": 614,
+    "endYear": 619,
+    "category": "military",
+    "lonlat": [35.23, 31.78],
+    "importance": 2,
+    "title": {
+      "en": "Persian Capture of Jerusalem and Egypt",
+      "zh": "波斯攻陷耶路撒冷与埃及"
+    },
+    "summary": {
+      "en": "Khosrow II's armies stormed Jerusalem in 614, carrying off the True Cross, and by 619 had conquered Egypt, stripping the Empire of its holiest city and richest province.",
+      "zh": "614年，霍斯劳二世的大军攻陷耶路撒冷，掳走真十字架；至619年又征服埃及，帝国最神圣的城市与最富庶的行省相继沦丧。"
+    },
+    "detail": {
+      "en": "In May 614, after a brief siege, the Persian general Shahrbaraz took Jerusalem. Contemporary accounts describe massacre and fire; the Patriarch Zacharias was led into captivity, and the relic of the True Cross, Christendom's most venerated treasure, was carried off to Ctesiphon. The shock reverberated across the Christian world as a catastrophe of almost apocalyptic weight.\n\nThe Persian tide did not stop there. Shahrbaraz pressed into Egypt, and Alexandria fell around 619, placing the entire Nile valley under Sasanian rule. For the first time since Augustus, Rome's granary lay in foreign hands, and the shipments of grain that had fed Constantinople for centuries were severed.\n\nWith Syria, Palestine, and Egypt gone and Persian troops encamped opposite the capital, many believed the Roman state was finished. It was against this abyss that Heraclius prepared his counterstroke.",
+      "zh": "614年5月，波斯名将沙赫巴勒兹经短暂围攻后攻陷耶路撒冷。据当时记载，城中屠戮纵火，牧首撒迦利亚被掳，基督教世界最尊崇的圣物真十字架被劫往泰西封。这场浩劫震动整个基督教世界，其冲击几近末世之感。\n\n波斯攻势并未止步。沙赫巴勒兹挥师深入埃及，亚历山大约于619年陷落，尼罗河谷尽归萨珊治下。自奥古斯都以来，罗马的粮仓首次落入外邦之手，数百年来供养君士坦丁堡的运粮船队就此断绝。\n\n叙利亚、巴勒斯坦、埃及相继沦丧，波斯军队扎营于都城对岸，许多人相信罗马国家已然穷途末路。正是在这深渊边缘，希拉克略开始筹划他的反击。"
+    }
+  },
+  {
+    "id": "hexagram-wartime-finance-615",
+    "year": 615,
+    "category": "economy",
+    "lonlat": [28.98, 41.01],
+    "importance": 2,
+    "title": {
+      "en": "The Silver Hexagram and Wartime Finance",
+      "zh": "六克银币与战时财政"
+    },
+    "summary": {
+      "en": "Facing bankruptcy, Heraclius introduced the silver hexagram coin, struck partly from Church plate, bearing the plea 'God, help the Romans'.",
+      "zh": "面对财政枯竭，希拉克略发行六克银币，部分以教会银器熔铸，币文镌刻着'愿上帝襄助罗马人'的祈求。"
+    },
+    "detail": {
+      "en": "With the eastern provinces lost and tax revenues collapsing, the Empire in 615 introduced a new heavy silver coin, the hexagram. Its legend, 'Deus adiuta Romanis' — 'God, help the Romans' — turned the coinage itself into a public prayer, an extraordinary admission of crisis on official money.\n\nThe silver came in large part from the Church: Patriarch Sergius placed the plate and treasures of Hagia Sophia at the emperor's disposal as a loan, an unprecedented mobilization of ecclesiastical wealth for the war effort. Salaries and military pay were partly converted to the new coin at reduced rates, effectively halving many state outlays.\n\nOther austerities followed, most symbolically the end of the free bread distribution in Constantinople in 618, once Egyptian grain ceased to arrive. Together these measures form one of the most drastic fiscal restructurings in Roman history, and they financed the campaigns that saved the Empire.",
+      "zh": "东方诸省沦陷，税源枯竭，帝国于615年发行了一种新的重型银币——六克银币（hexagram）。币文'Deus adiuta Romanis'——'愿上帝襄助罗马人'——使钱币本身成为一篇公开的祷文，在官铸货币上如此直陈危局，实属罕见。\n\n铸币用银大半来自教会：牧首塞尔吉乌斯将圣索菲亚大教堂的银器珍藏以借贷形式交予皇帝支配，如此规模地动用教产以充军资，前所未有。官俸军饷部分改以新币折价发放，实际上将许多国家开支削减近半。\n\n随之而来的还有其他紧缩之政：最具象征意味的，是埃及粮运断绝后，君士坦丁堡的免费面包配给于618年宣告终结。这一系列举措堪称罗马历史上最激烈的财政重组之一，正是它们支撑起了挽救帝国的历次征战。"
+    }
+  },
+  {
+    "id": "greek-official-language",
+    "year": 620,
+    "category": "culture",
+    "lonlat": [28.98, 41.01],
+    "importance": 2,
+    "title": {
+      "en": "Greek Becomes the Language of State",
+      "zh": "希腊语成为国家语言"
+    },
+    "summary": {
+      "en": "Under Heraclius the administration definitively adopted Greek in place of Latin, and the emperor took the Greek title 'basileus' — a Greek-speaking Empire that remained Roman to its core.",
+      "zh": "希拉克略治下，帝国行政最终以希腊语取代拉丁语，皇帝亦采用希腊语尊号'巴西琉斯'——一个说希腊语、却始终以罗马自居的帝国由此定型。"
+    },
+    "detail": {
+      "en": "By the 620s the long coexistence of Latin and Greek in imperial government was resolved in favour of Greek. Heraclius made Greek the effective language of administration, law, and the army's command culture, and in 629 formally adopted the Greek royal title 'basileus' in place of the cumbersome Latin sequence of imperial titles.\n\nThe change ratified reality. Latin-speaking provinces in the West had long since been lost or become peripheral, while the Empire's surviving heartlands — Anatolia, the Aegean, the great capital itself — spoke Greek. Justinian had already issued his Novels mostly in Greek a century earlier; now the last Latin scaffolding of the state was quietly dismantled.\n\nYet the Empire's inhabitants never ceased to call themselves 'Rhomaioi', Romans. The paradox is the key to the whole civilization: a polity Greek in tongue and Orthodox in faith that understood itself, without interruption, as the Roman Empire.",
+      "zh": "至620年代，拉丁语与希腊语在帝国政务中长期并存的局面终于尘埃落定：希腊语胜出。希拉克略使希腊语实际上成为行政、法律与军令文化的通用语言，并于629年正式采用希腊语王号'巴西琉斯'，取代冗长繁复的拉丁语帝号序列。\n\n这一变革不过是对现实的追认。西方拉丁语行省或早已丧失，或已沦为边缘，而帝国存续的腹心之地——安纳托利亚、爱琴海域与伟大的都城本身——皆操希腊语。早在一个世纪前，查士丁尼的《新律》便多以希腊文颁布；如今，国家最后的拉丁支架也被悄然拆除。\n\n然而帝国臣民从未停止自称'罗马人'（Rhomaioi）。这一悖论正是理解这一文明的钥匙：一个以希腊语为舌、以正教为魂的政体，始终毫无间断地自认为罗马帝国。"
+    }
+  },
+  {
+    "id": "avar-persian-siege-626",
+    "year": 626,
+    "category": "military",
+    "lonlat": [28.98, 41.01],
+    "importance": 1,
+    "title": {
+      "en": "Avar-Persian Siege of Constantinople",
+      "zh": "阿瓦尔—波斯联军围攻君士坦丁堡"
+    },
+    "summary": {
+      "en": "With Heraclius far away on campaign, an Avar horde and a Persian army converged on Constantinople; the city's walls, fleet, and faith broke the siege in ten days.",
+      "zh": "希拉克略远征在外，阿瓦尔大军与波斯军队合围君士坦丁堡；凭借城墙、舰队与信仰，都城在十日之内粉碎了围攻。"
+    },
+    "detail": {
+      "en": "In the summer of 626 the Avar khagan led perhaps 80,000 Avars, Slavs, and subject peoples against the Theodosian Walls, while the Persian army of Shahrbaraz waited at Chalcedon across the Bosporus, hoping to join the assault. The emperor was deep in the East; the defence fell to the Patriarch Sergius and the patrician Bonus.\n\nSergius turned the defence into a liturgy, processing along the ramparts with the image of the Theotokos, whom the citizens credited as the city's true guardian. The military crisis broke on 7 August, when the Roman fleet annihilated the Slav dugout canoes attempting to ferry troops across the Golden Horn. Unable to breach the walls or link up with the Persians, the khagan burned his siege engines and withdrew.\n\nThe deliverance was celebrated in the great Akathist Hymn to the Virgin, still sung in the Orthodox Church. Avar power never recovered, and the road to Heraclius' final victory lay open.",
+      "zh": "626年夏，阿瓦尔可汗率阿瓦尔人、斯拉夫人及诸附庸部族约八万之众直逼狄奥多西城墙，波斯将领沙赫巴勒兹的大军则屯驻博斯普鲁斯海峡对岸的卡尔西顿，意图合击。皇帝远在东方腹地，守城重任落在牧首塞尔吉乌斯与贵族博努斯肩上。\n\n塞尔吉乌斯将守城化作一场礼仪：他捧圣母像巡行城垣，市民深信圣母才是这座城真正的守护者。战局在8月7日逆转——罗马舰队在金角湾全歼企图渡运兵员的斯拉夫独木舟队。可汗既不能破墙，又无法与波斯人会师，只得焚毁攻城器械，怏怏而退。\n\n这场解围被谱入献给圣母的伟大《阿卡菲斯特赞歌》，至今仍在正教会传唱。阿瓦尔霸权自此一蹶不振，通往希拉克略最终胜利的道路就此敞开。"
+    }
+  },
+  {
+    "id": "nineveh-true-cross-627",
+    "year": 627,
+    "endYear": 630,
+    "category": "military",
+    "lonlat": [43.15, 36.36],
+    "importance": 1,
+    "title": {
+      "en": "Victory at Nineveh and the Return of the True Cross",
+      "zh": "尼尼微大捷与真十字架的归还"
+    },
+    "summary": {
+      "en": "Heraclius crushed the Persian army at Nineveh in December 627; within three years Khosrow II was dead, the lost provinces recovered, and the True Cross restored to Jerusalem.",
+      "zh": "627年12月，希拉克略在尼尼微全歼波斯大军；三年之内，霍斯劳二世身死，失地尽复，真十字架重归耶路撒冷。"
+    },
+    "detail": {
+      "en": "On 12 December 627, near the ruins of ancient Nineveh, Heraclius brought the Persian general Rhahzadh to battle and destroyed his army in a day-long engagement in which, tradition holds, the emperor slew the enemy commander in single combat. The road to the Persian heartland lay open, and Heraclius ravaged the royal palaces around Ctesiphon.\n\nThe defeat shattered Khosrow II's regime. In February 628 he was deposed and murdered by his own son, and the new king sued for peace, restoring every conquered province — Syria, Palestine, Egypt, Armenia — and the relic of the True Cross. In March 630 Heraclius entered Jerusalem on foot and returned the Cross to the Church of the Holy Sepulchre, a scene that resounded through Christendom.\n\nIt was among the most complete reversals of fortune in Roman history — and among the most fragile. Both empires emerged bled white, six years before the armies of Islam appeared on their borders.",
+      "zh": "627年12月12日，希拉克略在古城尼尼微废墟附近迫使波斯统帅拉赫扎德决战，激战竟日，尽歼其军；相传皇帝更在阵前单骑斩杀敌将。此役过后，波斯腹地门户洞开，希拉克略纵兵蹂躏泰西封周围的诸座王宫。\n\n惨败令霍斯劳二世的政权土崩瓦解。628年2月，他被亲子废黜弑杀，新王遣使乞和，归还所有被占行省——叙利亚、巴勒斯坦、埃及、亚美尼亚——并奉还真十字架圣物。630年3月，希拉克略徒步进入耶路撒冷，亲手将十字架送归圣墓教堂，此情此景传遍基督教世界。\n\n这是罗马历史上最彻底的命运逆转之一——也是最脆弱的一次。两大帝国皆已流尽鲜血，而仅仅六年之后，伊斯兰的大军便出现在它们的边境。"
+    }
+  },
+  {
+    "id": "david-plates-630",
+    "year": 630,
+    "category": "art",
+    "lonlat": [28.98, 41.01],
+    "importance": 2,
+    "title": {
+      "en": "The David Plates: Imperial Silver Art",
+      "zh": "大卫银盘：帝国银器艺术"
+    },
+    "summary": {
+      "en": "Nine magnificent silver plates depicting the life of David, struck with Heraclius' control stamps, celebrated the emperor's Persian triumph in a consciously classical style.",
+      "zh": "九件描绘大卫生平的华美银盘，钤有希拉克略朝的官方戳记，以刻意复古的古典风格颂扬皇帝的波斯大捷。"
+    },
+    "detail": {
+      "en": "The so-called David Plates, discovered in 1902 near Lambousa in Cyprus, are a set of nine silver dishes portraying scenes from the life of King David, culminating in his duel with Goliath. Imperial control stamps date their manufacture to the workshops of Constantinople between 613 and 630, at the climax of the Persian war.\n\nThe programme was pointed: David, the anointed shepherd who felled a giant, mirrored Heraclius, who was said to have slain a Persian champion in single combat. Old Testament kingship became a language of imperial propaganda in precious metal.\n\nArtistically the plates are a manifesto of continuity. Their supple modelling, classical drapery, and mythological gravity descend directly from Hellenistic silverwork, proof that on the eve of the Empire's greatest transformations, the classical tradition in Eastern Roman art was not a memory but a living craft of the court workshops.",
+      "zh": "1902年出土于塞浦路斯兰布萨附近的'大卫银盘'，是一组九件银碟，描绘大卫王生平诸场景，以其与歌利亚的决斗为高潮。盘底所钤帝国官方戳记表明，它们于613至630年间铸造于君士坦丁堡的宫廷作坊，正值波斯战争最激烈之时。\n\n其图像用意昭然：大卫，那位受膏的牧童，以一己之力击倒巨人，正是希拉克略的写照——传说皇帝曾在阵前单骑斩杀波斯猛将。旧约中的王权叙事，就此化作贵金属上的帝国宣传语言。\n\n就艺术而论，这组银盘堪称古典传统延续的宣言：其圆润的人体塑造、古典式的衣褶与神话般的庄重气度，直承希腊化银器工艺的血脉。它证明在帝国即将经历巨变的前夜，东罗马艺术中的古典传统绝非遥远的记忆，而是宫廷作坊中鲜活的技艺。"
+    }
+  },
+  {
+    "id": "battle-of-yarmouk-636",
+    "year": 636,
+    "category": "military",
+    "lonlat": [35.95, 32.72],
+    "importance": 1,
+    "title": {
+      "en": "Battle of the Yarmouk",
+      "zh": "雅穆克河战役"
+    },
+    "summary": {
+      "en": "In August 636, after six days of fighting above the Yarmouk gorges, the Arab armies destroyed the imperial field army and tore Syria from Roman hands forever.",
+      "zh": "636年8月，经过雅穆克河谷上方六昼夜的鏖战，阿拉伯军队全歼帝国野战大军，叙利亚自此永远脱离罗马之手。"
+    },
+    "detail": {
+      "en": "To meet the Arab invasion of Syria, Heraclius assembled the largest army the Empire could field — a coalition of Roman regulars, Armenians, and Ghassanid Arab allies under the general Vahan. In August 636 it faced the Muslim forces, brilliantly coordinated by Khalid ibn al-Walid, on the plateau above the ravines of the Yarmouk river.\n\nSix days of battle ended in catastrophe. Outmanoeuvred, driven against the gorges, and struck by Khalid's cavalry reserve, the imperial army disintegrated; much of it perished in the ravines. It was one of the most decisive battles ever fought: no comparable Roman force could be raised again in the East.\n\nHeraclius, at Antioch, ordered the evacuation of Syria — later tradition gives him the farewell 'Peace unto thee, O Syria'. Damascus was reoccupied, Jerusalem capitulated in 638, Antioch fell, and the Empire's frontier rolled back to the Taurus mountains, where it would hold for three centuries.",
+      "zh": "为迎击阿拉伯人对叙利亚的入侵，希拉克略集结了帝国所能调动的最大兵力——由将军瓦汉统领的罗马正规军、亚美尼亚人与加萨尼阿拉伯盟军组成的联军。636年8月，联军在雅穆克河深谷之上的高原，与哈立德·伊本·瓦利德精妙调度的穆斯林军队对峙。\n\n六天的会战以惨败告终。帝国大军被反复调动、逼向深谷，又遭哈立德的骑兵预备队致命一击，全线崩溃，大部葬身沟壑之中。这是史上最具决定性的会战之一：帝国在东方再也无力集结如此规模的军队。\n\n身在安条克的希拉克略下令全面撤出叙利亚——后世传说他留下了那句告别：'别了，叙利亚，愿你平安。'大马士革再度易手，耶路撒冷于638年开城，安条克陷落，帝国边界退至托罗斯山脉——并将在那里坚守三百年。"
+    }
+  },
+  {
+    "id": "loss-of-egypt-641",
+    "year": 641,
+    "category": "economy",
+    "lonlat": [29.92, 31.2],
+    "importance": 1,
+    "title": {
+      "en": "Loss of Egypt: The Granary Severed",
+      "zh": "埃及沦丧：粮仓断绝"
+    },
+    "summary": {
+      "en": "The surrender of Alexandria in 641 handed Egypt to the Caliphate, permanently stripping the Empire of its richest province and the grain that had fed Constantinople for centuries.",
+      "zh": "641年亚历山大城降约签订，埃及归于哈里发国；帝国最富庶的行省与数百年来供养君士坦丁堡的粮源就此永久丧失。"
+    },
+    "detail": {
+      "en": "'Amr ibn al-As led his small army into Egypt in 639. The fortress of Babylon at the head of the Delta fell in April 641, and in November the Patriarch Cyrus, governing a demoralized province, signed the Treaty of Alexandria, agreeing to evacuate the country. In September 642 the last imperial troops sailed out of Alexandria's harbour.\n\nThe economic amputation was without parallel. Egypt had been the wealthiest land of the Mediterranean world, supplying an outsized share of imperial tax revenue and the wheat fleets on which the capital's population depended. Its loss, following that of Syria, roughly halved the Empire's income within a decade.\n\nThe state that survived was forced into a new economic shape: a smaller, rationed Constantinople; an economy pivoting to Anatolian and Thracian agriculture; armies paid increasingly through land rather than coin. The transformation was wrenching, but it produced a more compact, defensible, and ultimately durable Empire.",
+      "zh": "639年，阿慕尔·伊本·阿斯率一支不大的军队侵入埃及。641年4月，扼守三角洲门户的巴比伦要塞陷落；同年11月，治理着这个人心涣散行省的牧首居鲁士签署《亚历山大条约》，同意全面撤离。642年9月，最后一批帝国军队扬帆驶出亚历山大港。\n\n这场经济上的截肢史无前例。埃及曾是地中海世界最富庶之地，贡献着帝国税入中不成比例的巨大份额，其运麦船队更是都城人口的命脉。继叙利亚之后再失埃及，帝国岁入在十年之内几乎腰斩。\n\n幸存下来的国家被迫重塑经济形态：君士坦丁堡的规模缩减、供给转为配给；经济重心转向安纳托利亚与色雷斯的农业；军队的酬偿日益倚重土地而非钱币。这场转型剧痛深重，却造就了一个更紧凑、更易守、也终究更耐久的帝国。"
+    }
+  },
+  {
+    "id": "first-arab-siege-greek-fire",
+    "year": 674,
+    "endYear": 678,
+    "category": "military",
+    "lonlat": [28.98, 41.01],
+    "importance": 1,
+    "title": {
+      "en": "First Arab Siege and the Invention of Greek Fire",
+      "zh": "阿拉伯人首围君士坦丁堡与希腊火的发明"
+    },
+    "summary": {
+      "en": "Mu'awiya's fleets blockaded Constantinople for years, until the new incendiary weapon of Kallinikos — Greek fire — burned the Arab navy and broke the Caliphate's first great assault.",
+      "zh": "穆阿维叶的舰队连年封锁君士坦丁堡，直到卡利尼科斯发明的新式燃烧武器——希腊火——焚毁阿拉伯海军，粉碎了哈里发国的第一次大举进攻。"
+    },
+    "detail": {
+      "en": "From 674 the Caliph Mu'awiya pressed a sustained naval campaign against Constantinople itself, his fleets wintering at Cyzicus and blockading the city through the sailing seasons. For the young Caliphate it was to be the decisive blow against the Christian Empire.\n\nThe city's salvation came from a refugee. Kallinikos, an architect who had fled Heliopolis in Syria, devised a petroleum-based incendiary mixture that could be projected through bronze siphons mounted on warships and would burn even on the surface of the sea. With this 'marine fire' — known ever after as Greek fire — the dromons of Constantine IV shattered the Arab squadrons in the waters around the city.\n\nBy 678 the offensive had collapsed; the retreating fleet was wrecked by storms, and Mu'awiya accepted a thirty-year peace. The formula of Greek fire became the most closely guarded state secret in the medieval world, and the check administered here preserved the Empire — and much of Europe behind it.",
+      "zh": "自674年起，哈里发穆阿维叶对君士坦丁堡本身发动持久的海上攻势：其舰队以基齐库斯为冬营，每逢航季便封锁都城。对年轻的哈里发国而言，这本应是对基督教帝国的致命一击。\n\n拯救这座城的却是一名流亡者。建筑师卡利尼科斯自叙利亚的赫利奥波利斯逃来，研制出一种以石油为基的燃烧混合剂，可经战船上的青铜虹吸管喷射而出，落于海面犹自燃烧。凭借这种'海火'——后世所称的希腊火——君士坦丁四世的德罗蒙战舰在都城周围海域击碎了阿拉伯分舰队。\n\n至678年攻势全面瓦解，撤退的舰队又遭风暴摧折，穆阿维叶被迫接受三十年和约。希腊火的配方从此成为中古世界守护最严的国家机密，而此役所遏止的攻势，保全了帝国——也保全了帝国身后的大半个欧洲。"
+    }
+  },
+  {
+    "id": "theme-system-sebastopolis",
+    "year": 692,
+    "category": "civilization",
+    "lonlat": [36.09, 40.02],
+    "importance": 1,
+    "title": {
+      "en": "The Theme System: A New Provincial Order",
+      "zh": "军区制：行省新秩序"
+    },
+    "summary": {
+      "en": "By the time of the battle of Sebastopolis in 692, the theme system — soldier-farmers settled in great military districts — had rebuilt the Empire's whole framework of defence and society.",
+      "zh": "至692年塞巴斯托波利斯之战时，军区制——将士兵屯驻于各大军事区、以田养兵——已然重塑了帝国防御与社会的整体骨架。"
+    },
+    "detail": {
+      "en": "The defeat at Sebastopolis in 692, where Justinian II's Slav corps deserted to the Arabs mid-battle, reopened the Anatolian frontier to raids — yet the Empire did not collapse. What absorbed the blow was a new order of state and society that had crystallized over the previous half-century: the themes (themata).\n\nAs the old provinces of the East were lost, the surviving field armies were withdrawn into Anatolia and settled across great districts that took their names — Opsikion, Anatolikon, Armeniakon, Thrakesion, with the Karabisianoi fleet at sea. Soldiers were increasingly supported by hereditary landholdings rather than cash pay, and each district's strategos united military and, over time, civil authority.\n\nThe result was a countryside of soldier-farmers with a personal stake in defence, a cheap and self-regenerating army, and a decentralized resilience that no single defeat could destroy. More than any battle, this quiet institutional revolution explains how the Empire outlived the storm of the seventh century.",
+      "zh": "692年的塞巴斯托波利斯之战中，查士丁尼二世麾下的斯拉夫军团阵前倒戈投向阿拉伯人，安纳托利亚边境再度门户洞开——然而帝国并未因此崩溃。承受住这一打击的，是此前半个世纪间逐渐成形的国家与社会新秩序：军区制（themata）。\n\n随着东方旧行省相继沦丧，幸存的野战军团撤入安纳托利亚，屯驻于以其命名的广大区域——奥普西金军区、安纳托利亚军区、亚美尼亚军区、色雷斯西亚军区，海上则有卡拉比西亚尼舰队。士兵的给养日益依托世袭份地而非现钱军饷，各军区的将军（strategos）则集军权于一身，并渐次兼领民政。\n\n由此形成的是一片由兵农共同体构成的乡野：士兵保家即是卫国，军队廉价而生生不息，防御体系分散而坚韧，任何一场败仗都无法将其摧毁。比起任何战役，正是这场静默的制度革命，解释了帝国何以能挺过七世纪的狂风暴雨。"
+    }
+  },
+  {
+    "id": "quinisext-council-692",
+    "year": 692,
+    "category": "law",
+    "lonlat": [28.98, 41.01],
+    "importance": 2,
+    "title": {
+      "en": "Justinian II and the Quinisext Council",
+      "zh": "查士丁尼二世与'五六会议'"
+    },
+    "summary": {
+      "en": "The Council in Trullo, convened by Justinian II, issued 102 canons that became the enduring backbone of Orthodox canon law — and a new source of friction with Rome.",
+      "zh": "查士丁尼二世召集的特鲁洛会议颁布一百零二条教规，从此成为正教教会法的恒久骨干——也埋下了与罗马新的龃龉。"
+    },
+    "detail": {
+      "en": "In 692 Justinian II summoned bishops to the domed hall (trullos) of the imperial palace to complete the work of the Fifth and Sixth Ecumenical Councils, which had defined doctrine but issued no disciplinary rules. The resulting 'Quinisext' council promulgated 102 canons regulating almost every corner of Christian life: clerical marriage (permitted for priests, against Roman practice), liturgy, fasting, and popular customs, banning lingering pagan festivities such as the Kalends.\n\nSeveral canons had lasting cultural force. Canon 82 ordered that Christ be depicted in his human form rather than symbolically as a lamb — a landmark in the theology of the religious image. Canon 36 reaffirmed Constantinople's privileges as equal to those of Old Rome.\n\nPope Sergius I refused to sign, and Justinian's attempt to arrest him failed humiliatingly. The canons nonetheless became the foundation of Orthodox canon law to this day, and the episode traced, once more, the widening line between the Churches of East and West.",
+      "zh": "692年，查士丁尼二世召集众主教于皇宫的穹顶大厅（trullos）集会，以补足第五、第六次大公会议之缺——两次会议厘定了教义，却未颁行任何纪律规章。这次'五六会议'遂颁布教规一百零二条，几乎规范了基督徒生活的每个角落：司铎婚姻（准许在俗司铎保有婚姻，与罗马惯例相left）、礼仪、斋戒，以及民间风俗——诸如'卡伦岱'新年节庆等异教遗风皆在禁绝之列。\n\n其中数条教规影响深远。第八十二条规定基督当以人形描绘，不得再以羔羊为象征——这是圣像神学史上的里程碑。第三十六条则重申君士坦丁堡与旧罗马享有同等的教座特权。\n\n教宗塞尔吉乌斯一世拒绝签署，查士丁尼派员拘捕教宗的企图更以难堪的失败告终。然而这些教规终究奠定了正教教会法的根基，沿用至今；而这段插曲，也再一次刻深了东西方教会之间日渐扩大的裂痕。"
+    }
+  },
+  {
+    "id": "second-arab-siege-717",
+    "year": 717,
+    "endYear": 718,
+    "category": "military",
+    "lonlat": [28.98, 41.01],
+    "importance": 1,
+    "title": {
+      "en": "Second Arab Siege: Leo III Saves the City",
+      "zh": "阿拉伯人二围君士坦丁堡：利奥三世保卫都城"
+    },
+    "summary": {
+      "en": "The Caliphate hurled its greatest armament against Constantinople; Leo III, Greek fire, a savage winter, and Bulgar attacks annihilated it — a deliverance of European scale.",
+      "zh": "哈里发国倾其最强军力围攻君士坦丁堡；利奥三世、希腊火、酷烈寒冬与保加尔人的袭击将其彻底歼灭——这场解围关乎整个欧洲的命运。"
+    },
+    "detail": {
+      "en": "In August 717 the Caliphate's supreme effort arrived before Constantinople: Maslama's army, reported at 80,000 or more, entrenched before the land walls while enormous fleets moved to seal the sea lanes. Leo III, a soldier from the Syrian frontier crowned emperor only months before, directed the defence.\n\nEvery Arab move failed. Greek fire consumed the squadrons that ventured into the Bosporus; the chain guarded the Golden Horn. The winter of 717-718 was among the cruellest in memory — snow lay for a hundred days, and the besiegers, unprepared, starved and froze. Egyptian Christian crews deserted to the city with news of the fleets, which were then burned at anchor; an army marching up through Anatolia was ambushed; and the Bulgar khan Tervel, honouring his alliance, mauled the besiegers from the rear.\n\nOn 15 August 718 the siege was raised; storms destroyed most of the retreating fleet. Historians have long ranked this defence among the decisive events of world history: the Caliphate never again attempted the city.",
+      "zh": "717年8月，哈里发国的倾国之师兵临君士坦丁堡：据载马斯拉马的大军多达八万以上，深沟高垒直逼陆墙，庞大舰队则分头封锁海路。数月前刚刚加冕的叙利亚边地军人利奥三世，亲自主持城防。\n\n阿拉伯人的每一步都归于失败。冒进博斯普鲁斯海峡的分舰队被希腊火吞噬；铁链锁住了金角湾。717至718年之冬又是记忆中最酷烈的寒冬——积雪百日不化，毫无准备的围城大军饥寒交迫。舰队中的埃及基督徒水手纷纷携情报投奔城中，停泊的舰船随即被焚；取道安纳托利亚北上的援军中伏溃败；保加尔可汗特尔维尔更信守盟约，自背后痛击围城之敌。\n\n718年8月15日，围攻解除；风暴又摧毁了撤退舰队的大半。史家历来将这场保卫战列为世界历史的决定性事件之一：哈里发国从此再未染指这座城。"
+    }
+  },
+  {
+    "id": "iconoclasm-begins-726",
+    "year": 726,
+    "endYear": 730,
+    "category": "religion",
+    "lonlat": [28.98, 41.01],
+    "importance": 1,
+    "title": {
+      "en": "Iconoclasm Begins",
+      "zh": "毁坏圣像运动的开端"
+    },
+    "summary": {
+      "en": "Leo III turned against the veneration of icons, removing the Christ image from the Chalke Gate and in 730 outlawing icons outright — opening a conflict that would convulse the Empire for over a century.",
+      "zh": "利奥三世转而反对圣像崇敬，下令撤除查尔克大门上的基督像，并于730年正式禁绝圣像——由此揭开震撼帝国一个多世纪的大争端。"
+    },
+    "detail": {
+      "en": "Around 726 — after a terrifying volcanic eruption at Thera was read as a sign of divine anger — Leo III began to preach publicly against the veneration of icons, convinced that the Empire's calamities were punishment for idolatry. The removal of the great image of Christ from the Chalke Gate of the palace provoked a riot in which the responsible officer was killed by an outraged crowd.\n\nIn 730 Leo made iconoclasm law, issuing an edict against the icons; Patriarch Germanos I resigned rather than sign, and was replaced by the compliant Anastasios. Resistance was immediate and wide: the theme of Hellas rose in revolt, the popes condemned the policy, and from Muslim-ruled Palestine the monk John of Damascus composed the classic theological defences of the holy images.\n\nThe quarrel was never merely about pictures: it engaged the nature of Christ, the limits of imperial power over the Church, and the fate of a vast artistic heritage. It would dominate imperial life, in two long phases, until 843.",
+      "zh": "约726年——锡拉岛骇人的火山喷发被解读为天怒之兆——利奥三世开始公开宣讲反对圣像崇敬，深信帝国的连番劫难乃是对偶像崇拜的惩罚。皇宫查尔克大门上巨大的基督圣像被下令撤除，激愤的民众当场击杀了执行的军官，酿成骚乱。\n\n730年，利奥将毁像立为国法，颁布禁绝圣像的敕令；牧首日耳曼努斯一世拒不署名而去职，由顺从的阿纳斯塔修斯接任。抵抗随即四起：希腊军区举兵反叛，历任教宗严词谴责，而身处穆斯林治下巴勒斯坦的修士大马士革的约翰，则写下了为圣像辩护的神学经典。\n\n这场争端从来不止关乎图像本身：它牵动着基督的本性、皇权干预教会的界限，以及一笔浩瀚艺术遗产的存亡。此后它将分两个漫长阶段主宰帝国的生活，直至843年方休。"
+    }
+  },
+  {
+    "id": "ecloga-law-code-741",
+    "year": 741,
+    "category": "law",
+    "lonlat": [28.98, 41.01],
+    "importance": 2,
+    "title": {
+      "en": "The Ecloga: Law in Greek for a New Age",
+      "zh": "《法律选编》：新时代的希腊语法典"
+    },
+    "summary": {
+      "en": "Leo III and Constantine V issued the Ecloga, a concise Greek law code 'corrected toward greater humanity' — the first major legislation since Justinian and a model for the Slavic world.",
+      "zh": "利奥三世与君士坦丁五世颁布《法律选编》——一部'向更大仁慈修正'的简明希腊语法典，是查士丁尼以来首部重要立法，并成为斯拉夫世界的立法范本。"
+    },
+    "detail": {
+      "en": "Around 741 Leo III and his son Constantine V promulgated the Ecloga, a 'selection of laws' distilled from Justinian's vast Latin corpus into a short, practical handbook in plain Greek that a provincial judge could actually use. It was the first major imperial legislation in two centuries.\n\nIts content mapped a changed society. Marriage, family, and inheritance were regulated under strong Christian influence, strengthening the legal position of wives and children. The criminal law replaced many death penalties with mutilations — blinding, slitting of the nose, amputation — which the code's preface, in a spirit alien to modern eyes, presented as a 'correction toward greater humanity'. The same preface ordered that judges be salaried by the state so they need not live on bribes.\n\nThe Ecloga's afterlife was immense: translated and adapted, notably in the Slavonic 'Court Law for the People', it carried Roman legal culture to Bulgaria, Rus, and beyond.",
+      "zh": "约741年，利奥三世偕其子君士坦丁五世颁布《法律选编》（Ecloga）——从查士丁尼卷帙浩繁的拉丁文法典中提炼而成的一部简明实用手册，以通俗希腊语写就，使外省法官真正能够上手使用。这是两个世纪以来帝国的第一部重要立法。\n\n其内容映照出一个已然改变的社会：婚姻、家庭与继承诸法深受基督教精神浸润，妻子与子女的法律地位得到加强；刑法则以肢体刑——刺瞎、劓鼻、断手——取代了诸多死刑。法典序言以今人难以索解的口吻，称此为'向更大仁慈的修正'。同一篇序言还规定法官由国家支薪，使其不必以贿赂为生。\n\n《法律选编》身后的影响极为深远：它被翻译改编——尤以斯拉夫文《民众审判法》为著——将罗马法律文化播于保加利亚、罗斯乃至更远之地。"
+    }
+  },
+  {
+    "id": "loss-of-ravenna-751",
+    "year": 751,
+    "category": "politics",
+    "lonlat": [12.2, 44.42],
+    "importance": 2,
+    "title": {
+      "en": "Fall of Ravenna: The End of the Exarchate",
+      "zh": "拉文纳陷落：总督区的终结"
+    },
+    "summary": {
+      "en": "The Lombard king Aistulf took Ravenna in 751, extinguishing imperial rule in northern Italy and driving the popes into the arms of the Franks.",
+      "zh": "751年，伦巴第国王艾斯图尔夫攻占拉文纳，帝国在意大利北部的统治就此熄灭，历任教宗转而投向法兰克人的怀抱。"
+    },
+    "detail": {
+      "en": "In 751 Aistulf, king of the Lombards, captured Ravenna, seat of the exarch who had governed imperial Italy for nearly two centuries. The conquest ended the Empire's presence in northern and central Italy, the last great remnant of Justinian's western reconquest; imperial power on the peninsula shrank to Venice's lagoons, Sicily, and the far south.\n\nThe deeper consequence was papal. Rome, threatened by the Lombards and estranged from an iconoclast Constantinople that could send no armies, sought a new protector. Pope Stephen II crossed the Alps to Pippin III, whose Frankish campaigns forced Aistulf to surrender the exarchate's territories — not to the emperor, but to St Peter. The 'Donation of Pippin' of 756 founded the Papal States.\n\nA political axis a millennium old had quietly turned: the papacy's future now lay with the Franks, a realignment whose logical conclusion would come on Christmas Day, 800.",
+      "zh": "751年，伦巴第国王艾斯图尔夫攻陷拉文纳——近两百年来治理帝国意大利领地的总督驻节之城。此役终结了帝国在意大利北部和中部的统治，查士丁尼西征伟业的最后一大遗存就此湮灭；帝国在半岛上的势力，萎缩至威尼斯潟湖、西西里与最南端一隅。\n\n更深远的后果落在教廷。罗马既受伦巴第人威胁，又与推行毁像、无力派兵的君士坦丁堡日益疏离，遂另寻庇护。教宗司提反二世翻越阿尔卑斯山面见丕平三世；法兰克大军两度南征，迫使艾斯图尔夫交出总督区故地——但不是交还皇帝，而是献予圣彼得。756年的'丕平献土'由此奠立教宗国。\n\n一条延续千年的政治轴线悄然转向：教廷的未来自此系于法兰克人，而这场重组的逻辑终点，将在800年的圣诞节到来。"
+    }
+  },
+  {
+    "id": "council-of-hieria-754",
+    "year": 754,
+    "category": "religion",
+    "lonlat": [29.04, 40.97],
+    "importance": 2,
+    "title": {
+      "en": "Council of Hieria",
+      "zh": "希埃里亚会议"
+    },
+    "summary": {
+      "en": "Constantine V's council of 338 bishops at Hieria condemned all religious images as idolatry, giving iconoclasm a formal theology and licensing a harsh persecution.",
+      "zh": "君士坦丁五世在希埃里亚召集三百三十八位主教，将一切宗教图像斥为偶像崇拜，为毁像运动赋予正式神学，并为其后的严酷迫害张目。"
+    },
+    "detail": {
+      "en": "In 754 Constantine V, a committed and theologically able iconoclast, assembled 338 bishops at the palace of Hieria on the Asian shore of the Bosporus. The council proclaimed itself the seventh ecumenical council and condemned the making and veneration of religious images root and branch: the only true image of Christ, it held, was the Eucharist, and painters who portrayed him either divided his natures or circumscribed his divinity.\n\nThe gathering's authority was contested from the start — none of the five patriarchal sees was represented, Rome, Alexandria, Antioch, and Jerusalem all standing aloof. But its decrees armed the state: in the following years iconophile resistance, concentrated in monasteries, was broken with confiscations, public humiliations, and executions, of which the monk Stephen the Younger, killed in 765, became the most celebrated martyr.\n\nEvery anathema of Hieria was formally overturned at Nicaea in 787, yet its acts survive — read into the record at Nicaea for refutation — as the fullest statement of iconoclast thought.",
+      "zh": "754年，坚定而颇具神学素养的毁像派皇帝君士坦丁五世，在博斯普鲁斯海峡亚洲一岸的希埃里亚行宫召集主教三百三十八人。会议自封为第七次大公会议，将宗教图像的绘制与崇敬连根否定：基督唯一真正的'像'乃是圣体圣事；画师若描绘基督，不是分裂其二性，便是妄图圈限其神性。\n\n这次集会的权威从一开始便备受质疑——五大牧首教座无一与会，罗马、亚历山大、安条克、耶路撒冷俱皆置身事外。但其决议为国家迫害提供了武器：此后数年，以修道院为中心的崇像派抵抗遭到抄没、当众羞辱与处决的镇压，765年遇害的修士'小司提反'成为其中最负盛名的殉道者。\n\n希埃里亚的每一条绝罚令都在787年尼西亚会议上被正式推翻；然而其会议文书——因在尼西亚被逐条宣读驳斥而得以留存——至今仍是毁像派思想最完整的陈述。"
+    }
+  },
+  {
+    "id": "hagia-eirene-aniconic-apse",
+    "year": 753,
+    "category": "art",
+    "lonlat": [28.98, 41.01],
+    "importance": 2,
+    "title": {
+      "en": "The Cross of Hagia Eirene: Iconoclast Art",
+      "zh": "圣伊琳妮教堂的十字架：毁像时代的艺术"
+    },
+    "summary": {
+      "en": "Rebuilt after the earthquake of 740, the church of Hagia Eirene received in its apse a plain gold mosaic bearing only a monumental cross — the surviving manifesto of iconoclast aesthetics.",
+      "zh": "740年地震后重建的圣伊琳妮教堂，其半圆殿仅饰以金底之上一座巍然十字的马赛克——毁像时代美学留存至今的宣言。"
+    },
+    "detail": {
+      "en": "The great earthquake of 740 wrecked Hagia Eirene, the venerable church beside Hagia Sophia. Its reconstruction under Constantine V, around the middle of the century, produced the largest monument of iconoclast church decoration to survive anywhere: in the golden conch of the apse, where an image of Christ or the Virgin would be expected, stands only an austere monumental cross in dark outline.\n\nThis was not an absence of art but a deliberate aesthetic. Iconoclast patrons stripped churches of figural sacred images and clothed them instead in crosses, vegetal scrolls, birds, and geometric ornament — splendour without portraiture. Their opponents jeered that they had turned churches into 'orchards and aviaries', a taunt that itself records the richness of the style.\n\nSimilar crosses replaced figural mosaics from the Great Palace to distant provincial churches. Hagia Eirene's apse, never redecorated, remains the most eloquent witness to a century when the Empire's art was itself the battlefield.",
+      "zh": "740年大地震摧毁了圣索菲亚大教堂近旁的古老教堂圣伊琳妮。君士坦丁五世于本世纪中叶主持重建，留下了现存各地规模最大的毁像时代教堂装饰遗构：在半圆殿金色的穹隅之内——本应绘有基督或圣母像之处——唯有一座深色勾勒、庄严朴素的巨大十字架。\n\n这并非艺术的缺席，而是一种刻意为之的美学。毁像派的赞助者剥除教堂中的具象圣像，代之以十字架、藤蔓卷草、飞禽与几何纹样——是不施人像的华彩。反对者讥其将教堂变成了'果园与鸟舍'，这句嘲讽本身恰恰记录了此种风格的繁丽。\n\n从大皇宫到偏远的外省教堂，类似的十字架纷纷取代了具象马赛克。圣伊琳妮的半圆殿此后再未重饰，遂成为那个艺术本身即是战场的世纪最雄辩的见证。"
+    }
+  },
+  {
+    "id": "second-council-nicaea-787",
+    "year": 787,
+    "category": "religion",
+    "lonlat": [29.72, 40.43],
+    "importance": 2,
+    "title": {
+      "en": "Irene and the Second Council of Nicaea",
+      "zh": "伊琳妮与第二次尼西亚会议"
+    },
+    "summary": {
+      "en": "Under the empress Irene, the Second Council of Nicaea restored the veneration of icons, distinguishing the honour paid to images from the worship due to God alone.",
+      "zh": "在女主伊琳妮主持下，第二次尼西亚会议恢复圣像崇敬，并厘清了对圣像的敬礼与唯独归于上帝的崇拜之别。"
+    },
+    "detail": {
+      "en": "Irene, ruling as regent for her young son Constantine VI, resolved to end half a century of official iconoclasm. Her first attempt at a council in Constantinople in 786 was broken up by soldiers of the guard loyal to the iconoclast legacy of Constantine V; only after these units were disbanded could the bishops reconvene safely at Nicaea in 787, with legates of Pope Hadrian I and the eastern patriarchates present.\n\nThe council, guided by the Patriarch Tarasios, restored the icons on a careful theological foundation: images are owed veneration (proskynesis), never the worship (latreia) reserved for God, and 'the honour paid to the image passes to its prototype'. The decrees of Hieria were anathematized point by point.\n\nRecognized as the seventh ecumenical council, Nicaea II was the last council accepted by both the Eastern and Western Churches. Iconoclasm would return in 815, but its intellectual foundations had been permanently broken.",
+      "zh": "伊琳妮以幼帝君士坦丁六世摄政的身份临朝，决意终结半个世纪的官方毁像政策。786年她首次在君士坦丁堡召集会议，却被忠于君士坦丁五世毁像遗风的禁军士兵冲散；直到这些部队被解散，主教们才得以于787年安然移会尼西亚，教宗哈德良一世的特使与东方诸牧首的代表均列席其间。\n\n会议在牧首塔拉西乌斯的引导下，将圣像的恢复奠定于审慎的神学根基之上：圣像所受的是敬礼（proskynesis），而绝非唯独归于上帝的崇拜（latreia）；'向圣像所致的敬意，归于其原型'。希埃里亚会议的决议被逐条施以绝罚。\n\n第二次尼西亚会议被尊为第七次大公会议，亦是东西方教会共同承认的最后一次大公会议。毁像运动虽将于815年卷土重来，但其思想根基已被永久摧毁。"
+    }
+  },
+  {
+    "id": "charlemagne-coronation-two-emperors",
+    "year": 800,
+    "category": "politics",
+    "lonlat": [28.98, 41.01],
+    "importance": 2,
+    "title": {
+      "en": "Two Emperors: Charlemagne's Coronation Seen from Constantinople",
+      "zh": "双帝并立：君士坦丁堡眼中的查理曼加冕"
+    },
+    "summary": {
+      "en": "When the pope crowned Charlemagne 'emperor' at Rome in 800, Constantinople saw a barbarian usurpation of a dignity that belonged to one throne alone — the 'problem of two emperors' was born.",
+      "zh": "800年教宗在罗马为查理曼加冕称'帝'，在君士坦丁堡看来，这是蛮族对独一无二帝位的僭越——'双帝并立问题'由此而生。"
+    },
+    "detail": {
+      "en": "On Christmas Day 800 Pope Leo III set a crown on the head of Charles, king of the Franks, and the Roman crowd acclaimed him 'emperor of the Romans'. In Constantinople the news landed as an affront bordering on the absurd: in Roman political theology there was one Empire and one emperor on earth, and it reigned on the Bosporus. Western apologists answered that the throne was 'vacant', since a woman — Irene, who had deposed and blinded her own son — occupied it.\n\nCourt chroniclers even recorded talk of a marriage between Irene and Charles that would have reunited East and West, a scheme extinguished by Irene's fall in 802. Instead came friction and war over Venice and the Dalmatian coast.\n\nBy the Treaty of Aachen in 812, Michael I's envoys acclaimed Charles as 'basileus' — but pointedly not 'of the Romans', a style Constantinople reserved to itself. The compromise settled little; the rivalry of the two empires would shape European politics for centuries.",
+      "zh": "800年圣诞节，教宗利奥三世将冠冕加于法兰克国王查理头上，罗马民众欢呼其为'罗马人的皇帝'。消息传至君士坦丁堡，无异于近乎荒诞的冒犯：在罗马政治神学中，普天之下唯有一个帝国、一位皇帝，而帝座就在博斯普鲁斯之滨。西方的辩护者则宣称帝位'空悬'——因为坐在上面的是一个女人：废黜并刺瞎亲生儿子的伊琳妮。\n\n宫廷编年史家甚至记下了伊琳妮与查理联姻、以期重合东西的传闻，这一图谋随着伊琳妮802年倒台而烟消云散。接踵而至的，是围绕威尼斯与达尔马提亚沿岸的摩擦与战事。\n\n812年《亚琛条约》达成，米海尔一世的使节尊称查理为'巴西琉斯'——却刻意不加'罗马人的'四字，此号君士坦丁堡自留独享。妥协并未了结什么；两个帝国的对峙，将在此后数百年间左右欧洲政局。"
+    }
+  },
+  {
+    "id": "krum-death-of-nikephoros-811",
+    "year": 811,
+    "category": "military",
+    "lonlat": [26.65, 42.98],
+    "importance": 2,
+    "title": {
+      "en": "Krum Destroys the Army of Nikephoros I",
+      "zh": "克鲁姆全歼尼基弗鲁斯一世大军"
+    },
+    "summary": {
+      "en": "The Bulgar khan Krum annihilated the imperial army in a mountain pass and killed the emperor Nikephoros I, lining his skull with silver as a drinking cup.",
+      "zh": "保加尔可汗克鲁姆在山间隘道全歼帝国大军，皇帝尼基弗鲁斯一世阵亡，其头骨被镶银制成酒杯。"
+    },
+    "detail": {
+      "en": "In 811 the emperor Nikephoros I, an able financier determined to crush Bulgar power, invaded Bulgaria and sacked Krum's capital of Pliska, rejecting every offer of peace. Withdrawing through the Balkan mountains, his army entered a defile — traditionally the Varbitsa pass — which Krum's men had sealed at both ends with wooden ramparts.\n\nAt dawn on 26 July the Bulgars fell upon the trapped host and annihilated it. Nikephoros perished — the first emperor to die in battle against a foreign enemy since Valens at Adrianople in 378 — and his heir Staurakios was carried away paralysed by a sword-wound to the spine. Krum, the chroniclers relate, had the emperor's skull lined with silver and used it as a drinking cup for his boyars.\n\nThe disaster inaugurated Krum's years of terror, when his armies burned the suburbs of Constantinople itself, and it fixed the Bulgars as the Empire's most dangerous European neighbour for two centuries.",
+      "zh": "811年，长于理财、决意摧毁保加尔势力的皇帝尼基弗鲁斯一世大举入侵保加利亚，攻掠克鲁姆的都城普利斯卡，并拒绝了对方的一切求和。大军经巴尔干山脉回撤时，进入一处隘道——相传即瓦尔比察山口——克鲁姆早已命人以木墙封死两端。\n\n7月26日拂晓，保加尔人扑向被困之师，将其全歼。尼基弗鲁斯战殁——这是自378年瓦伦斯亡于阿德里安堡以来，第一位战死于外敌之手的皇帝；继承人斯陶拉基奥斯脊椎中剑，瘫痪着被抬离战场。编年史家记载，克鲁姆命人将皇帝的头骨镶以白银，充作宴饮群臣的酒杯。\n\n这场惨祸开启了克鲁姆令人胆寒的岁月——其大军一度焚掠君士坦丁堡近郊——并使保加尔人在此后两百年间，始终是帝国在欧洲最危险的邻邦。"
+    }
+  },
+  {
+    "id": "triumph-of-orthodoxy-843",
+    "year": 843,
+    "category": "religion",
+    "lonlat": [28.98, 41.01],
+    "importance": 1,
+    "title": {
+      "en": "The Triumph of Orthodoxy: Icons Restored",
+      "zh": "正教凯旋：圣像的复归"
+    },
+    "summary": {
+      "en": "The empress Theodora ended iconoclasm forever; on the first Sunday of Lent 843 the icons were carried in triumph into Hagia Sophia, a feast the Orthodox Church keeps to this day.",
+      "zh": "皇太后狄奥多拉永久终结了毁像运动；843年大斋首主日，圣像被凯旋般迎入圣索菲亚大教堂——正教会至今仍庆此节。"
+    },
+    "detail": {
+      "en": "After the death of the last iconoclast emperor, Theophilos, his widow Theodora governed as regent for the child Michael III. Herself a devoted iconophile, she moved swiftly: the iconoclast Patriarch John the Grammarian was deposed, the monk Methodios raised in his place, and a synod in March 843 reaffirmed the decrees of Nicaea II and restored the veneration of icons — while Theodora secured a posthumous pardon for her husband's soul as her price.\n\nOn 11 March 843, the first Sunday of Lent, clergy and people processed with the holy images from the Blachernae church into Hagia Sophia. The event was instituted as an annual feast, the 'Sunday of Orthodoxy', which the Orthodox Church still celebrates at the opening of every Lent.\n\nThe definitive end of the image struggle released a century of pent-up creative energy: the great figural mosaics, illuminated psalters, and theological confidence of the following age all flow from this moment.",
+      "zh": "最后一位毁像皇帝狄奥菲洛斯驾崩后，遗孀狄奥多拉以幼帝米海尔三世之名摄政。她本人笃信圣像，行动迅捷：毁像派牧首'文法家'约翰被废黜，修士美多迪乌斯继任；843年3月，教会会议重申第二次尼西亚会议的决议，恢复圣像崇敬——而狄奥多拉所索的代价，是为亡夫的灵魂求得身后赦免。\n\n843年3月11日，正值大斋期首主日，教士与民众捧持圣像，自布拉赫奈教堂列队巡行，迎入圣索菲亚大教堂。此事被定为年度节庆——'正教主日'，正教会至今仍在每年大斋伊始隆重庆祝。\n\n圣像之争的最终落幕，释放出积蓄百年的创造力：其后时代恢弘的具象马赛克、精美的诗篇插图抄本与充盈的神学自信，皆发源于这一刻。"
+    }
+  },
+  {
+    "id": "leo-mathematician-magnaura-855",
+    "year": 855,
+    "category": "culture",
+    "lonlat": [28.98, 41.01],
+    "importance": 2,
+    "title": {
+      "en": "Leo the Mathematician and the Magnaura School",
+      "zh": "数学家利奥与玛格瑙拉学府"
+    },
+    "summary": {
+      "en": "The caesar Bardas endowed a school of higher learning in the Magnaura palace under Leo the Mathematician, rekindling the study of ancient science and letters.",
+      "zh": "凯撒巴尔达斯在玛格瑙拉宫创办高等学府，延请数学家利奥主持，重燃古代科学与文章之学的薪火。"
+    },
+    "detail": {
+      "en": "Around 855 the caesar Bardas, the powerful uncle of Michael III, established and endowed a school of philosophy and the sciences in the Magnaura hall of the Great Palace. At its head he placed Leo the Mathematician, the most celebrated scholar of the age, whose pupils taught geometry, arithmetic, astronomy, and grammar.\n\nLeo's fame was already legendary. He had devised the optical telegraph — a chain of fire-beacons with synchronized clocks that flashed news of Arab raids from the Cilician frontier to the capital within an hour — and the caliph al-Ma'mun was said to have offered treasure and peace to borrow him, prompting the emperor to retort that giving away learning would be surrendering the glory of the Romans.\n\nAround the school gathered the movement that copied the ancient classics into the new minuscule script, saving much of Greek literature from oblivion. The Magnaura circle was the seedbed of the great cultural flowering of the following century.",
+      "zh": "约855年，米海尔三世权倾朝野的舅父、凯撒巴尔达斯，在大皇宫的玛格瑙拉殿创办并资助了一所哲学与诸科学府，延请当世声名最著的学者'数学家'利奥主持；其门下弟子分授几何、算术、天文与文法。\n\n利奥其人早已名动天下。他设计了光学信标电报——一线烽燧配以同步时钟，能在一个时辰之内将阿拉伯人入寇的军情自奇里乞亚边境传至都城；相传哈里发马蒙曾愿以重金与和约相易，只求借他一晤，皇帝则答曰：将学问拱手让人，无异于将罗马人的荣耀拱手让人。\n\n围绕这所学府，兴起了以新式小写体誊录古代经典的风潮，希腊文献的大宗因此免于湮灭。玛格瑙拉学人圈，正是下一个世纪文化大盛的苗圃。"
+    }
+  },
+  {
+    "id": "cyril-methodius-moravia-863",
+    "year": 863,
+    "category": "civilization",
+    "lonlat": [22.94, 40.64],
+    "importance": 2,
+    "title": {
+      "en": "Cyril and Methodius: The Mission to Moravia",
+      "zh": "西里尔与美多迪乌斯：摩拉维亚传教"
+    },
+    "summary": {
+      "en": "At the request of the Moravian prince, the Thessalonian brothers Cyril and Methodius carried a new alphabet and a Slavonic liturgy north — the birth of Slavic letters.",
+      "zh": "应摩拉维亚君主之请，塞萨洛尼基兄弟西里尔与美多迪乌斯携新创字母与斯拉夫语礼仪北上——斯拉夫文字文明就此诞生。"
+    },
+    "detail": {
+      "en": "In 862 Rastislav, prince of Great Moravia, asked the emperor Michael III for teachers who could instruct his people in the Christian faith in their own Slavic tongue — and, not incidentally, offset Frankish influence. The court chose two brothers from Thessaloniki, Constantine (later the monk Cyril) and Methodius, scholars fluent in the Slavic speech of their native region.\n\nBefore departing in 863, Constantine devised the Glagolitic alphabet, the first script created for a Slavic language, and began translating the Gospels and the liturgy into what became Old Church Slavonic — the first Slavic literary language. The mission taught, ordained, and celebrated the rites in Slavonic, defending the principle, against 'trilingualist' critics, that every people may praise God in its own tongue.\n\nThough Frankish clergy eventually drove their disciples from Moravia, those exiles were welcomed in Bulgaria, where the work flowered and the Cyrillic alphabet took shape. From it descends the script of the entire Slavic Orthodox world.",
+      "zh": "862年，大摩拉维亚君主拉斯季斯拉夫遣使觐见皇帝米海尔三世，请求派遣能以斯拉夫语向其民众传授基督信仰的教师——此举亦意在制衡法兰克人的势力。朝廷选中了塞萨洛尼基的两兄弟：君士坦丁（后出家名西里尔）与美多迪乌斯，二人皆为通晓故乡斯拉夫方言的饱学之士。\n\n863年启程之前，君士坦丁创制了格拉哥里字母——第一套为斯拉夫语言而造的文字，并着手将福音书与礼仪译成后世所称的古教会斯拉夫语——斯拉夫民族的第一种书面语言。传教团以斯拉夫语施教、授职、行礼，并抗辩'三语论'者，捍卫了各民族皆可用自己的语言赞美上帝这一原则。\n\n尽管法兰克教士最终将其门徒逐出摩拉维亚，这些流亡者却在保加利亚受到礼遇，事业于彼开花结果，西里尔字母亦在此成形。整个斯拉夫正教世界的文字，皆由此发源。"
+    }
+  },
+  {
+    "id": "christianization-of-bulgaria-864",
+    "year": 864,
+    "category": "religion",
+    "lonlat": [27.13, 43.39],
+    "importance": 2,
+    "title": {
+      "en": "The Christianization of Bulgaria",
+      "zh": "保加利亚的基督教化"
+    },
+    "summary": {
+      "en": "Khan Boris I of Bulgaria accepted baptism from Constantinople, taking the name Michael after his imperial godfather and drawing his realm into the orbit of Eastern Roman Christianity.",
+      "zh": "保加利亚可汗鲍里斯一世接受来自君士坦丁堡的洗礼，依其皇帝教父之名改称米海尔，将其国度引入东罗马基督教的文明轨道。"
+    },
+    "detail": {
+      "en": "Around 864, pressed by an imperial show of force on his borders during a season of famine, the Bulgar khan Boris I agreed to receive Christianity from Constantinople. He was baptized with the emperor Michael III standing as godfather — by proxy — and took the imperial name, ruling thenceforth as Boris-Michael. A revolt of boyars defending the old gods was crushed without mercy.\n\nBoris proved no passive convert. Dissatisfied with the Patriarch Photios' lofty instruction and seeking an autonomous church, he flirted spectacularly with Rome, drawing the famous pastoral responses of Pope Nicholas I in 866, before the council of 869-870 assigned the Bulgarian church to Constantinople's jurisdiction with wide autonomy.\n\nThe consequences were epochal. Bulgaria became the first great Slavic Orthodox state, soon the refuge of Cyril and Methodius' exiled disciples and the workshop of Slavonic letters — the channel through which Eastern Roman Christianity and culture would flow to the whole Slavic east.",
+      "zh": "约864年，值饥馑之季，帝国又陈兵边境示威，保加尔可汗鲍里斯一世遂应允自君士坦丁堡接受基督教。他受洗时由皇帝米海尔三世（遣代理人）担任教父，并承其名，此后以'鲍里斯-米海尔'为号临朝。执意护持旧神的波雅尔贵族随即举事，被他毫不留情地扑灭。\n\n鲍里斯绝非俯首听命的皈依者。他不满于牧首佛提乌高蹈的训诲，谋求一个自主的教会，竟转而与罗马大张旗鼓地周旋——866年教宗尼古拉一世那份著名的牧函答问即由此而来——直至869至870年的会议将保加利亚教会划归君士坦丁堡治下，并赋予广泛自主。\n\n其影响堪称划时代：保加利亚成为第一个斯拉夫正教大国，不久便收容了西里尔与美多迪乌斯被逐的门徒，化身斯拉夫文字的工坊——东罗马的基督教与文化，正是经由这条水道，流向整个斯拉夫东方。"
+    }
+  }
+]

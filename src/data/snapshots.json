@@ -1,0 +1,158 @@
+[
+  {
+    "id": "founding-330",
+    "year": 330,
+    "label": { "en": "Dedication of Constantinople", "zh": "君士坦丁堡奠基" },
+    "note": { "en": "Constantine the Great dedicates the New Rome on the Bosporus. The empire is one, from Hispania to the Euphrates.", "zh": "君士坦丁大帝在博斯普鲁斯海峡之滨为新罗马揭幕。此时帝国仍为一体，疆域西起伊比利亚，东抵幼发拉底河。" }
+  },
+  {
+    "id": "division-395",
+    "year": 395,
+    "label": { "en": "Division of the Empire", "zh": "帝国分治" },
+    "note": { "en": "On the death of Theodosius I the empire is divided between his sons. The East, ruled from Constantinople, begins its own eleven-century story.", "zh": "狄奥多西一世驾崩后，帝国由两子分治。以君士坦丁堡为都的东部，自此开启延续十一个世纪的历史。" }
+  },
+  {
+    "id": "theodosius-ii-450",
+    "year": 450,
+    "label": { "en": "The Theodosian Age", "zh": "狄奥多西时代" },
+    "note": { "en": "Behind the new Theodosian Walls, the East weathers the storm of the Huns that breaks the West.", "zh": "凭借新筑的狄奥多西城墙，东部帝国安然渡过了令西部倾覆的匈人风暴。" }
+  },
+  {
+    "id": "anastasius-491",
+    "year": 491,
+    "label": { "en": "Anastasius and Recovery", "zh": "阿纳斯塔修斯与复苏" },
+    "note": { "en": "The Western throne is gone; the East endures. Anastasius fills the treasury and reforms the coinage.", "zh": "西部帝位已成往事，东部依然屹立。阿纳斯塔修斯整顿币制，国库充盈。" }
+  },
+  {
+    "id": "justinian-accession-527",
+    "year": 527,
+    "label": { "en": "Justinian Takes the Throne", "zh": "查士丁尼登基" },
+    "note": { "en": "A Latin-speaking soldier's nephew becomes emperor, dreaming of restoring the whole Roman world.", "zh": "行伍出身的家族之侄登上帝位，胸怀恢复整个罗马世界的宏图。" }
+  },
+  {
+    "id": "justinian-apogee-555",
+    "year": 555,
+    "label": { "en": "Justinian's Reconquest", "zh": "查士丁尼的光复" },
+    "note": { "en": "Africa, Italy, and southern Spain are Roman again. The Mediterranean is once more, almost, a Roman lake.", "zh": "阿非利加、意大利与西班牙南部重归罗马。地中海几乎再度成为罗马的内湖。" }
+  },
+  {
+    "id": "maurice-600",
+    "year": 600,
+    "label": { "en": "Maurice Holds the Line", "zh": "莫里斯守御四方" },
+    "note": { "en": "Lombards gnaw at Italy, Avars and Slavs press the Danube, yet the empire still spans three continents.", "zh": "伦巴第人蚕食意大利，阿瓦尔人与斯拉夫人威逼多瑙河，但帝国仍横跨三洲。" }
+  },
+  {
+    "id": "darkest-hour-626",
+    "year": 626,
+    "label": { "en": "The Darkest Hour", "zh": "至暗时刻" },
+    "note": { "en": "Persia holds Egypt, Syria and Anatolia's heart; Avars besiege the capital. The empire survives by its walls, its fleet, and its faith.", "zh": "波斯占据埃及、叙利亚与安纳托利亚腹地，阿瓦尔人兵临都城。帝国凭城墙、舰队与信念苦撑危局。" }
+  },
+  {
+    "id": "heraclius-triumph-630",
+    "year": 630,
+    "label": { "en": "Heraclius Triumphant", "zh": "希拉克略的凯旋" },
+    "note": { "en": "The True Cross returns to Jerusalem. Persia is broken — but both empires are exhausted, and a new power stirs in Arabia.", "zh": "真十字架重归耶路撒冷，波斯一蹶不振——然而两大帝国俱已力竭，阿拉伯半岛上新的力量正在崛起。" }
+  },
+  {
+    "id": "arab-conquests-650",
+    "year": 650,
+    "label": { "en": "The Arab Conquests", "zh": "阿拉伯征服" },
+    "note": { "en": "In a single generation Syria, Palestine and Egypt are lost forever. The empire falls back on Anatolia and the sea.", "zh": "仅仅一代人之间，叙利亚、巴勒斯坦与埃及永远地失去了。帝国退守安纳托利亚与海洋。" }
+  },
+  {
+    "id": "leo-iii-717",
+    "year": 717,
+    "label": { "en": "The Great Siege Repelled", "zh": "击退大围攻" },
+    "note": { "en": "Leo III and Greek fire shatter the Caliphate's supreme effort against Constantinople. The tide of conquest breaks on the Theodosian Walls.", "zh": "利奥三世与希腊火粉碎了哈里发国对君士坦丁堡的倾力一击，征服的浪潮在狄奥多西城墙下退去。" }
+  },
+  {
+    "id": "iconoclast-780",
+    "year": 780,
+    "label": { "en": "The Iconoclast Empire", "zh": "毁坏圣像时代的帝国" },
+    "note": { "en": "A leaner, militarized empire of themes holds Anatolia and the Aegean, torn within by the war over holy images.", "zh": "军区制下更为精干的帝国固守安纳托利亚与爱琴海，内部却因圣像之争而撕裂。" }
+  },
+  {
+    "id": "orthodoxy-843",
+    "year": 843,
+    "label": { "en": "The Triumph of Orthodoxy", "zh": "正统的凯旋" },
+    "note": { "en": "Icons are restored for good. Crete and Sicily slip away to the Arabs, but learning and confidence revive in the capital.", "zh": "圣像崇敬最终恢复。克里特与西西里渐落于阿拉伯人之手，但都城的学术与自信正在复苏。" }
+  },
+  {
+    "id": "basil-i-867",
+    "year": 867,
+    "label": { "en": "The Macedonian Dynasty", "zh": "马其顿王朝肇建" },
+    "note": { "en": "Basil I seizes the throne, founding the dynasty under which the empire will climb back to greatness.", "zh": "巴西尔一世夺取帝位，开创了引领帝国重返强盛的马其顿王朝。" }
+  },
+  {
+    "id": "symeon-925",
+    "year": 925,
+    "label": { "en": "The Bulgarian Challenge", "zh": "保加利亚的挑战" },
+    "note": { "en": "Symeon of Bulgaria styles himself emperor and storms to the walls; the empire bends but does not break.", "zh": "保加利亚的西美昂自称皇帝，兵锋直抵城下；帝国弯而不折。" }
+  },
+  {
+    "id": "phokas-tzimiskes-976",
+    "year": 976,
+    "label": { "en": "The Soldier-Emperors' Legacy", "zh": "军人皇帝的遗产" },
+    "note": { "en": "Crete, Cyprus, Cilicia and Antioch are Roman again after three centuries. Young Basil II inherits a resurgent empire.", "zh": "克里特、塞浦路斯、奇里乞亚与安条克在三个世纪后重归罗马。年轻的巴西尔二世继承了一个复兴中的帝国。" }
+  },
+  {
+    "id": "basil-ii-apogee-1025",
+    "year": 1025,
+    "label": { "en": "The Medieval Apogee", "zh": "中世纪的极盛" },
+    "note": { "en": "Basil II dies master of the Balkans to the Danube and Anatolia to Armenia — the strongest Roman state in four centuries.", "zh": "巴西尔二世驾崩之时，帝国北抵多瑙河、东达亚美尼亚，是四百年来最强大的罗马国家。" }
+  },
+  {
+    "id": "manzikert-1071",
+    "year": 1071,
+    "label": { "en": "Manzikert", "zh": "曼齐刻尔特" },
+    "note": { "en": "The emperor is captured by the Seljuks; Bari, the last Italian city, falls to the Normans. The long crisis begins.", "zh": "皇帝被塞尔柱人俘虏；最后的意大利城市巴里落入诺曼人之手。漫长的危机由此开始。" }
+  },
+  {
+    "id": "alexios-1081",
+    "year": 1081,
+    "label": { "en": "Alexios Inherits the Ruins", "zh": "阿莱克修斯临危受命" },
+    "note": { "en": "Anatolia is all but lost to the Turks. Alexios I Komnenos begins rebuilding from the Balkans and the coasts.", "zh": "安纳托利亚几乎尽失于突厥人。阿莱克修斯一世·科穆宁自巴尔干与沿海之地开始重建。" }
+  },
+  {
+    "id": "john-ii-1143",
+    "year": 1143,
+    "label": { "en": "The Komnenian Restoration", "zh": "科穆宁中兴" },
+    "note": { "en": "Alexios and John II have clawed back the coasts of Anatolia. The empire is again the great power of the eastern Mediterranean.", "zh": "阿莱克修斯与约翰二世收复了安纳托利亚沿海。帝国再度成为东地中海的强权。" }
+  },
+  {
+    "id": "manuel-1180",
+    "year": 1180,
+    "label": { "en": "Manuel's High Noon", "zh": "曼努埃尔的鼎盛" },
+    "note": { "en": "Manuel I's empire reaches from Dalmatia to Cilicia, courted and resented by Latin West and Turkish East alike.", "zh": "曼努埃尔一世的帝国西起达尔马提亚、东至奇里乞亚，令拉丁西方与突厥东方既仰慕又忌惮。" }
+  },
+  {
+    "id": "nicaea-1204",
+    "year": 1204,
+    "label": { "en": "Catastrophe and Exile", "zh": "浩劫与流亡" },
+    "note": { "en": "The Fourth Crusade sacks Constantinople. At Nicaea, the empire-in-exile keeps the Roman name and the Roman idea alive.", "zh": "第四次十字军劫掠君士坦丁堡。流亡政权于尼西亚存续，守护着罗马之名与罗马的理念。" }
+  },
+  {
+    "id": "restoration-1261",
+    "year": 1261,
+    "label": { "en": "The City Regained", "zh": "光复都城" },
+    "note": { "en": "Michael VIII Palaiologos rides through the Golden Gate. Constantinople is Roman once more, though the empire is a shadow.", "zh": "米海尔八世·帕列奥列格穿过金门入城。君士坦丁堡重归罗马，纵然帝国已是旧日之影。" }
+  },
+  {
+    "id": "andronikos-iii-1330",
+    "year": 1330,
+    "label": { "en": "A Balkan Kingdom", "zh": "偏安巴尔干" },
+    "note": { "en": "Anatolia is lost to the Ottomans and the beyliks. The empire lives on in Thrace, Macedonia and the Morea — and in its art and letters.", "zh": "安纳托利亚失于奥斯曼与诸侯国。帝国偏安于色雷斯、马其顿与摩里亚——亦存续于其艺术与学术之中。" }
+  },
+  {
+    "id": "manuel-ii-1400",
+    "year": 1400,
+    "label": { "en": "The City and the Morea", "zh": "孤城与摩里亚" },
+    "note": { "en": "Little remains but Constantinople itself and the Morea. Manuel II travels the courts of the West, seeking help that never comes.", "zh": "所余无几，唯都城与摩里亚而已。曼努埃尔二世遍访西方宫廷，求援而终无所获。" }
+  },
+  {
+    "id": "fall-1453",
+    "year": 1453,
+    "label": { "en": "The Fall", "zh": "陷落" },
+    "note": { "en": "On 29 May 1453 the Theodosian Walls are breached at last. Constantine XI dies fighting, and eleven centuries of the Eastern Roman Empire end.", "zh": "1453年5月29日，狄奥多西城墙终被攻破。君士坦丁十一世战死城头，东罗马帝国十一个世纪的历史就此落幕。" }
+  }
+]

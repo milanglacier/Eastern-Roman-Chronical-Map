@@ -1,0 +1,483 @@
+[
+  {
+    "id": "dedication-of-constantinople",
+    "year": 330,
+    "category": "politics",
+    "lonlat": [28.98, 41.01],
+    "importance": 1,
+    "title": {
+      "en": "Dedication of Constantinople",
+      "zh": "君士坦丁堡落成"
+    },
+    "summary": {
+      "en": "On 11 May 330, Constantine the Great dedicated Constantinople as the new imperial capital on the Bosporus, the 'New Rome' that would anchor the Eastern Roman Empire for over a millennium.",
+      "zh": "330年5月11日，君士坦丁大帝在博斯普鲁斯海峡之滨为新都君士坦丁堡举行落成大典。这座“新罗马”此后千余年间始终是东罗马帝国的根基所在。"
+    },
+    "detail": {
+      "en": "After his victory over Licinius in 324, Constantine chose the ancient Greek town on the Bosporus as the site of a new imperial residence. The location was superb: a defensible peninsula commanding the straits between Europe and Asia, astride the trade routes linking the Black Sea to the Mediterranean and the military roads between the Danube and the Persian frontier.\n\nFor six years builders raised walls, fora, a hippodrome, a senate house, and an imperial palace, adorning the city with statuary gathered from across the Roman world. On 11 May 330 the city was formally dedicated with forty days of celebration, and Constantine endowed it with a senate and grain distributions modeled on those of Rome.\n\nThe founding of Constantinople shifted the empire's center of gravity decisively eastward. As the seat of emperors, the hub of administration, and eventually the greatest city of the medieval world, it defined the character of the Eastern Roman state until 1453.",
+      "zh": "324年击败李锡尼之后，君士坦丁选定博斯普鲁斯海峡边的古老希腊城镇作为新皇都的所在。此地形胜绝佳：半岛地势易守难攻，扼欧亚两洲之间的海峡咽喉，兼控黑海通往地中海的商路与多瑙河至波斯边境的军道。\n\n此后六年间，工匠们筑起城墙、广场、竞技场、元老院与皇宫，又从罗马世界各地征集雕像装点新城。330年5月11日，全城举行为期四十天的落成庆典；君士坦丁并仿照罗马旧制，为新都设立元老院与免费配粮制度。\n\n君士坦丁堡的奠立使帝国的重心决定性地东移。作为历代皇帝的驻跸之地与行政中枢，它日后成长为中世纪世界最宏伟的城市，直至1453年始终塑造着东罗马国家的面貌。"
+    }
+  },
+  {
+    "id": "basiliad-of-caesarea",
+    "year": 372,
+    "category": "civilization",
+    "lonlat": [35.49, 38.72],
+    "importance": 2,
+    "title": {
+      "en": "Basil Founds the Basiliad Hospital",
+      "zh": "巴西尔创建巴西利亚德医养院"
+    },
+    "summary": {
+      "en": "Basil of Caesarea built a vast charitable complex — hospital, hospice, poorhouse, and leprosarium — outside Caesarea in Cappadocia, a landmark in the history of organized medical care.",
+      "zh": "凯撒里亚的巴西尔在卡帕多细亚的凯撒里亚城郊兴建了一座包括医院、济贫院、旅舍与麻风病院的大型慈善建筑群，在有组织医疗救助的历史上具有里程碑意义。"
+    },
+    "detail": {
+      "en": "In the early 370s, Basil, bishop of Caesarea in Cappadocia, channeled church wealth and imperial favor into a sprawling philanthropic foundation at the city's edge. Contemporaries called it a 'new city': it combined a hospice for travelers, a poorhouse, workshops, staff residences, and — most remarkably — buildings for the systematic care of the sick, including lepers whom Basil was said to embrace personally.\n\nThe Basiliad marked a turning point in the history of medicine and social welfare. Greco-Roman antiquity had physicians and temple healing, but no permanent institutions dedicated to nursing the destitute sick. Basil's foundation fused Christian charity with organized medical attention, staffed by monks and professional doctors.\n\nThe model spread rapidly through the eastern provinces. Hospitals, orphanages, and old-age homes endowed by bishops, emperors, and private donors became a distinctive feature of Eastern Roman urban life, an institutional legacy that passed to both the Islamic world and medieval Europe.",
+      "zh": "370年代初，卡帕多细亚凯撒里亚主教巴西尔将教会财产与皇帝的恩赏投入城郊一处规模宏大的慈善设施。时人称之为“新城”：其中有接待旅人的客舍、济贫院、作坊与员工居所，尤为引人注目的是专门收治病患的建筑，甚至收容麻风病人——据说巴西尔曾亲自拥抱他们。\n\n巴西利亚德在医学与社会救济史上是一个转折点。希腊罗马古典世界虽有医师与神庙医疗，却从无常设机构专门照护贫病之人。巴西尔的创举将基督教慈善与有组织的医疗照护结合起来，由修士与职业医生共同执事。\n\n这一模式迅速传遍东部诸行省。由主教、皇帝与私人捐建的医院、孤儿院与养老院，成为东罗马城市生活的鲜明特色，其制度遗产后来兼被伊斯兰世界与中世纪欧洲继承。"
+    }
+  },
+  {
+    "id": "battle-of-adrianople",
+    "year": 378,
+    "category": "military",
+    "lonlat": [26.56, 41.68],
+    "importance": 1,
+    "title": {
+      "en": "Battle of Adrianople",
+      "zh": "阿德里安堡战役"
+    },
+    "summary": {
+      "en": "On 9 August 378, Gothic forces annihilated the eastern field army near Adrianople, killing Emperor Valens — one of the most catastrophic Roman defeats and a turning point in relations with the barbarian peoples.",
+      "zh": "378年8月9日，哥特人在阿德里安堡附近全歼东部野战军，皇帝瓦伦斯阵亡。这是罗马历史上最惨重的败绩之一，也是帝国与蛮族关系的转折点。"
+    },
+    "detail": {
+      "en": "In 376 the Goths, driven against the Danube by the Huns, were admitted into Thrace as refugees. Mistreated and starved by corrupt Roman officials, they rose in revolt and ravaged the Balkan provinces for two years. Emperor Valens marched from the Persian frontier to crush them, and on 9 August 378, without waiting for the western army of his nephew Gratian, attacked the Gothic wagon camp near Adrianople.\n\nThe battle was a disaster. The Gothic cavalry, returning from foraging, caught the Roman flanks; the infantry was compressed and cut down where it stood. Perhaps two-thirds of the eastern field army perished, along with Valens himself, whose body was never found.\n\nAdrianople shattered the aura of Roman invincibility and forced a new policy: in 382 Theodosius I settled the Goths within the empire as federate allies under their own leaders — a precedent whose consequences would unfold for a century.",
+      "zh": "376年，哥特人被匈人驱赶至多瑙河畔，以难民身份获准进入色雷斯。因罗马贪官的苛待与饥困，他们揭竿而起，两年间蹂躏巴尔干诸省。皇帝瓦伦斯自波斯边境回师平乱，378年8月9日，他未待其侄西部皇帝格拉提安的援军到达，便向阿德里安堡附近的哥特车营发起进攻。\n\n此役演成一场浩劫。外出劫掠的哥特骑兵及时回援，猛击罗马军侧翼；步兵阵形被压缩挤迫，就地被屠戮殆尽。东部野战军约三分之二覆没，瓦伦斯本人战死，尸骨无存。\n\n阿德里安堡之败击碎了罗马不可战胜的神话，迫使帝国改弦更张：382年狄奥多西一世准许哥特人以“同盟者”身份定居帝国境内，仍由其首领统辖——这一先例的后果将在此后百年间逐步显现。"
+    }
+  },
+  {
+    "id": "edict-of-thessalonica",
+    "year": 380,
+    "category": "religion",
+    "lonlat": [22.94, 40.64],
+    "importance": 1,
+    "title": {
+      "en": "Edict of Thessalonica",
+      "zh": "萨洛尼卡敕令"
+    },
+    "summary": {
+      "en": "In February 380, Theodosius I decreed that all Roman subjects should profess Nicene Christianity, making it in effect the state religion of the empire.",
+      "zh": "380年2月，狄奥多西一世颁布敕令，命全体罗马臣民皈依尼西亚信经的基督教，实际上确立了帝国的国教。"
+    },
+    "detail": {
+      "en": "Issued at Thessalonica on 27 February 380 in the names of Theodosius I, Gratian, and Valentinian II, the edict Cunctos populos commanded all peoples of the empire to follow the faith 'which the divine Apostle Peter transmitted to the Romans' — the Trinitarian creed of Nicaea as professed by the bishops of Rome and Alexandria. Those who dissented were branded heretics, denied the name of 'catholic' Christians, and threatened with imperial punishment.\n\nThe decree ended half a century of imperial vacillation between Nicene and Arian formulations and signaled the new emperor's determination to impose doctrinal unity. Subsequent legislation stripped heretics of churches and assembly rights and progressively restricted pagan sacrifice.\n\nThe Edict of Thessalonica bound church and state together in a partnership that defined the Eastern Roman world: orthodoxy became a matter of law, and the emperor its guardian — a fusion of imperial authority and Christian confession that endured for the rest of the empire's history.",
+      "zh": "380年2月27日，敕令《致众民》以狄奥多西一世、格拉提安与瓦伦提尼安二世三帝的名义在萨洛尼卡颁布，命帝国全体臣民奉行“圣使徒彼得传于罗马人”的信仰，即罗马与亚历山大里亚主教所持守的尼西亚三位一体信经。持异议者被斥为异端，不得称“公教”基督徒，并将受皇权惩处。\n\n这道敕令终结了帝国在尼西亚派与阿里乌派之间摇摆半个世纪的局面，昭示新君决意强推教义统一。此后的立法陆续剥夺异端的教堂与集会权利，并逐步禁绝异教献祭。\n\n萨洛尼卡敕令将教会与国家结为一体，塑造了东罗马世界的基本格局：正统信仰从此成为法律问题，皇帝则是它的守护者。这种皇权与基督教信仰的结合，贯穿了帝国此后的全部历史。"
+    }
+  },
+  {
+    "id": "first-council-of-constantinople",
+    "year": 381,
+    "category": "religion",
+    "lonlat": [28.97, 41.005],
+    "importance": 2,
+    "title": {
+      "en": "First Council of Constantinople",
+      "zh": "第一次君士坦丁堡大公会议"
+    },
+    "summary": {
+      "en": "The second ecumenical council, convened by Theodosius I in 381, reaffirmed and expanded the Nicene Creed and ranked the see of Constantinople second only to Rome.",
+      "zh": "381年，狄奥多西一世召集第二次大公会议，重申并扩充尼西亚信经，并规定君士坦丁堡主教座的地位仅次于罗马。"
+    },
+    "detail": {
+      "en": "In May 381 some 150 eastern bishops gathered in Constantinople at the summons of Theodosius I to settle the theological strife that had divided the church since Nicaea. The council condemned Arianism and the 'Pneumatomachians' who denied the divinity of the Holy Spirit, and produced the expanded creed — the Niceno-Constantinopolitan Creed — still recited in Christian liturgies today, with its fuller confession of the Spirit 'the Lord, the giver of life.'\n\nEqually consequential was the council's third canon: because Constantinople was the New Rome, its bishop should hold precedence of honor second only to the bishop of Rome. The ruling elevated a see barely fifty years old above the ancient patriarchates of Alexandria and Antioch, provoking lasting resentment.\n\nThe council cemented the alliance between the Theodosian dynasty and Nicene orthodoxy, and established Constantinople as the ecclesiastical as well as political capital of the Roman East.",
+      "zh": "381年5月，约一百五十位东部主教应狄奥多西一世之召会聚君士坦丁堡，以平息自尼西亚会议以来撕裂教会的神学纷争。会议谴责了阿里乌派以及否认圣灵神性的“反圣灵派”，并订立扩充后的信经——《尼西亚—君士坦丁堡信经》，其中更完整地宣认圣灵为“主，赋予生命者”。这一信经至今仍在基督教礼仪中诵念。\n\n影响同样深远的是会议第三条法规：君士坦丁堡既为新罗马，其主教的荣誉地位应仅次于罗马主教。这项裁决使一个建立不过五十年的主教座凌驾于亚历山大里亚与安条克两大古老宗主教座之上，埋下经久不息的怨望。\n\n此次会议巩固了狄奥多西王朝与尼西亚正统的联盟，并确立君士坦丁堡不仅是罗马东部的政治首都，也是教会的中枢。"
+    }
+  },
+  {
+    "id": "division-of-the-empire",
+    "year": 395,
+    "category": "politics",
+    "lonlat": [9.19, 45.46],
+    "importance": 1,
+    "title": {
+      "en": "Death of Theodosius and Division of the Empire",
+      "zh": "狄奥多西驾崩与帝国分治"
+    },
+    "summary": {
+      "en": "On the death of Theodosius I at Milan in January 395, the empire was divided between his sons Arcadius in the East and Honorius in the West — a partition that proved permanent.",
+      "zh": "395年1月，狄奥多西一世在米兰驾崩，帝国由其二子分治：阿卡狄乌斯领东部，霍诺留领西部。这次分治从此再未逆转。"
+    },
+    "detail": {
+      "en": "Theodosius I, the last emperor to rule the whole Roman world alone, died at Milan on 17 January 395, months after crushing the western usurper Eugenius at the river Frigidus. His elder son Arcadius, aged about seventeen, already reigned in Constantinople; the younger, Honorius, aged ten, was installed in the West under the guardianship of the general Stilicho.\n\nDividing the empire between colleagues was old practice, and contemporaries saw nothing final in the arrangement. Yet the two courts, dominated by rival ministers, drifted into estrangement and at times open hostility, quarreling over Illyricum and over Gothic federates who exploited the divide.\n\nIn hindsight, 395 marks the parting of the ways. The eastern half — richer, more urbanized, shielded by Constantinople's defenses — weathered the storms of the fifth century, while the West slid toward fragmentation. The Eastern Roman Empire begins its separate history here.",
+      "zh": "狄奥多西一世是最后一位独自统治整个罗马世界的皇帝。395年1月17日，他在弗里吉杜斯河之战击灭西部僭主欧根尼乌斯数月之后，于米兰驾崩。长子阿卡狄乌斯时年约十七，已在君士坦丁堡称帝；幼子霍诺留年方十岁，在大将斯提里科的监护下统领西部。\n\n由数帝分治帝国本是旧例，时人并不认为此番安排有何决定意义。然而两个朝廷各为权臣把持，渐行渐远，时或公开敌对，围绕伊利里库姆的归属与利用东西裂隙渔利的哥特同盟者争执不休。\n\n后世回望，395年正是东西分途之始。东部富庶、城市繁盛，又有君士坦丁堡的天险屏障，得以安然渡过五世纪的风暴；西部则步步走向瓦解。东罗马帝国独立的历史，由此发端。"
+    }
+  },
+  {
+    "id": "theodosian-walls",
+    "year": 413,
+    "category": "military",
+    "lonlat": [28.92, 41.02],
+    "importance": 2,
+    "title": {
+      "en": "Completion of the Theodosian Walls",
+      "zh": "狄奥多西城墙建成"
+    },
+    "summary": {
+      "en": "Under Theodosius II, Constantinople received a massive new land wall in 413, later expanded into a triple line of defense that made the capital virtually impregnable for a thousand years.",
+      "zh": "413年，狄奥多西二世在位期间，君士坦丁堡筑成雄伟的新陆墙，其后又扩建为三重防线，使都城此后千年近乎坚不可摧。"
+    },
+    "detail": {
+      "en": "As Constantinople outgrew Constantine's original circuit and the Hunnic menace loomed over the Balkans, the praetorian prefect Anthemius, regent for the child emperor Theodosius II, directed the construction of a new land wall roughly two kilometers west of the old one. Completed in 413, the main wall ran some 5.7 kilometers from the Sea of Marmara to the Golden Horn, studded with ninety-six towers.\n\nAfter earthquakes toppled long stretches in 447 — with Attila's Huns nearby — the circus factions rebuilt the fortifications in a matter of weeks, adding an outer wall and a moat. The result was a triple barrier of ditch, outer wall, and inner wall rising over twelve meters, the most formidable urban fortification of the ancient and medieval worlds.\n\nThe Theodosian Walls repelled Huns, Avars, Persians, Arabs, Bulgars, and Rus'. Until gunpowder artillery breached them in 1453, they were the strategic bedrock of the empire's survival.",
+      "zh": "随着君士坦丁堡的规模超出君士坦丁旧城圈，匈人的威胁又笼罩巴尔干，辅佐幼帝狄奥多西二世的大区长官安特米乌斯主持修筑新陆墙，位置在旧墙以西约两公里处。工程于413年告竣：主墙自马尔马拉海延伸至金角湾，长约五点七公里，缀有九十六座塔楼。\n\n447年地震震塌大段城墙，其时阿提拉的匈人大军近在咫尺，赛车党社竟在数周之内重建了防御工事，并增筑外墙、开凿壕沟。由此形成壕沟、外墙、内墙的三重屏障，内墙高逾十二米，堪称古代与中世纪世界最坚固的城防。\n\n狄奥多西城墙先后击退匈人、阿瓦尔人、波斯人、阿拉伯人、保加尔人与罗斯人的进攻。直到1453年火炮将其轰开之前，它始终是帝国得以存续的战略基石。"
+    }
+  },
+  {
+    "id": "university-of-constantinople",
+    "year": 425,
+    "category": "culture",
+    "lonlat": [28.975, 41.008],
+    "importance": 2,
+    "title": {
+      "en": "Foundation of the University of Constantinople",
+      "zh": "君士坦丁堡大学创立"
+    },
+    "summary": {
+      "en": "In 425 Theodosius II established a state school of higher learning in the capital with thirty-one endowed chairs in Greek and Latin grammar, rhetoric, philosophy, and law.",
+      "zh": "425年，狄奥多西二世在都城设立国立高等学府，置希腊语、拉丁语文法、修辞、哲学与法学教席共三十一席。"
+    },
+    "detail": {
+      "en": "By a law of 27 February 425, Theodosius II — reputedly encouraged by his cultivated empress Eudocia — reorganized higher education in Constantinople into a publicly endowed institution, the Pandidakterion, housed at the Capitol. It comprised thirty-one salaried chairs: sixteen for Greek and fifteen for Latin studies, covering grammar and rhetoric, together with chairs of philosophy and of law. Professors received state salaries and privileges but were forbidden to teach privately; unauthorized rivals were banned from public lecture halls.\n\nThe foundation reflected the state's need for trained administrators, lawyers, and orators, and the growing prestige of Greek letters alongside the Latin of law and government. It also asserted imperial oversight of an intellectual life previously dominated by itinerant sophists.\n\nThough its continuity waxed and waned, the school made Constantinople a lasting center of secular learning, where classical literature, philosophy, and jurisprudence were copied, taught, and preserved through centuries when much of the ancient heritage vanished in the West.",
+      "zh": "425年2月27日，狄奥多西二世颁布法令——据说出于博学的皇后欧多基娅的劝勉——将君士坦丁堡的高等教育改组为国家资助的学府“泛学园”，设于卡皮托利乌姆。学府置带俸教席三十一席：希腊学十六席、拉丁学十五席，涵盖文法与修辞，另设哲学与法学教席。教授领受国家俸禄与特权，但不得私自授徒；未经许可者禁止在公共讲堂开课。\n\n这一创举既反映了国家对训练有素的官吏、法律家与演说家的需求，也体现了希腊学术在法律与政务所用拉丁语之外声望日隆。它同时确立了皇权对学术生活的监督，而此前这一领域向为游方智者所把持。\n\n此后学府虽有兴废，但它使君士坦丁堡长久地成为世俗学术的中心。古典文学、哲学与法学在此传抄讲授，绵延不绝——而同一时期，古代遗产在西方已大量湮灭。"
+    }
+  },
+  {
+    "id": "theodosian-code",
+    "year": 438,
+    "category": "law",
+    "lonlat": [28.98, 41.005],
+    "importance": 2,
+    "title": {
+      "en": "Publication of the Theodosian Code",
+      "zh": "《狄奥多西法典》颁行"
+    },
+    "summary": {
+      "en": "In 438 Theodosius II promulgated the first official collection of imperial laws since Constantine, systematizing more than a century of legislation for both halves of the empire.",
+      "zh": "438年，狄奥多西二世颁布自君士坦丁以来第一部官方敕令汇编，将百余年的立法加以系统整理，通行于帝国东西两部。"
+    },
+    "detail": {
+      "en": "Roman law by the fifth century was a thicket: imperial constitutions scattered across archives, private collections of uneven authority, and jurists' writings of uncertain weight. In 429 Theodosius II appointed a commission to gather every general law issued since Constantine; after a reorganization in 435, the completed code in sixteen books was promulgated in 438 and given force in both East and West, formally received by the Roman senate.\n\nThe Code arranged over 2,500 edited constitutions by subject, from administration and taxation to marriage, heresy, and the status of Jews and pagans. It is both a legal monument and an unrivaled window into late Roman government and society.\n\nThe Theodosian Code shaped everything that followed: it was the foundation on which Justinian's compilers built a century later, and through the Breviary of Alaric it transmitted Roman law to the barbarian kingdoms of the West, becoming a common legal inheritance of medieval Europe.",
+      "zh": "至五世纪，罗马法已如榛莽：历代敕令散见于各处档案，私人汇编权威不一，法学家著述效力难明。429年，狄奥多西二世任命委员会，收集君士坦丁以来颁布的一切一般性法律；435年重组班子后，十六卷本法典于438年颁行，同时施行于东西两部，并由罗马元老院隆重接受。\n\n法典按主题编排经过整理的敕令二千五百余条，内容自行政、赋税以至婚姻、异端及犹太人与异教徒的地位，无所不包。它既是法律丰碑，也是了解晚期罗马政府与社会无可替代的窗口。\n\n《狄奥多西法典》深刻影响了此后的一切：一个世纪后查士丁尼的编纂者即以之为基础；它又经由《阿拉里克摘要》将罗马法传入西方蛮族诸王国，成为中世纪欧洲共同的法律遗产。"
+    }
+  },
+  {
+    "id": "council-of-chalcedon",
+    "year": 451,
+    "category": "religion",
+    "lonlat": [29.03, 40.99],
+    "importance": 1,
+    "title": {
+      "en": "Council of Chalcedon",
+      "zh": "卡尔西顿大公会议"
+    },
+    "summary": {
+      "en": "The fourth ecumenical council defined Christ as one person in two natures, divine and human — a formula that split eastern Christianity and shaped imperial politics for centuries.",
+      "zh": "第四次大公会议界定基督为一个位格兼具神人二性。这一定义使东方基督教世界陷于分裂，并在此后数百年间左右帝国政治。"
+    },
+    "detail": {
+      "en": "In October 451, at the summons of Emperor Marcian and Empress Pulcheria, over five hundred bishops assembled at Chalcedon, across the strait from Constantinople — the largest church council antiquity had seen. Reversing the 'Robber Council' of Ephesus of 449, it deposed Dioscorus of Alexandria and, drawing on Pope Leo's Tome, defined that Christ is one person acknowledged 'in two natures, without confusion, without change, without division, without separation.'\n\nIntended as a settlement, the definition instead ignited a schism. Large parts of Egypt, Syria, and Armenia rejected Chalcedon as a betrayal of Cyril of Alexandria's teaching, giving rise to the miaphysite churches that endure to this day. The council's canon 28, granting Constantinople patriarchal privileges equal to Rome's, further strained relations with the papacy.\n\nFor the next two centuries, emperors alternated between enforcing Chalcedon and courting its opponents — a religious fracture that weakened imperial cohesion in the very provinces later lost to the Arab conquests.",
+      "zh": "451年10月，应皇帝马尔西安与皇后普尔喀丽娅之召，五百余位主教会聚于君士坦丁堡对岸的卡尔西顿，规模为古代教会会议之最。会议推翻449年以弗所“强盗会议”的决议，废黜亚历山大里亚的迪奥斯科鲁斯，并依据教宗利奥的《大卷》，定义基督为一个位格，“具有二性，不相混淆、不相改变、不可分割、不可离散”。\n\n本欲息争的定义反而点燃了分裂。埃及、叙利亚与亚美尼亚大片地区斥卡尔西顿背弃了亚历山大里亚的西里尔的教导，由此形成延续至今的“一性论”诸教会。会议第二十八条法规赋予君士坦丁堡与罗马同等的宗主教特权，更使其与教廷关系雪上加霜。\n\n此后两百年，历代皇帝在强制推行卡尔西顿信条与安抚其反对者之间反复摇摆。这道宗教裂痕削弱了帝国的凝聚力，而裂痕所在的诸行省，恰是日后阿拉伯征服中最先失去的土地。"
+    }
+  },
+  {
+    "id": "deposition-of-romulus-augustulus",
+    "year": 476,
+    "category": "politics",
+    "lonlat": [12.20, 44.42],
+    "importance": 1,
+    "title": {
+      "en": "Fall of the Western Empire",
+      "zh": "西罗马帝国覆亡"
+    },
+    "summary": {
+      "en": "In 476 the general Odoacer deposed the boy emperor Romulus Augustulus at Ravenna and sent the imperial regalia to Constantinople, leaving the eastern emperor sole heir of Rome.",
+      "zh": "476年，将领奥多亚克在拉文纳废黜幼帝罗慕路斯·奥古斯图卢斯，并将皇帝御物送往君士坦丁堡。东部皇帝自此成为罗马的唯一继承者。"
+    },
+    "detail": {
+      "en": "By the 470s the western imperial office had become a plaything of barbarian generalissimos. When the patrician Orestes refused his Germanic soldiers land in Italy, they proclaimed the officer Odoacer their king. On 4 September 476 Odoacer took Ravenna, executed Orestes, and deposed Orestes' young son, the usurper-emperor Romulus, pensioning the boy off to a Campanian villa.\n\nOdoacer then made a gesture heavy with meaning: he had the Roman senate dispatch the western imperial insignia to Emperor Zeno in Constantinople, declaring that one emperor sufficed for the world and asking only to govern Italy as Zeno's patrician. Zeno temporized, but the western line of emperors was extinct.\n\nContemporaries hardly registered a cataclysm, yet 476 became the emblem of an epochal shift. The Roman Empire now survived solely in the East, and its rulers in Constantinople never renounced the claim — pursued in earnest under Justinian — to the lost provinces of the West.",
+      "zh": "至470年代，西部帝位已沦为蛮族大将手中的玩物。贵族奥雷斯特斯拒绝将意大利土地分给麾下日耳曼士兵，士兵遂拥立军官奥多亚克为王。476年9月4日，奥多亚克攻取拉文纳，处死奥雷斯特斯，废黜其幼子、僭立的皇帝罗慕路斯，将这个孩子送往坎帕尼亚的庄园荣养。\n\n奥多亚克随即做出一个意味深长的姿态：他让罗马元老院将西部皇帝御物呈送君士坦丁堡的皇帝芝诺，声称天下有一位皇帝已足，自己只求以芝诺的贵族身份治理意大利。芝诺虚与委蛇，但西部帝统已然断绝。\n\n时人几乎未觉天崩地裂，476年却成为划时代巨变的象征。罗马帝国自此仅存于东方，而君士坦丁堡的君主们从未放弃对西部故土的主张——到查士丁尼时代，这一主张终于付诸大规模的行动。"
+    }
+  },
+  {
+    "id": "anastasius-coinage-reform",
+    "year": 498,
+    "category": "economy",
+    "lonlat": [28.985, 41.012],
+    "importance": 2,
+    "title": {
+      "en": "Anastasius' Coinage and Fiscal Reforms",
+      "zh": "阿纳斯塔修斯币制与财政改革"
+    },
+    "summary": {
+      "en": "In 498 Anastasius I introduced the large marked-value copper follis and overhauled taxation, stabilizing everyday commerce and leaving the treasury with an immense surplus.",
+      "zh": "498年，阿纳斯塔修斯一世发行标明面值的大型铜币福利斯，并整顿税制，稳定了日常商贸，国库为之充盈。"
+    },
+    "detail": {
+      "en": "The gold solidus had been sound since Constantine, but small change was chaos: tiny, wretched copper nummi that traded by weight and guesswork, strangling petty commerce. In 498 Anastasius I, a former treasury official, issued a reformed copper coinage — the follis of forty nummi with clearly marked denominations of 40, 20, 10, and 5 — restoring public confidence in the money used for bread, wages, and market stalls.\n\nHis fiscal measures cut deeper. He abolished the hated chrysargyron, the tax on urban trades and crafts, to public jubilation; converted most land taxes from kind to gold; and tightened collection through state-appointed officials, curbing the abuses of city councils.\n\nFrugal and exacting, Anastasius left at his death in 518 a reserve reported at 320,000 pounds of gold. That hoard financed the wars, buildings, and law books of Justin and Justinian: the splendors of the sixth century rested on Anastasian bookkeeping.",
+      "zh": "金币索利都斯自君士坦丁以来币值坚挺，小额通货却一片混乱：铜币努姆斯细小粗劣，交易全凭称重与估算，严重窒碍民间贸易。498年，出身财政官员的阿纳斯塔修斯一世发行改革后的铜币——值四十努姆斯的福利斯，并明确标出四十、二十、十、五的面值——使民众对购买面包、支付工钱、市集交易所用的货币重拾信心。\n\n他的财政举措更为深远：废除人人痛恨的城市工商税“金银税”，万民称庆；将大部分田赋由实物折为黄金征收；又以国家委派的官员严格征管，遏制城市议事会的积弊。\n\n阿纳斯塔修斯节俭而精明，518年去世时留下据称三十二万磅黄金的储备。这笔巨财支撑了查士丁与查士丁尼两朝的战争、营造与法典编纂：六世纪的辉煌，正建立在阿纳斯塔修斯的精打细算之上。"
+    }
+  },
+  {
+    "id": "closure-of-athenian-academy",
+    "year": 529,
+    "category": "culture",
+    "lonlat": [23.73, 37.98],
+    "importance": 2,
+    "title": {
+      "en": "Closure of the Athenian Academy",
+      "zh": "雅典学园关闭"
+    },
+    "summary": {
+      "en": "In 529 Justinian barred pagans from teaching, ending the Neoplatonic school of Athens — an event long taken to symbolize the close of classical antiquity.",
+      "zh": "529年，查士丁尼禁止异教徒授学，雅典的新柏拉图学派就此终结。此事历来被视为古典时代落幕的象征。"
+    },
+    "detail": {
+      "en": "The Neoplatonic school of Athens, heir to nine centuries of philosophical tradition reaching back to Plato, remained under Proclus and his successors a bastion of learned paganism. In 529 Justinian issued legislation forbidding pagans to hold teaching posts, and confiscatory measures struck the school's endowments. The Athenian academy, then led by Damascius, ceased instruction.\n\nAround 531 Damascius and six colleagues, including the great Aristotelian commentator Simplicius, sought refuge at the court of the Persian king Khosrow I. Disillusioned, they returned under a clause of the Roman-Persian treaty of 532 guaranteeing them freedom from persecution, and Simplicius went on writing commentaries that preserved swaths of earlier Greek thought.\n\nPhilosophy did not die — it continued at Alexandria in Christian hands — but the closure marked the end of institutional pagan learning. The symbolic coincidence is striking: in the same year, 529, Benedict founded Monte Cassino and Justinian issued his Code. One order of knowledge yielded to another.",
+      "zh": "雅典的新柏拉图学派上承柏拉图以来九百年的哲学传统，在普罗克洛斯及其后继者的主持下，始终是异教学术的堡垒。529年，查士丁尼立法禁止异教徒执掌教职，学园产业亦遭籍没。时任掌门达马斯基乌斯治下的雅典学园遂停止讲学。\n\n约531年，达马斯基乌斯与包括亚里士多德注疏大家辛普利基乌斯在内的六位同道，投奔波斯王库思老一世的宫廷。他们旋即失望而归——532年罗马与波斯和约中的专款保障他们免遭迫害。辛普利基乌斯此后仍笔耕不辍，其注疏保存了大量早期希腊思想。\n\n哲学并未就此消亡——它在亚历山大里亚由基督徒学者续其薪火——但学园之闭标志着建制化异教学术的终结。象征性的巧合耐人寻味：同在529年，本笃创建了卡西诺山修道院，查士丁尼颁布了他的法典。一种知识秩序让位于另一种。"
+    }
+  },
+  {
+    "id": "corpus-juris-civilis",
+    "year": 529,
+    "endYear": 534,
+    "category": "law",
+    "lonlat": [28.977, 41.006],
+    "importance": 1,
+    "title": {
+      "en": "Corpus Juris Civilis",
+      "zh": "《民法大全》编成"
+    },
+    "summary": {
+      "en": "Between 529 and 534, Justinian's commission under Tribonian distilled a millennium of Roman law into the Code, Digest, and Institutes — the most influential law books ever written.",
+      "zh": "529至534年间，查士丁尼委任特里波尼安主持，将千年罗马法凝炼为《法典》《学说汇纂》与《法学阶梯》，成为历史上影响最深远的法律典籍。"
+    },
+    "detail": {
+      "en": "Within months of his accession, Justinian ordered a new codification of imperial law. The first Code appeared in 529; then came the astonishing feat: a commission led by the jurist Tribonian read through some three million lines of classical juristic writing and compressed them into the fifty books of the Digest, completed in 533 — the same year the Institutes, an official textbook for first-year law students, was published. A revised Code followed in 534, and Justinian's later laws, the Novels, were issued mostly in Greek.\n\nThe compilation gave the empire a single, authoritative, internally consistent body of law and remade legal education at Constantinople and Berytus. All other sources were superseded; commentary on the Digest was forbidden.\n\nThe Corpus Juris Civilis is arguably the most consequential secular book of the era 330-609. Rediscovered in the medieval West, it became the foundation of the civil-law tradition that today governs most of the world's legal systems.",
+      "zh": "即位数月，查士丁尼便下令重新编纂帝国法律。第一部《法典》于529年问世；随后是令人惊叹的壮举：法学家特里波尼安领衔的委员会通读古典法学著作约三百万行，将其压缩为五十卷《学说汇纂》，于533年完成；同年又颁布《法学阶梯》，作为法科新生的官方教科书。534年修订版《法典》继出；查士丁尼此后的立法称《新律》，多以希腊语颁布。\n\n这套编纂使帝国拥有了统一、权威、内在自洽的法律体系，并彻底改造了君士坦丁堡与贝里图斯的法学教育。其他一切法源皆遭废止，且禁止对《学说汇纂》另作注解。\n\n《民法大全》堪称330至609年间影响最深远的世俗典籍。中世纪西欧重新发现它之后，它成为大陆法传统的基石——今日世界多数法律体系仍导源于此。"
+    }
+  },
+  {
+    "id": "nika-riots",
+    "year": 532,
+    "category": "politics",
+    "lonlat": [28.976, 41.006],
+    "importance": 1,
+    "title": {
+      "en": "Nika Riots",
+      "zh": "尼卡暴动"
+    },
+    "summary": {
+      "en": "In January 532 the circus factions of Constantinople united in a week-long insurrection that burned half the city and nearly toppled Justinian, ending in a massacre in the Hippodrome.",
+      "zh": "532年1月，君士坦丁堡的赛车党社联合发动持续一周的暴动，焚毁半座都城，几乎推翻查士丁尼，最终以竞技场大屠杀收场。"
+    },
+    "detail": {
+      "en": "The Blues and Greens, rival circus factions, were normally at each other's throats. In January 532, enraged by botched executions and by the fiscal rigor of Justinian's ministers John the Cappadocian and Tribonian, they united under the watchword 'Nika!' — 'Conquer!' For days mobs ruled the streets, torching the praetorium, the Chalke gate, the church of Hagia Sophia, and swaths of the city center, and proclaimed the reluctant senator Hypatius, nephew of Anastasius, as emperor.\n\nJustinian, by one famous account, prepared to flee until Empress Theodora declared she would rather die in the purple — 'kingship is a fine burial shroud.' Steeled, the emperor acted: the eunuch Narses split the factions with gold, while Belisarius and Mundus led troops into the Hippodrome, where perhaps thirty thousand rioters were cut down. Hypatius was executed.\n\nThe riots left Justinian unchallengeable — and the smoking ruins gave him a cleared stage on which to build, above all a new Hagia Sophia.",
+      "zh": "蓝党与绿党这两大赛车党社平素势同水火。532年1月，因行刑失当激起众怒，加之对查士丁尼的重臣“卡帕多细亚人”约翰与特里波尼安苛政的积怨，两党竟以“尼卡！”（意为“得胜！”）为号联合起事。乱民连日横行街衢，焚毁禁卫官署、查尔克大门、圣索菲亚教堂及市中心大片区域，并拥立阿纳斯塔修斯之侄、身不由己的元老许帕提乌斯为帝。\n\n据著名的记载，查士丁尼一度准备出逃，皇后狄奥多拉却宣称宁愿身着紫袍而死——“帝位是最好的裹尸布”。皇帝由是定志：宦官纳尔塞斯以重金分化两党，贝利撒留与蒙都斯则率军突入竞技场，屠戮乱民约三万人。许帕提乌斯被处死。\n\n暴动过后，查士丁尼的权位再无人能撼动——而余烬未熄的废墟，恰为他的营造大业腾出了舞台，其中最伟大者，便是新的圣索菲亚大教堂。"
+    }
+  },
+  {
+    "id": "reconquest-of-africa",
+    "year": 533,
+    "endYear": 534,
+    "category": "military",
+    "lonlat": [10.32, 36.85],
+    "importance": 2,
+    "title": {
+      "en": "Reconquest of Africa",
+      "zh": "收复阿非利加"
+    },
+    "summary": {
+      "en": "In 533-534 Belisarius destroyed the Vandal kingdom in two swift battles, restoring the rich province of Africa to Roman rule after a century of separation.",
+      "zh": "533至534年，贝利撒留两战而灭汪达尔王国，使富庶的阿非利加行省在分离百年之后重归罗马治下。"
+    },
+    "detail": {
+      "en": "In June 533 Belisarius sailed from Constantinople with about fifteen thousand men to attack the Vandal kingdom, which had held Africa since 439 and had sacked Rome in 455. Landing unopposed south of Carthage, he shattered King Gelimer's army at Ad Decimum on 13 September and entered Carthage the next day, dining on the feast prepared for the Vandal king. In December, at Tricamarum, the Vandal army was broken beyond recovery; Gelimer surrendered in the spring and walked in Belisarius' triumph at Constantinople — the first celebrated there by a subject general.\n\nThe speed of the victory stunned contemporaries and vindicated Justinian's western ambitions against the caution of his advisers. Africa's grain, olive oil, and tax revenue returned to the imperial ledger, and a new praetorian prefecture was organized at Carthage.\n\nDecades of Moorish wars and military mutinies followed, but Africa remained Roman until the Arab conquests — the most durable of Justinian's reconquests.",
+      "zh": "533年6月，贝利撒留率约一万五千人自君士坦丁堡扬帆出征，讨伐自439年据有阿非利加、并曾于455年洗劫罗马城的汪达尔王国。大军在迦太基以南顺利登陆，9月13日于阿德·德基穆姆大破国王盖利默的军队，翌日进入迦太基，享用了为汪达尔王备下的御宴。12月特里卡马鲁姆一役，汪达尔军队一败涂地；盖利默于次年春天投降，并在君士坦丁堡贝利撒留的凯旋式中随行示众——这是首次由臣属将领在都城举行的凯旋式。\n\n胜利之神速令时人震惊，也证明查士丁尼力排众议、经略西方的雄图并非妄想。阿非利加的谷物、橄榄油与赋税重新载入帝国账册，迦太基亦新设大区长官府。\n\n此后数十年虽有摩尔战事与军队哗变相扰，阿非利加仍归罗马所有，直至阿拉伯人的征服——这是查士丁尼诸次收复中最持久的一处。"
+    }
+  },
+  {
+    "id": "gothic-war-italy",
+    "year": 535,
+    "endYear": 554,
+    "category": "military",
+    "lonlat": [12.48, 41.89],
+    "importance": 2,
+    "title": {
+      "en": "Gothic War: Reconquest of Italy",
+      "zh": "哥特战争：收复意大利"
+    },
+    "summary": {
+      "en": "From 535 to 554 imperial armies under Belisarius and Narses wrested Italy from the Ostrogoths in a grinding war that restored Rome to the empire but left the peninsula devastated.",
+      "zh": "535至554年，贝利撒留与纳尔塞斯先后统军，经旷日持久的鏖战从东哥特人手中夺回意大利。罗马故土重归帝国，半岛却已残破不堪。"
+    },
+    "detail": {
+      "en": "Emboldened by the African triumph, Justinian moved against Ostrogothic Italy in 535. Belisarius took Sicily, then Naples, and entered Rome in December 536; through 537-538 he held the city against a great Gothic siege in which the aqueducts were cut, never fully to flow again. Ravenna fell by stratagem in 540, and the war seemed won.\n\nIt was not. Under the able king Totila the Goths rebounded, retaking most of the peninsula while imperial resources were drained by plague and the Persian war. Rome changed hands repeatedly — at one point in 546 it stood briefly almost empty. Only in 552 did the eunuch general Narses, leading a fresh army, destroy Totila at Busta Gallorum and crush the last Gothic king, Teia, at Mons Lactarius; the final strongholds yielded by 554.\n\nJustinian's Pragmatic Sanction reorganized Italy, but twenty years of war, famine, and plague had ruined the land Rome had ruled for eight centuries, leaving it easy prey for the Lombards in 568.",
+      "zh": "阿非利加大捷使查士丁尼信心倍增，535年即对东哥特人治下的意大利用兵。贝利撒留先取西西里，再克那不勒斯，536年12月进入罗马城；537至538年间，他坚守罗马，挫败哥特大军的围攻——围城期间输水道被切断，此后再未完全恢复。540年拉文纳以计谋而下，战争似已告捷。\n\n然而战事远未终结。哥特人在英主托提拉率领下卷土重来，趁帝国因瘟疫与波斯战争而力竭之机夺回半岛大部。罗马城几度易手——546年城中一度几成空城。直至552年，宦官出身的统帅纳尔塞斯率生力军在布斯塔·加洛鲁姆之战击杀托提拉，又于拉克塔里乌斯山歼灭末代哥特王泰亚；至554年，最后的据点相继归降。\n\n查士丁尼颁布《国事诏书》重整意大利，但二十年的战乱、饥馑与瘟疫已使这片罗马经营八百年的土地满目疮痍，568年伦巴第人入侵时，半岛几无招架之力。"
+    }
+  },
+  {
+    "id": "hagia-sophia",
+    "year": 537,
+    "category": "art",
+    "lonlat": [28.980, 41.008],
+    "importance": 1,
+    "title": {
+      "en": "Consecration of Hagia Sophia",
+      "zh": "圣索菲亚大教堂落成"
+    },
+    "summary": {
+      "en": "On 27 December 537 Justinian consecrated the new Hagia Sophia, whose vast floating dome made it the supreme achievement of Eastern Roman architecture and the largest church in the world for nearly a millennium.",
+      "zh": "537年12月27日，查士丁尼为新圣索菲亚大教堂举行祝圣礼。其恢宏欲飞的穹顶使之成为东罗马建筑的巅峰之作，此后近千年间始终是世界上最大的教堂。"
+    },
+    "detail": {
+      "en": "After the Nika riots burned the old basilica in 532, Justinian resolved to build on a scale never attempted. He entrusted the work not to master builders but to two scientists — Anthemius of Tralles, a mathematician, and Isidore of Miletus, a geometer — who designed a dome over thirty meters across, carried on pendentives above a square bay and buttressed by half-domes, so that the canopy seemed, in Procopius' words, suspended from heaven by a golden chain.\n\nTen thousand workers finished the church in under six years. Its interior glowed with polychrome marbles from across the empire, gold mosaic, and light pouring through the ring of windows at the dome's base. At the consecration Justinian is said to have exclaimed, 'Solomon, I have outdone you.'\n\nThe first dome fell after earthquakes in 558 and was rebuilt higher by 562. Hagia Sophia became the liturgical heart of the empire, the model for centuries of church building, and the most eloquent monument the Eastern Roman world ever raised.",
+      "zh": "532年尼卡暴动焚毁旧堂之后，查士丁尼决意以前所未有的规模重建。他将工程托付的不是营造匠师，而是两位科学家——数学家特拉勒斯的安特米乌斯与几何学家米利都的伊西多尔。二人设计出直径逾三十米的穹顶，以帆拱承接于方形空间之上，四周辅以半穹顶——用普罗科皮乌斯的话说，这穹盖仿佛以金链悬于天际。\n\n上万工匠不到六年便建成大教堂。堂内彩色大理石采自帝国各地，金色马赛克熠熠生辉，光线自穹顶基部一圈窗洞倾泻而下。祝圣之日，据说查士丁尼慨然长叹：“所罗门，我胜过你了！”\n\n558年地震致初代穹顶坍塌，562年重建并增高。圣索菲亚从此成为帝国礼仪生活的中心、此后数百年教堂建筑的典范，也是东罗马世界留给后世最动人的丰碑。"
+    }
+  },
+  {
+    "id": "plague-of-justinian",
+    "year": 541,
+    "endYear": 544,
+    "category": "civilization",
+    "lonlat": [28.99, 41.015],
+    "importance": 1,
+    "title": {
+      "en": "Plague of Justinian",
+      "zh": "查士丁尼大瘟疫"
+    },
+    "summary": {
+      "en": "Arriving from Egypt in 541, the first great pandemic of bubonic plague swept the Mediterranean, killing perhaps a quarter of the population and sapping the empire's manpower and revenues for generations.",
+      "zh": "541年，鼠疫自埃及传入，史上第一次腺鼠疫大流行席卷地中海世界，或夺去四分之一人口的生命，帝国的人力与财赋因之数代不振。"
+    },
+    "detail": {
+      "en": "In 541 a terrifying disease appeared at Pelusium in Egypt and spread along the grain routes, reaching Constantinople in the spring of 542. Procopius, an eyewitness, describes buboes in the groin and armpits, delirium, and death within days; at the height of the mortality he reports thousands dying daily in the capital, corpses filling the towers of the sea walls, ships drifting crewless. Modern genetics has confirmed the pathogen as Yersinia pestis, the same bacterium as the Black Death.\n\nJustinian himself sickened and barely survived. The fiscal and military consequences were immediate: tax revenues collapsed even as the state, desperate for soldiers and laborers, faced soaring wages that Justinian vainly tried to freeze by law.\n\nThe plague returned in waves for two centuries, perhaps killing a quarter or more of the Mediterranean's people. Historians debate its precise weight, but few doubt that it fatally undermined the resources behind Justinian's restored empire and helped tilt the balance of the ancient world.",
+      "zh": "541年，一种可怖的疫病出现于埃及的培琉喜阿姆，沿运粮航路蔓延，542年春抵达君士坦丁堡。亲历其事的普罗科皮乌斯记载：患者腹股沟与腋下生出淋巴结肿块，继而神志昏乱，数日即死；疫情最烈时，都城每日死者数以千计，海墙塔楼中堆满尸体，海上漂着无人操驾的船只。现代基因学已证实病原为鼠疫耶尔森菌——与黑死病同源。\n\n查士丁尼本人亦染疫，九死一生。财政与军事的恶果立现：税入锐减，国家却急需兵员与劳力，工价飞涨，查士丁尼立法限价而徒劳无功。\n\n此后两百年间瘟疫屡次复发，地中海世界或有四分之一以上的人口丧生。史家对其影响轻重尚有争论，但少有人怀疑：它从根本上侵蚀了查士丁尼中兴大业所倚仗的资源，改变了古代世界的力量格局。"
+    }
+  },
+  {
+    "id": "san-vitale-mosaics",
+    "year": 547,
+    "category": "art",
+    "lonlat": [12.197, 44.421],
+    "importance": 2,
+    "title": {
+      "en": "Mosaics of San Vitale at Ravenna",
+      "zh": "拉文纳圣维塔莱教堂马赛克"
+    },
+    "summary": {
+      "en": "Consecrated around 547, the church of San Vitale in Ravenna houses the era's most celebrated mosaics, including the imperial panels of Justinian and Theodora with their courts.",
+      "zh": "约547年祝圣的拉文纳圣维塔莱教堂，保存着这一时代最负盛名的马赛克，其中尤以查士丁尼与狄奥多拉率廷臣侍从的两幅镶嵌画著称。"
+    },
+    "detail": {
+      "en": "Begun under Ostrogothic rule and completed after the imperial reconquest, the octagonal church of San Vitale was financed by the banker Julianus Argentarius and consecrated by Bishop Maximian around 547. Its choir and apse carry the finest surviving wall mosaics of the sixth century: Christ enthroned on the globe of the world, Old Testament sacrifices, luxuriant vaults of vines and peacocks.\n\nMost famous are the two facing panels beside the apse: Justinian, haloed, bearing the eucharistic bread, flanked by clergy, officials, and guards; opposite him Theodora, crowned and jeweled, offering the chalice amid her court ladies. Neither sovereign ever set foot in Ravenna — the panels are a statement of imperial presence in newly recovered Italy, fusing court ceremony with liturgy.\n\nSan Vitale distills the aesthetic of the age: solemn frontal figures, shimmering gold ground, matter transfigured into light. Its influence echoed for centuries, and it remains an unmatched witness to sixth-century imperial art.",
+      "zh": "圣维塔莱教堂始建于东哥特统治时期，帝国收复意大利后方告完工。这座八边形教堂由银行家尤利安努斯·阿根塔里乌斯出资兴建，约547年由主教马克西米安祝圣。堂内圣坛与后殿保存着六世纪传世最精美的壁面马赛克：基督端坐于寰宇之球，旧约献祭诸场景，以及缀满葡萄藤与孔雀的华美穹顶。\n\n最负盛名的是后殿两侧遥遥相对的两幅镶嵌画：查士丁尼头顶光环，手捧圣餐面饼，教士、廷臣与卫士分列左右；对面的狄奥多拉冠冕珠玉俱全，在宫廷贵妇簇拥中献上圣爵。两位君主其实从未踏足拉文纳——这两幅画正是帝国君临新复意大利的宣示，将宫廷仪轨与教会礼仪融为一体。\n\n圣维塔莱凝聚了这个时代的美学精髓：庄严的正面人像、流光溢彩的金底、化物质为光辉的境界。其影响绵延数百年，至今仍是六世纪帝国艺术无可替代的见证。"
+    }
+  },
+  {
+    "id": "silkworm-smuggling",
+    "year": 552,
+    "category": "economy",
+    "lonlat": [28.99, 41.005],
+    "importance": 2,
+    "title": {
+      "en": "Silkworms Smuggled to Constantinople",
+      "zh": "蚕种密运君士坦丁堡"
+    },
+    "summary": {
+      "en": "Around 552, monks smuggled silkworm eggs from Central Asia to Justinian's court hidden in hollow canes, breaking the Persian monopoly and founding an imperial silk industry.",
+      "zh": "约552年，僧侣将蚕卵藏于空心手杖，自中亚密运至查士丁尼宫廷，打破波斯对丝绸贸易的垄断，帝国自营丝业由此发端。"
+    },
+    "detail": {
+      "en": "Silk, indispensable for court ceremony, diplomacy, and elite dress, reached the Mediterranean only along routes controlled by Persia, which taxed the trade and could throttle it in wartime. Justinian had sought alternate channels via the Red Sea and the steppe without success.\n\nAround 552, according to Procopius, monks who had lived in 'Serinda' — probably Sogdiana or regions further east — came to the emperor and offered to procure the source of silk itself. Returning to Central Asia, they concealed silkworm eggs in hollow canes and carried them to Constantinople, together with the knowledge of rearing the worms on mulberry leaves and reeling the cocoons.\n\nFrom this famous act of economic espionage grew a state-dominated silk industry, with imperial workshops in Constantinople and later flourishing production in Greece and Syria. Fine silks became a tool of statecraft — bestowed on allies, denied to rivals — and a major source of wealth. Rarely has a single smuggling operation altered the economic balance between empires so decisively.",
+      "zh": "丝绸是宫廷仪典、外交馈赠与显贵服饰不可或缺之物，然而它输入地中海的商路尽在波斯掌握之中：波斯既课以重税，战时更可随意切断。查士丁尼曾谋求经红海与草原另辟蹊径，皆无所成。\n\n据普罗科皮乌斯记载，约552年，曾旅居“塞林达”（大约是粟特或更东之地）的僧侣晋见皇帝，自请求取丝之本源。他们重返中亚，将蚕卵藏入空心手杖，携至君士坦丁堡，并带回以桑叶养蚕、缫茧成丝的技艺。\n\n这桩著名的“经济谍战”孕育出国家主导的丝绸产业：君士坦丁堡设皇家织坊，希腊与叙利亚的丝业其后亦蔚为大观。精美丝绸从此成为经国之具——赏赐盟友，禁售敌国——亦是财富重要来源。一次走私而能如此深刻地改写帝国之间的经济格局，史上罕有其匹。"
+    }
+  },
+  {
+    "id": "death-of-justinian",
+    "year": 565,
+    "category": "politics",
+    "lonlat": [28.984, 41.003],
+    "importance": 2,
+    "title": {
+      "en": "Death of Justinian I",
+      "zh": "查士丁尼一世驾崩"
+    },
+    "summary": {
+      "en": "Justinian died in November 565 after a 38-year reign that restored Africa and Italy, codified Roman law, and built Hagia Sophia — leaving an empire enlarged, exhausted, and transformed.",
+      "zh": "565年11月，在位三十八年的查士丁尼驾崩。他收复阿非利加与意大利、编成罗马法典、建成圣索菲亚大教堂，留下的帝国疆域扩大，元气耗竭，面貌一新。"
+    },
+    "detail": {
+      "en": "Justinian I died in the palace on the night of 14 November 565, in his eighty-third year, having outlived Theodora, Belisarius, and nearly all the men of his great enterprises. The throne passed quietly to his nephew Justin II. The historian Agathias observed that the old emperor left the state 'great in appearance but weak in reality.'\n\nThe reckoning was double-edged. Justinian had nearly doubled the empire's territory, given Roman law its definitive form, adorned the capital with Hagia Sophia, and presided over a brilliant age of literature, theology, and art. Yet plague, decades of war on three fronts, heavy taxation, and religious discord had drained the state; Italy lay ruined, and within three years the Lombards overran much of it.\n\nHis successors — Justin II, Tiberius II, Maurice — struggled to defend the overextended inheritance against Persia, the Avars, and the Slavs. Justinian's death closes the age of restoration and opens the harder, leaner world of the late sixth century.",
+      "zh": "565年11月14日夜，查士丁尼一世在宫中辞世，享年八十有三。狄奥多拉、贝利撒留以及辅佐他成就大业的群臣几乎都已先他而去。帝位平静地传于其甥查士丁二世。史家阿加提亚斯评论道：老皇帝留下的国家“外表宏大，内里虚弱”。\n\n盖棺论定，功过参半。查士丁尼使帝国疆域几近倍增，为罗马法定下千古范本，以圣索菲亚大教堂妆点都城，其治下文学、神学与艺术灿然可观。然而瘟疫肆虐、三线鏖战数十年、赋敛沉重、教争不息，早已耗尽国力；意大利残破不堪，不出三年，伦巴第人便席卷其大半。\n\n继任诸帝——查士丁二世、提比略二世、莫里斯——为守住这份过度扩张的遗产，与波斯、阿瓦尔人、斯拉夫人苦苦周旋。查士丁尼之死，为中兴时代画上句点，也开启了六世纪末更为艰难困窘的岁月。"
+    }
+  },
+  {
+    "id": "avar-slav-danube-pressure",
+    "year": 580,
+    "endYear": 586,
+    "category": "military",
+    "lonlat": [19.61, 44.97],
+    "importance": 2,
+    "title": {
+      "en": "Avar and Slav Assault on the Danube",
+      "zh": "阿瓦尔人与斯拉夫人压境多瑙河"
+    },
+    "summary": {
+      "en": "In the 580s the Avar khaganate seized Sirmium and, with massive Slav migrations, broke through the Danube frontier, flooding the Balkans while the empire was locked in war with Persia.",
+      "zh": "580年代，阿瓦尔汗国攻陷锡尔米乌姆，斯拉夫人大举南徙，多瑙河防线洞开。其时帝国正与波斯苦战，巴尔干遂遭蹂躏。"
+    },
+    "detail": {
+      "en": "The Avars, steppe horsemen who had built a khaganate on the Hungarian plain, spent the 570s extorting ever-larger subsidies from Constantinople. In 582, after a three-year siege, they took Sirmium, the great fortress-city commanding the Sava crossing — the hinge of the Danube defenses. Singidunum and other river cities followed.\n\nBehind and alongside the Avars moved the Slavs, no longer raiding but settling. In 581, a chronicler wrote, they overran Greece and 'settled on the land as if it were their own.' In 586 a great Avar-Slav host besieged Thessalonica itself, the second city of the European provinces, which credited its deliverance to its patron Saint Demetrius. Emperor Maurice, absorbed by the Persian war, could spare little for the Balkans.\n\nThese decades began the transformation of the peninsula: Roman provincial life contracted to fortified coastal cities while Slavic settlement reshaped the interior — a demographic revolution with which the empire would contend for centuries.",
+      "zh": "阿瓦尔人是在匈牙利平原建立汗国的草原骑马民族，整个570年代不断勒索君士坦丁堡，岁币节节攀升。582年，经三年围攻，他们攻陷扼守萨瓦河渡口的雄镇锡尔米乌姆——多瑙河防务的枢纽。辛吉杜努姆等沿河诸城相继失守。\n\n斯拉夫人随阿瓦尔人之后蜂拥而至，不再是劫掠而去，而是就地定居。编年史家记载，581年他们席卷希腊，“在那片土地上安家，俨然以其为故土”。586年，阿瓦尔—斯拉夫联军竟围攻欧洲诸省第二大城萨洛尼卡，城中军民将解围归功于主保圣人德米特里的庇佑。皇帝莫里斯深陷波斯战争，无力兼顾巴尔干。\n\n这数十年开启了半岛的巨变：罗马行省生活萎缩至设防的沿海城市，斯拉夫人的定居则重塑了内陆——这场人口革命，帝国此后数百年都须与之周旋。"
+    }
+  },
+  {
+    "id": "maurice-balkan-campaigns",
+    "year": 591,
+    "endYear": 602,
+    "category": "military",
+    "lonlat": [21.22, 44.74],
+    "importance": 2,
+    "title": {
+      "en": "Maurice's Balkan Campaigns",
+      "zh": "莫里斯的巴尔干战役"
+    },
+    "summary": {
+      "en": "After peace with Persia in 591, Maurice threw the army against the Avars and Slavs, winning striking victories beyond the Danube — until the overstrained troops mutinied in 602 and overthrew him.",
+      "zh": "591年与波斯媾和后，莫里斯挥军反击阿瓦尔人与斯拉夫人，屡屡越过多瑙河获胜——直至602年疲惫不堪的军队哗变，将他推翻。"
+    },
+    "detail": {
+      "en": "The favorable Persian peace of 591 at last freed Maurice to fight for the Balkans. Through the 590s his generals — his brother Peter, then the energetic Priscus — campaigned along and beyond the Danube. Around 599 Priscus crushed the Avars in a series of battles near Viminacium, then struck into the khagan's own heartland on the Tisza, victories on a scale the steppe empire had never suffered.\n\nBy 602 the Danube line was substantially restored, and imperial arms had shown they could carry war into the enemy's country. But Maurice, ruling an empire drained by decades of war and plague, drove his men mercilessly, cutting pay and ordering the army to winter north of the Danube in Slavic territory.\n\nThe troops mutinied, raised the centurion Phocas on their shields, and marched on Constantinople. Maurice was overthrown and executed with his sons in November 602. The mutiny undid his Balkan gains and plunged the empire into the catastrophic Persian war that opens the next era.",
+      "zh": "591年与波斯缔结的有利和约，终使莫里斯得以全力经略巴尔干。整个590年代，他的将领——先是其弟彼得，继而是干练的普里斯库斯——沿多瑙河两岸连年征战。约599年，普里斯库斯在维米纳基乌姆附近连战连捷，大破阿瓦尔人，随即直捣蒂萨河畔的汗庭腹地——草原帝国从未遭受过如此规模的惨败。\n\n至602年，多瑙河防线大体恢复，帝国军队亦已证明有能力将战火烧入敌境。然而莫里斯统治的帝国已被数十年战争与瘟疫耗尽，他驭下苛刻，削减军饷，又下令大军在多瑙河以北的斯拉夫人地界过冬。\n\n士卒遂哗变，将百夫长福卡斯举于盾上拥立为帝，挥师直趋君士坦丁堡。602年11月，莫里斯被推翻，与诸子一同遇害。这场兵变使他在巴尔干的战果毁于一旦，并将帝国拖入下一个时代开端那场灾难性的波斯战争。"
+    }
+  },
+  {
+    "id": "strategikon-of-maurice",
+    "year": 600,
+    "category": "culture",
+    "lonlat": [28.97, 41.01],
+    "importance": 2,
+    "title": {
+      "en": "The Strategikon",
+      "zh": "《战略》成书"
+    },
+    "summary": {
+      "en": "Around 600 the military handbook known as the Strategikon, attributed to Emperor Maurice, codified the army's tactics and ethnographic intelligence — the classic manual of Eastern Roman warfare.",
+      "zh": "约600年，托名皇帝莫里斯的兵书《战略》问世，系统总结军队战法与对诸族的情报认知，成为东罗马军事学的经典。"
+    },
+    "detail": {
+      "en": "Composed in the decades around 600 and attributed to Emperor Maurice or his circle, the Strategikon distills the hard lessons of the sixth-century wars into twelve books of practical soldiering: cavalry drill and formations, ambushes, sieges, logistics, discipline, and the handling of an army on the march. Written in plain Greek 'for the average officer,' it reflects an army now built around the armored horse-archer.\n\nMost celebrated is its ethnographic book, which analyzes how to fight each enemy according to his nature: the Persians disciplined and cunning, the 'light-haired peoples' — Franks and Lombards — bold but reckless, the Avars treacherous and skilled, the Slavs elusive masters of their forests and marshes. It is among the era's most valuable sources for the peoples beyond the frontier.\n\nThe Strategikon founded a whole genre of military literature in the empire, studied and reworked for centuries — testimony that the Roman art of war survived as a living science long after the legions of old had vanished.",
+      "zh": "《战略》约成书于600年前后，托名皇帝莫里斯或出自其幕僚之手。全书十二卷，将六世纪历次战争的血泪经验凝为切实可用的兵学：骑兵操典与阵法、伏击、攻城、辎重、军纪，以及大军行进的调度。书用平实的希腊语写成，“供寻常军官研读”，反映出此时的军队已以重甲弓骑兵为核心。\n\n最为后世称道的是其民族志一卷，依各敌之性分析制胜之道：波斯人纪律严明而狡诈多谋；“浅发诸族”——法兰克人与伦巴第人——勇猛而鲁莽；阿瓦尔人反复无常而战技精熟；斯拉夫人则出没无常，是森林沼泽间的行家。此卷亦是了解边境之外诸民族最珍贵的史料之一。\n\n《战略》开创了帝国兵书这一整个文类，此后数百年间被反复研读增订——足证古典军团虽早已消逝，罗马兵学仍作为一门活的学问绵延不绝。"
+    }
+  }
+]

@@ -1,0 +1,522 @@
+[
+  {
+    "id": "basil-i-macedonian-dynasty",
+    "year": 867,
+    "category": "politics",
+    "lonlat": [28.98, 41.01],
+    "importance": 1,
+    "title": {
+      "en": "Basil I Founds the Macedonian Dynasty",
+      "zh": "巴西尔一世开创马其顿王朝"
+    },
+    "summary": {
+      "en": "The stable-groom-turned-courtier Basil I murdered his patron and co-emperor Michael III and took the throne alone, founding a dynasty that would govern the Empire for nearly two centuries.",
+      "zh": "出身寒微、由驯马之职跻身宫廷的巴西尔一世弑杀其恩主兼共治皇帝米海尔三世，独掌大位，开创了此后统御帝国近两百年的马其顿王朝。"
+    },
+    "detail": {
+      "en": "Basil rose from obscurity in the Macedonian theme through feats of strength and a talent for court intrigue, becoming Michael III's favourite, then co-emperor. In September 867 he had Michael murdered in his bedchamber and assumed sole rule, an act of naked usurpation that nonetheless launched one of the Empire's most consequential houses.\n\nBasil proved an energetic and capable ruler. He began a great codification of Roman law, the Prochiron and Epanagoge, laying groundwork for the later Basilika; rebuilt the fleet; pressed campaigns against the Paulician heretics of the east and against Arab positions in southern Italy; and raised the domed Nea Ekklesia within the palace as a monument to his new house.\n\nThough his own origins were humble and his path to power violent, Basil's successors — through calamity and triumph alike — would carry the Macedonian name to the Empire's medieval apex under Basil II a century and a half later.",
+      "zh": "巴西尔出身马其顿军区寒门，凭借膂力过人与宫廷权术，先得米海尔三世宠信，继而受封共治皇帝。867年9月，他在寝宫中谋杀米海尔，独揽大权——此举虽属赤裸裸的篡逆，却开启了帝国历史上影响最为深远的王朝之一。\n\n巴西尔在位期间颇为勤勉能干：他着手大规模编纂罗马法律，编成《法律手册》（Prochiron）与《法律选编》（Epanagoge），为日后《法律汇编》（Basilika）奠定基础；重建舰队；对东方保罗派异端与意大利南部的阿拉伯势力用兵；并在皇宫内兴建圆顶的'新教堂'（Nea Ekklesia），以彰显新朝气象。\n\n尽管巴西尔本人出身低微、夺位手段血腥，但其子孙历经祸福，终在一个半世纪后的巴西尔二世治下，将马其顿之名推至帝国中古时代的巅峰。"
+    }
+  },
+  {
+    "id": "hagia-sophia-apse-mosaic",
+    "year": 867,
+    "category": "art",
+    "lonlat": [28.98, 41.01],
+    "importance": 2,
+    "title": {
+      "en": "Unveiling of the Apse Mosaic in Hagia Sophia",
+      "zh": "圣索菲亚大教堂后殿马赛克揭幕"
+    },
+    "summary": {
+      "en": "On Palm Sunday 867 Patriarch Photios unveiled a new mosaic of the enthroned Virgin and Child in the apse of Hagia Sophia, a triumphant declaration that image veneration had been permanently restored after Iconoclasm.",
+      "zh": "867年棕枝主日，牧首佛提乌于圣索菲亚大教堂后殿揭幕新制的圣母怀抱圣婴马赛克像，以此庄严宣告毁坏圣像运动之后，圣像崇拜已获得永久恢复。"
+    },
+    "detail": {
+      "en": "After the final restoration of icons in 843, the Empire's churches slowly refilled their stripped walls with sacred images. In 867 Patriarch Photios delivered a celebrated homily inaugurating a monumental new mosaic in the apse of Hagia Sophia: the Virgin enthroned, holding the Christ child, gazing down the length of the nave.\n\nPhotios's sermon framed the image not merely as decoration but as theological proof — the visible Church answering a century of imperial edicts that had denounced such images as idolatry. The mosaic's gold ground and monumental scale set the model that later Macedonian-era churches would follow.\n\nThe timing, in the very year of Basil I's accession, bound the new dynasty publicly to the restored Orthodoxy of images. Art and politics were fused in a single gesture in the Empire's greatest church, announcing that the age of Iconoclasm was closed for good.",
+      "zh": "843年圣像崇拜最终获得恢复之后，帝国境内教堂被剥去圣像的墙壁逐渐重新绘满神圣图像。867年，牧首佛提乌发表著名讲道，为圣索菲亚大教堂后殿一幅恢弘的新马赛克像揭幕：圣母端坐宝座，怀抱圣婴基督，俯视整条中殿。\n\n佛提乌的讲词将此像不止视为装饰，更视为一种神学明证——教会以可见之形象，回应了一个世纪以来将圣像斥为偶像崇拜的历次帝国敕令。这幅金地马赛克规模恢弘，成为此后马其顿王朝时代教堂效仿的范本。\n\n此事恰逢巴西尔一世登基之年，将新王朝与圣像崇拜的恢复公开地联系在一起。艺术与政治在帝国最伟大的教堂中融为一体，向世人昭示：毁坏圣像的时代已一去不返。"
+    }
+  },
+  {
+    "id": "basilika-law-code",
+    "year": 892,
+    "category": "law",
+    "lonlat": [28.98, 41.01],
+    "importance": 2,
+    "title": {
+      "en": "Promulgation of the Basilika",
+      "zh": "《法律汇编》颁布"
+    },
+    "summary": {
+      "en": "Leo VI completed and issued the Basilika, a sixty-book Greek recasting of Justinian's Corpus Iuris Civilis, replacing centuries-old Latin compilations with a single authoritative code for the medieval Empire.",
+      "zh": "利奥六世编成并颁布六十卷本《法律汇编》（Basilika），以希腊文重新整理查士丁尼《民法大全》，取代沿用数百年的拉丁法典，为中古帝国确立统一权威的法律典范。"
+    },
+    "detail": {
+      "en": "Justinian's sixth-century Corpus Iuris Civilis, composed in Latin, had grown ever more remote from a Greek-speaking, administratively transformed Empire. Basil I began the labour of translating and rearranging its contents; his son Leo VI completed the task around 892, publishing the Basilika — 'the Royal Laws' — in sixty books organized by subject rather than by the old fourfold Justinianic scheme.\n\nThe Basilika absorbed the Digest, Code, Institutes, and Novels into a single coherent Greek text, stripped of obsolete provisions and updated with commentary drawn from centuries of juristic practice. It became the working law of the courts for the remainder of the Empire's existence.\n\nMore than a technical exercise, the Basilika expressed a self-conscious claim: that the medieval, Greek-speaking Roman state was the direct and legitimate heir of Justinian's jurisprudence, its ancient authority renewed rather than abandoned.",
+      "zh": "查士丁尼六世纪以拉丁文编成的《民法大全》，与说希腊语、行政体制已然转型的帝国日渐疏离。巴西尔一世着手将其译为希腊文并重新编排；其子利奥六世约于892年完成此项工程，颁布《法律汇编》——'王家法律'——共六十卷，按主题分类，一改查士丁尼旧制四分之法。\n\n《法律汇编》将《学说汇纂》《法典》《法学阶梯》与《新律》熔铸为一部条理贯通的希腊文法典，删削过时条文，并汇入数百年司法实践所积累的注疏。此后终帝国之世，它始终是法庭实际援用的法律依据。\n\n《法律汇编》不仅是一项技术性的整理工程，更表达了一种自觉的宣示：说希腊语的中古罗马国家，乃是查士丁尼法学传统直接而合法的继承者——古老的权威并未被舍弃，而是获得了新生。"
+    }
+  },
+  {
+    "id": "book-of-the-eparch",
+    "year": 912,
+    "category": "economy",
+    "lonlat": [28.98, 41.01],
+    "importance": 2,
+    "title": {
+      "en": "Leo VI's Book of the Eparch",
+      "zh": "利奥六世《市政官之书》"
+    },
+    "summary": {
+      "en": "Leo VI issued the Book of the Eparch, a detailed regulatory code governing the guilds of Constantinople — prices, quality, hours, and conduct — under the supervision of the City Prefect.",
+      "zh": "利奥六世颁行《市政官之书》，就君士坦丁堡各行会的价格、货品质量、营业时限与行为规范作出细密规定，统归都城长官监管。"
+    },
+    "detail": {
+      "en": "The Book of the Eparch, issued under Leo VI around 912, set out in minute detail the rules governing some twenty guilds of Constantinople's marketplace — notaries, silk merchants and weavers, moneychangers, grocers, butchers, fishmongers, tavern-keepers, and more. Each guild's admission requirements, permitted profit margins, working hours, and locations within the city were fixed by law.\n\nOversight rested with the Eparch of the City, whose officials inspected weights, measures, and the purity of goods, and who could expel adulterators of silk or bread from their trade. The silk industry received especially close attention, since its finest products were reserved for imperial and diplomatic use and its export was tightly controlled.\n\nThe result was a strikingly regulated urban economy, aimed at guaranteeing the food supply and commercial order of the capital, protecting consumers from fraud, and preserving the state's monopoly over strategic luxury goods such as purple-dyed silk.",
+      "zh": "《市政官之书》约于912年由利奥六世颁布，事无巨细地规定了君士坦丁堡市场中约二十个行会的运作规则——公证人、丝绸商与织工、兑换商、杂货商、屠户、鱼贩、酒肆主人等等。各行会的入会资格、法定利润限额、营业时段乃至在城中的经营位置，皆由法律一一厘定。\n\n监管之责归于都城长官（Eparch），其属员负责检查度量衡与货品成色，并有权将掺假售劣的丝商或面包商逐出本行。丝绸业尤受严密关注：其上品专供宫廷与外交之用，出口亦受严格管制。\n\n由此形成的，是一种高度受管制的都市经济体制，旨在保障都城的粮食供应与商业秩序、护消费者免于欺诈，并维系国家对紫染丝绸等战略性奢侈品的垄断地位。"
+    }
+  },
+  {
+    "id": "battle-of-achelous",
+    "year": 917,
+    "category": "military",
+    "lonlat": [27.65, 42.7],
+    "importance": 2,
+    "title": {
+      "en": "Symeon of Bulgaria's Wars and the Battle of Achelous",
+      "zh": "西美昂的对罗马战争与阿凯洛斯之战"
+    },
+    "summary": {
+      "en": "Tsar Symeon of Bulgaria annihilated a Roman army near the Achelous river, the worst military disaster of the Macedonian era and the high point of decades of warfare aimed at winning Symeon the imperial crown itself.",
+      "zh": "保加利亚沙皇西美昂在阿凯洛斯河附近全歼一支罗马大军，此役是马其顿王朝时代最惨重的军事灾难，也是西美昂数十年征战、意图夺取皇冕这一雄心的顶点。"
+    },
+    "detail": {
+      "en": "Educated in Constantinople and ambitious for the imperial title itself, Symeon of Bulgaria fought a long series of wars against the Empire from 894 onward. In August 917 a large Roman army under Leo Phokas and the fleet commander Romanos Lekapenos advanced against him near the Achelous river close to Anchialus on the Black Sea coast.\n\nThrough treachery, tactical surprise, and the panic of a mistimed retreat, Symeon's forces destroyed the Roman army almost to a man; Leo Phokas barely escaped. It was among the costliest defeats the Empire suffered in the entire Macedonian period, and it opened the Balkans to years of Bulgarian raiding as far as the suburbs of Constantinople itself.\n\nSymeon never took the capital, and his death in 927 dissolved his empire's brief supremacy, but Achelous left a lasting memory of how close Bulgaria had come to eclipsing Roman power in the Balkans.",
+      "zh": "西美昂自幼在君士坦丁堡受教，觊觎皇位本身，自894年起与帝国屡启战端。917年8月，利奥·福卡斯与舰队统帅罗曼努斯·雷卡佩努斯率大军进逼西美昂，两军会战于黑海沿岸安希亚洛斯附近的阿凯洛斯河畔。\n\n由于内部背叛、战术奇袭以及一次时机失当的撤退所引发的溃乱，西美昂的军队几乎将罗马大军全部歼灭，利奥·福卡斯仅以身免。此役堪称整个马其顿王朝时期帝国所遭受的最惨重败绩之一，此后数年间，保加利亚军队肆意侵扰巴尔干，兵锋一度直逼君士坦丁堡城郊。\n\n西美昂终究未能攻克都城，927年他猝然离世，其帝国的短暂强盛亦随之瓦解；然而阿凯洛斯之役却留下了深刻的记忆——保加利亚一度何其接近取代罗马在巴尔干的霸权。"
+    }
+  },
+  {
+    "id": "constantine-vii-encyclopedism",
+    "year": 950,
+    "category": "culture",
+    "lonlat": [28.98, 41.01],
+    "importance": 2,
+    "title": {
+      "en": "The Encyclopedism of Constantine VII Porphyrogennetos",
+      "zh": "君士坦丁七世的百科编纂事业"
+    },
+    "summary": {
+      "en": "Emperor Constantine VII sponsored a vast programme of encyclopedic compilation, gathering and preserving classical and administrative knowledge in works such as De Administrando Imperio and De Ceremoniis.",
+      "zh": "皇帝君士坦丁七世主持一项规模浩大的百科编纂事业，通过《论帝国治理》与《礼仪之书》等著作，系统搜集并保存了古典与行政知识。"
+    },
+    "detail": {
+      "en": "Constantine VII, porphyrogennetos — 'born in the purple' — spent much of his youth sidelined from real power, and turned his energies to scholarship. Once in effective control after 945, he directed teams of scholars to compile enormous encyclopedic works: De Administrando Imperio, a guide to foreign peoples and diplomacy written for his son; De Ceremoniis, a compendium of court ritual; and vast excerpta distilling classical and Hellenistic historians, agricultural writers, and military manuals into topical anthologies.\n\nThis was not idle antiquarianism. Anxious that ancient learning was slipping away amid centuries of crisis, Constantine's circle salvaged fragments of otherwise lost historians and codified administrative memory that later emperors relied upon directly.\n\nThe project exemplifies the so-called Macedonian Renaissance: a self-conscious, state-sponsored recovery of classical Greek and Roman heritage that defined the intellectual culture of the mid-tenth century Empire.",
+      "zh": "君士坦丁七世素有'紫衣生者'（porphyrogennetos）之称，早年长期被排斥于实权之外，遂将精力投注于学术。945年起真正掌权后，他召集学者团队编纂了一系列庞大的百科著作：为其子而作的外交治国指南《论帝国治理》（De Administrando Imperio）；记录宫廷礼仪的《礼仪之书》（De Ceremoniis）；以及从古典与希腊化时代史家、农学作者与兵法著述中摘录汇编而成的浩瀚文摘丛编。\n\n此举绝非闲情雅致的好古之举。君士坦丁及其学者圈忧心数百年危机之中古代学识渐已散佚，遂抢救保存了大量本已失传史家的片段，并系统整理行政典章成例，供后世皇帝直接援用。\n\n此一事业正是所谓'马其顿文艺复兴'的典范：一场由国家主导、有意识地复兴古典希腊罗马遗产的运动，构成了十世纪中叶帝国知识文化的鲜明特征。"
+    }
+  },
+  {
+    "id": "reconquest-of-crete",
+    "year": 961,
+    "category": "military",
+    "lonlat": [25.13, 35.34],
+    "importance": 1,
+    "title": {
+      "en": "Nikephoros Phokas Reconquers Crete",
+      "zh": "尼基弗鲁斯·福卡斯收复克里特"
+    },
+    "summary": {
+      "en": "After a nine-month siege the general Nikephoros Phokas stormed Chandax and ended 135 years of Arab rule over Crete, eliminating a base for piracy that had ravaged the Aegean since the ninth century.",
+      "zh": "经九个月围攻，将领尼基弗鲁斯·福卡斯攻陷坎达克斯城，终结阿拉伯人对克里特长达135年的统治，铲除了这一自九世纪以来不断祸害爱琴海域的海盗据点。"
+    },
+    "detail": {
+      "en": "Since its conquest by Andalusian exiles around 824, Crete had served as a fortified pirate stronghold, its raiders devastating shipping and coastal settlements across the Aegean for over a century. Repeated Roman expeditions to retake it had failed.\n\nIn 960 the domestikos ton scholon Nikephoros Phokas landed a massive expeditionary force and besieged the island's capital, Chandax (modern Heraklion). After nine gruelling months of siege warfare, sapping, and repeated assaults, the city fell in March 961; the Arab garrison was killed or enslaved and the emirate extinguished.\n\nThe victory, celebrated with a triumph in Constantinople, restored Roman naval security across the Aegean and launched Phokas's own rise to the imperial throne two years later. It stands as the opening blow of the great tenth-century reconquest that would carry Roman arms into Cilicia and Syria within the decade.",
+      "zh": "自824年为安达卢西亚流亡者所占据以来，克里特岛已成为一处坚固的海盗巢穴，其劫掠者百余年间不断蹂躏爱琴海域的商船与沿海聚落。罗马此前屡次出兵欲加收复，皆告失败。\n\n960年，御前军统帅（domestikos ton scholon）尼基弗鲁斯·福卡斯统率庞大远征军登陆该岛，围攻其首府坎达克斯（今伊拉克利翁）。经九个月艰苦围城、坑道作业与反复强攻，该城终于961年3月陷落；阿拉伯守军或被诛杀，或被掳为奴，酋长国就此覆灭。\n\n此役凯旋君士坦丁堡，重新确立了罗马在爱琴海域的制海安全，也开启了福卡斯本人两年后登上帝位之路。此役堪称十世纪罗马大规模收复失地的首战，此后十年间，罗马兵锋将进一步深入奇里乞亚与叙利亚。"
+    }
+  },
+  {
+    "id": "recovery-of-antioch",
+    "year": 969,
+    "category": "military",
+    "lonlat": [36.16, 36.2],
+    "importance": 1,
+    "title": {
+      "en": "Recovery of Antioch",
+      "zh": "安条克光复"
+    },
+    "summary": {
+      "en": "Roman forces under John I Tzimiskes captured Antioch, one of the five great patriarchal sees of the ancient Church, returning it to the Empire for the first time in over three centuries of Arab rule.",
+      "zh": "约翰一世·齐米斯基斯麾下的罗马军队攻克安条克——古代教会五大牧首圣座之一——使这座历经三百余年阿拉伯统治的名城重归帝国版图。"
+    },
+    "detail": {
+      "en": "Antioch, one of the ancient world's greatest cities and seat of one of Christendom's five patriarchates, had fallen to the Arab conquests in the seventh century. Its recovery became the great prize of the Roman resurgence in the East under Nikephoros II Phokas and his successor John I Tzimiskes.\n\nIn October 969, the general Michael Bourtzes exploited a breach in the city's defences and, with reinforcements arriving under Peter the Stratopedarches, forced the surrender of the Hamdanid garrison after brief but hard fighting. The city, its Christian population still substantial after centuries of Muslim rule, was reincorporated as a Roman duchy guarding the frontier with Aleppo.\n\nAntioch's recovery, following swiftly on the fall of Aleppo itself to tribute, marked the furthest reach of the tenth-century reconquista in the Levant and restored to Roman hands one of the oldest and most venerated seats of the Christian Church.",
+      "zh": "安条克乃古代世界最伟大的城市之一，亦是基督教会五大牧首圣座之一，七世纪阿拉伯征服浪潮中沦陷。其光复成为尼基弗鲁斯二世·福卡斯及其继任者约翰一世·齐米斯基斯治下罗马东方复兴大业的最大战果。\n\n969年10月，将领米海尔·布尔泽斯利用城防缺口发起突袭，随后统帅彼得（Stratopedarches）率援军抵达，经短暂而激烈的战斗，迫使哈姆丹王朝守军投降。此城历经数百年穆斯林统治，基督徒人口依然众多，重新并入帝国版图，设为公国，扼守与阿勒颇接壤的边疆。\n\n安条克的光复紧随阿勒颇纳贡称臣之后，标志着十世纪黎凡特收复失地运动所达到的最远疆界，也使基督教会最古老、最受尊崇的圣座之一重归罗马之手。"
+    }
+  },
+  {
+    "id": "baptism-of-the-rus",
+    "year": 988,
+    "category": "religion",
+    "lonlat": [33.49, 44.61],
+    "importance": 1,
+    "title": {
+      "en": "Vladimir of Kiev and the Baptism of the Rus",
+      "zh": "基辅弗拉基米尔与罗斯受洗"
+    },
+    "summary": {
+      "en": "Prince Vladimir of Kiev was baptized at Chersonesus and married Basil II's sister Anna, bringing Orthodox Christianity to the Rus and drawing the vast lands of Kievan Rus permanently into the Empire's religious and cultural orbit.",
+      "zh": "基辅大公弗拉基米尔在赫尔松受洗，并迎娶巴西尔二世之妹安娜为妻，将正教信仰传入罗斯，从此使辽阔的基辅罗斯永久纳入帝国的宗教与文化范围。"
+    },
+    "detail": {
+      "en": "In 987 Basil II, besieged by domestic rebellion, secured military aid from Vladimir, prince of Kiev, in exchange for the extraordinary concession of a marriage alliance — his own sister Anna, born in the purple, to be given to a pagan Rus ruler. When Basil hesitated after Vladimir's warriors had saved his throne, Vladimir seized the Roman-held Crimean city of Chersonesus as leverage.\n\nThere, in 988, Vladimir was baptized into Orthodox Christianity, took the Christian name Basil in his brother-in-law's honour, and received Anna as his bride. Returning to Kiev, he ordered the mass baptism of his people in the Dnieper river, replacing the old Slavic pantheon with the Christian faith transmitted directly from Constantinople.\n\nThe conversion bound the Rus lands to Constantinople's ecclesiastical, artistic, and literary culture for centuries, an act whose consequences — the Orthodox Christianization of Russia, Ukraine, and Belarus — rank among the most far-reaching of the entire Macedonian era.",
+      "zh": "987年，巴西尔二世内乱交困，遂向基辅大公弗拉基米尔求援，并以一项破格之举作为交换条件——将本人之妹、生于紫室的公主安娜下嫁这位异教罗斯君主。弗拉基米尔出兵助其保住帝位后，巴西尔却迟疑不决，弗拉基米尔遂夺取罗马治下的克里米亚城市赫尔松以为要挟。\n\n988年，弗拉基米尔即于赫尔松受洗归正，为敬重内兄，取教名'巴西尔'，随后迎娶安娜为妻。返回基辅后，他下令部众于第聂伯河中集体受洗，以直接源自君士坦丁堡的基督教信仰，取代古斯拉夫诸神信仰。\n\n此次改宗使罗斯诸地此后数百年间与君士坦丁堡的教会、艺术与文学传统紧密相连——俄罗斯、乌克兰与白俄罗斯的正教化，堪称整个马其顿王朝时代影响最为深远的事件之一。"
+    }
+  },
+  {
+    "id": "varangian-guard-founded",
+    "year": 988,
+    "category": "military",
+    "lonlat": [28.98, 41.01],
+    "importance": 2,
+    "title": {
+      "en": "Founding of the Varangian Guard",
+      "zh": "瓦兰吉卫队的创立"
+    },
+    "summary": {
+      "en": "As part of his alliance with Basil II, Vladimir of Kiev sent six thousand Rus warriors to Constantinople, forming the core of the Varangian Guard, the Empire's famed corps of Scandinavian and Rus imperial bodyguards.",
+      "zh": "作为与巴西尔二世联盟之约，弗拉基米尔遣派六千名罗斯战士前往君士坦丁堡，构成瓦兰吉卫队的核心——帝国日后闻名遐迩、由斯堪的纳维亚与罗斯武士组成的皇家近卫军团。"
+    },
+    "detail": {
+      "en": "Bound by treaty to aid Basil II against the rebel general Bardas Phokas, Vladimir dispatched some six thousand Rus warriors to Constantinople around 988. These formidable northern fighters proved decisive in crushing the rebellion at the Battle of Abydos in 989, and Basil retained them thereafter as a standing corps of palace guards.\n\nOrganized separately from the native Roman regiments, the new formation — soon known as the Varangian Guard — drew recruits from the Rus lands and, increasingly through the eleventh century, from Scandinavia itself, including, famously, the future king Harald Hardrada of Norway. Their loyalty to the throne rather than to any Roman faction made them uniquely valuable to emperors wary of domestic conspiracy.\n\nArmed distinctively with great double-headed axes, the Guard became a fixture of imperial ceremony and crisis alike, serving the emperors of Constantinople for more than two centuries until the city's fall to the Fourth Crusade.",
+      "zh": "依约需助巴西尔二世平定叛将巴尔达斯·福卡斯之乱，弗拉基米尔约于988年遣派六千名罗斯战士抵达君士坦丁堡。这支骁勇的北方武士在989年阿比多斯战役中发挥了决定性作用，助帝国平定叛乱；此后巴西尔便将其留用，编为常设的宫廷卫队。\n\n这支新建军团独立于本土罗马诸军编制之外，不久便以'瓦兰吉卫队'之名著称，兵源起初来自罗斯诸地，至十一世纪则日益增多地来自斯堪的纳维亚本土——其中包括后来的挪威国王'铁腕者'哈拉尔（Harald Hardrada）。这支卫队对皇权本身而非任何罗马派系效忠，因而对时刻提防内部阴谋的历代皇帝而言弥足珍贵。\n\n瓦兰吉卫队以其标志性的双刃巨斧为兵器，此后两百余年间，无论宫廷庆典抑或危难时刻，皆常伴历代君士坦丁堡皇帝左右，直至第四次十字军攻陷都城。"
+    }
+  },
+  {
+    "id": "basil-ii-conquest-of-bulgaria",
+    "year": 1014,
+    "endYear": 1018,
+    "category": "military",
+    "lonlat": [22.9, 41.35],
+    "importance": 1,
+    "title": {
+      "en": "Basil II Conquers Bulgaria: Kleidion and Annexation",
+      "zh": "巴西尔二世征服保加利亚：克莱迪昂之役与最终并入版图"
+    },
+    "summary": {
+      "en": "Basil II crushed Tsar Samuil's army at the Kleidion pass in 1014 and, after four more years of campaigning, annexed the whole Bulgarian state in 1018, ending a threat that had endured for over three centuries.",
+      "zh": "1014年，巴西尔二世于克莱迪昂隘口大败沙皇撒缪尔之军；此后又经四年征战，终于1018年吞并整个保加利亚国家，终结了这一延续三百余年的心腹之患。"
+    },
+    "detail": {
+      "en": "After decades of grinding war against the Bulgarian tsardom of Samuil, Basil II sprang a decisive trap in July 1014, encircling and destroying the Bulgarian army at the Kleidion pass in the Struma valley. Some fourteen thousand prisoners were reportedly blinded, one in a hundred left with a single eye to guide the rest home — a calculated act of terror that, in later legend, earned Basil the epithet Boulgaroktonos, 'Slayer of the Bulgarians'. Samuil is said to have died of shock on seeing his ruined army return.\n\nBulgarian resistance nonetheless persisted for four more years under Samuil's successors, collapsing only in 1018 amid internal betrayal and further Roman offensives. Basil then annexed the entire Bulgarian realm outright, extending Roman rule to the Danube for the first time in centuries.\n\nCrucially, Basil governed the conquest with restraint, preserving Bulgarian tax structures and the autocephalous Archbishopric of Ohrid, easing the region's absorption into an empire now territorially larger than at any point since Justinian.",
+      "zh": "与撒缪尔的保加利亚王国鏖战数十年后，巴西尔二世于1014年7月布下决定性的埋伏，在斯特鲁马河谷的克莱迪昂隘口合围并歼灭保加利亚大军。据传约一万四千名俘虏被刺瞎双目，每百人中留一人独眼引路——此一精心策划的恐怖之举，令巴西尔在后世传说中获得'保加利亚人的屠夫'（Boulgaroktonos）之号。撒缪尔据传见其残军归来，惊惧而亡。\n\n然而保加利亚人的抵抗又持续了四年，直至1018年，在内部背叛与罗马军队持续进攻之下终告瓦解。巴西尔遂将整个保加利亚国土径行并入帝国版图，数百年来罗马疆域首度重新延伸至多瑙河畔。\n\n值得一提的是，巴西尔治理这片新征服之地颇为节制：保留保加利亚原有税制，并保全俄赫里德自治大主教区的地位，使这一地区较为平顺地融入帝国——此时的帝国疆域，已是自查士丁尼以来最为辽阔的时期。"
+    }
+  },
+  {
+    "id": "death-of-basil-ii",
+    "year": 1025,
+    "category": "politics",
+    "lonlat": [28.98, 41.01],
+    "importance": 1,
+    "title": {
+      "en": "Death of Basil II: The Empire's Apogee",
+      "zh": "巴西尔二世驾崩：帝国的巅峰"
+    },
+    "summary": {
+      "en": "Basil II died in December 1025 after a fifty-year reign that left the Empire at its greatest territorial extent and military prestige since Justinian, with a full treasury and no serious external rival.",
+      "zh": "巴西尔二世于1025年12月驾崩，其在位五十年，使帝国疆域与军事声威达至查士丁尼以来的顶峰，国库充盈，四境再无强敌。"
+    },
+    "detail": {
+      "en": "Basil II had come to the throne as a boy amid civil war and spent his first decades battling aristocratic rebels before turning his full energy outward. By his death on 15 December 1025, the Empire stretched from southern Italy to the Caucasus and from the Danube to Syria, its Bulgarian and Georgian frontiers secured, its treasury reportedly holding an unprecedented surplus.\n\nBasil never married and left no direct heir, ruling instead as a soldier-monarch of austere habits who spent most of his reign on campaign rather than in the palace. His conquests of Bulgaria and consolidation of the eastern frontier represented the culmination of over a century of Macedonian expansion begun by his ancestor Basil I.\n\nYet the very concentration of power and success in his person meant the state had built no durable mechanism for what followed. His feeble brother Constantine VIII and the aging, childless dynasty that succeeded him proved unable to sustain the apparatus Basil had built, and the following half-century saw its slow unraveling.",
+      "zh": "巴西尔二世自幼于内战纷扰中登基，早年数十载皆致力于平定贵族叛乱，此后方将全部精力转向对外征伐。至1025年12月15日驾崩之时，帝国疆域已自意大利南部延伸至高加索，自多瑙河延伸至叙利亚，保加利亚与格鲁吉亚边境俱已巩固，国库据传盈余空前。\n\n巴西尔终身未娶，未留直系子嗣，以简朴自律的军人皇帝形象治国，在位期间大半时光皆用于征战而非居于宫中。其征服保加利亚、巩固东部边疆之功业，堪称自先祖巴西尔一世肇始、历经一个多世纪的马其顿王朝扩张事业之集大成者。\n\n然而，权力与功业如此高度集中于其一人之身，也意味着国家未能建立起可持续运作的制度保障。其才具平庸的胞弟君士坦丁八世，以及此后年迈无嗣的王朝继承者们，皆无力维系巴西尔所缔造的这套体制；此后半个世纪，帝国便缓慢地走向式微。"
+    }
+  },
+  {
+    "id": "law-and-philosophy-schools-1047",
+    "year": 1047,
+    "category": "law",
+    "lonlat": [28.98, 41.01],
+    "importance": 2,
+    "title": {
+      "en": "Constantine IX Founds the Schools of Law and Philosophy",
+      "zh": "君士坦丁九世创设法学院与哲学院"
+    },
+    "summary": {
+      "en": "Constantine IX Monomachos formally endowed a school of law under John Xiphilinos as nomophylax and a school of philosophy under Michael Psellos, institutionalizing higher education in Constantinople for the first time in centuries.",
+      "zh": "君士坦丁九世·莫诺马库斯正式设立法学院，以约翰·克西菲利努斯出任'法律守护者'（nomophylax），并创设哲学院，以米海尔·普塞洛斯主持，数百年来首次将高等教育制度化于君士坦丁堡。"
+    },
+    "detail": {
+      "en": "Around 1047 Emperor Constantine IX Monomachos issued a chrysobull founding a formal school of law in Constantinople, appointing the jurist John Xiphilinos to the newly created office of nomophylax — 'guardian of the laws' — with a state salary and a mandate to train professional judges in the intricacies of the Basilika and imperial legislation.\n\nAlongside it he restored a school of philosophy, placing the brilliant scholar Michael Psellos at its head with the title 'Consul of the Philosophers'. The two schools together aimed to reverse a long decline in trained bureaucratic and judicial personnel, replacing informal private tutoring with a state-sponsored curriculum.\n\nThe experiment proved short-lived as an institution — both Xiphilinos and Psellos later left for the monastic life and high office — but it marked a deliberate, high-profile attempt by the Macedonian state to professionalize legal and philosophical education, foreshadowing the eleventh century's wider intellectual revival.",
+      "zh": "约1047年，皇帝君士坦丁九世·莫诺马库斯颁布金玺诏书，于君士坦丁堡正式设立法学院，任命法学家约翰·克西菲利努斯出任新设的'法律守护者'（nomophylax）一职，由国家支薪，专责培养精通《法律汇编》与历代敕令的专业法官。\n\n与此同时，他还恢复了哲学院，命才华横溢的学者米海尔·普塞洛斯出任院长，授以'哲学家之执政官'（Consul of the Philosophers）称号。两院并立，意在扭转长期以来官僚与司法人才培养不振之弊，以国家资助的正规课程取代此前松散的私人师授。\n\n此一制度作为机构存续未久——克西菲利努斯与普塞洛斯此后皆先后投身修道生活或迁任要职——然而它标志着马其顿王朝国家一次高调而自觉的尝试，力图使法学与哲学教育专业化，预示着十一世纪更为广泛的知识复兴风潮。"
+    }
+  },
+  {
+    "id": "nea-moni-mosaics-chios",
+    "year": 1042,
+    "endYear": 1055,
+    "category": "art",
+    "lonlat": [26.1, 38.36],
+    "importance": 2,
+    "title": {
+      "en": "The Mosaics of Nea Moni on Chios",
+      "zh": "希俄斯岛新修道院马赛克"
+    },
+    "summary": {
+      "en": "Constantine IX Monomachos endowed the Nea Moni monastery on Chios in gratitude for a prophecy of his accession, and its katholikon was adorned with mosaics ranking among the supreme achievements of Macedonian-era art.",
+      "zh": "君士坦丁九世·莫诺马库斯为酬谢一则预言其登基之应验，出资兴建希俄斯岛新修道院，其主堂内的马赛克镶嵌画堪称马其顿王朝艺术的巅峰之作。"
+    },
+    "detail": {
+      "en": "According to tradition, three hermit monks on Chios had foretold that the exiled nobleman Constantine Monomachos would become emperor. When the prophecy came true in 1042, the new emperor, together with empresses Zoe and Theodora, richly endowed a monastery, Nea Moni, on the site, funding a splendid domed katholikon completed over the following years.\n\nThe church's interior was covered with mosaics of extraordinary quality, worked in gold ground with an unusually somber, expressive style — cycles of the Passion and the lives of saints rendered with an emotional intensity that distinguishes them from more formal contemporary work in Constantinople. Imperial workshops evidently sent their finest craftsmen to the island.\n\nSurviving substantially intact despite earthquakes and war, the mosaics of Nea Moni remain, alongside those of Hosios Loukas and Daphni, among the three great mosaic ensembles of the middle Macedonian and early Komnenian periods, and a UNESCO World Heritage Site today.",
+      "zh": "相传三位隐修士曾于希俄斯岛预言，被流放的贵族君士坦丁·莫诺马库斯将登上帝位。1042年预言应验，这位新皇帝遂与皇后佐伊及狄奥多拉一同，于此地慷慨出资兴建新修道院（Nea Moni），资助修筑一座宏丽的圆顶主堂，历数年方告落成。\n\n教堂内部遍饰马赛克镶嵌画，以金地为底，风格独具一种罕见的深沉与表现力——受难图景与圣徒行传诸循环画面，情感强烈，与同期君士坦丁堡较为程式化的作品迥然不同，足见宫廷工坊曾遣其最精良的匠人前往该岛效力。\n\n这些马赛克历经地震与战乱，至今大体完好，与奥西奥斯·卢卡斯及达夫尼修道院的马赛克并称马其顿王朝中后期与科穆宁王朝初期三大马赛克杰作群，如今亦已列入联合国教科文组织世界遗产名录。"
+    }
+  },
+  {
+    "id": "great-schism-1054",
+    "year": 1054,
+    "category": "religion",
+    "lonlat": [28.98, 41.01],
+    "importance": 1,
+    "title": {
+      "en": "The Great Schism",
+      "zh": "教会大分裂"
+    },
+    "summary": {
+      "en": "Papal legate Cardinal Humbert laid a bull of excommunication on the altar of Hagia Sophia against Patriarch Michael Cerularius, who excommunicated the legates in turn — the formal rupture between the Roman and Constantinopolitan churches.",
+      "zh": "教皇特使红衣主教亨伯特将一份绝罚敕书置于圣索菲亚大教堂祭坛之上，绝罚君士坦丁堡牧首米海尔·凯鲁拉里乌斯；牧首随即反将特使等一并逐出教门——罗马教会与君士坦丁堡教会正式决裂就此发生。"
+    },
+    "detail": {
+      "en": "Tensions between Rome and Constantinople over papal authority, the addition of the filioque clause to the Creed, clerical celibacy, and liturgical practice such as the use of unleavened bread had simmered for centuries. In 1054 Pope Leo IX sent legates led by the combative Cardinal Humbert of Silva Candida to Constantinople to negotiate an alliance against the Normans in Italy and settle these disputes.\n\nNegotiations with the equally uncompromising Patriarch Michael Cerularius collapsed in acrimony. On 16 July 1054 Humbert placed a bull excommunicating Cerularius on the altar of Hagia Sophia during the liturgy and departed the city; days later a synod convened by the Patriarch anathematized the legates in return.\n\nAt the time neither side saw this as a permanent, final rupture — such exchanges had occurred before and been healed — but subsequent centuries, and above all the trauma of the Fourth Crusade in 1204, hardened 1054 in retrospect into the symbolic date of the lasting division between the Latin West and the Orthodox East.",
+      "zh": "罗马教廷与君士坦丁堡之间围绕教皇权柄、信经中'和子句'（filioque）的增添、教士独身以及是否使用无酵饼等礼仪问题，纷争已延续数百年。1054年，教皇利奥九世遣使赴君士坦丁堡，由性情刚烈的西尔瓦·坎迪达枢机亨伯特领衔，本意是就意大利境内对抗诺曼人一事结盟，并借机解决上述争端。\n\n谈判与同样毫不妥协的牧首米海尔·凯鲁拉里乌斯陷入僵局，终告破裂。1054年7月16日，亨伯特于礼拜进行之际，将一份绝罚凯鲁拉里乌斯的敕书置于圣索菲亚大教堂祭坛之上，随即离城而去；数日后，牧首召集宗教会议，反将诸位特使一并逐出教门。\n\n当时双方皆未视此为永久性的最终决裂——此类互相绝罚此前亦曾发生并获弥合——然而此后数百年间，尤其经1204年第四次十字军之惨痛创伤，1054年之事回溯而言逐渐被定格为拉丁西方教会与正教东方教会永久分裂的象征性年份。"
+    }
+  },
+  {
+    "id": "michael-psellos-revival-of-philosophy",
+    "year": 1055,
+    "category": "culture",
+    "lonlat": [28.98, 41.01],
+    "importance": 2,
+    "title": {
+      "en": "Michael Psellos and the Revival of Philosophy",
+      "zh": "米海尔·普塞洛斯与哲学复兴"
+    },
+    "summary": {
+      "en": "Courtier, monk, and polymath Michael Psellos led a mid-eleventh-century revival of Platonic philosophy and classical learning, reshaping Constantinople's intellectual culture and later chronicling it in his celebrated Chronographia.",
+      "zh": "身兼廷臣、修士与博学之士数重身份的米海尔·普塞洛斯，于十一世纪中叶引领了柏拉图哲学与古典学问的复兴，重塑了君士坦丁堡的知识文化风貌，并在其名著《编年史》中为这一时代留下生动记述。"
+    },
+    "detail": {
+      "en": "A dazzlingly versatile figure — rhetorician, historian, government minister, and sometime monk — Michael Psellos dominated Constantinople's intellectual life across the reigns of half a dozen emperors. As head of the restored philosophy school and self-styled 'Consul of the Philosophers', he championed the serious study of Plato and Neoplatonic thought at a time when such interests could draw suspicion of paganism from conservative churchmen.\n\nPsellos wrote prolifically on subjects ranging from law and medicine to rhetoric, theology, and the natural sciences, training a generation of officials and scholars, including his own rival and successor John Italos, whose more radical Platonism eventually brought formal condemnation.\n\nPsellos's greatest legacy is the Chronographia, an intimate and often waspish history of the emperors he served from Basil II to Michael VII, prized for its psychological portraiture and its unmatched window onto the court politics of the era. His career exemplifies the eleventh-century flowering of secular learning within a still deeply Christian intellectual world.",
+      "zh": "米海尔·普塞洛斯才华横溢、涉猎极广，兼修辞学家、史学家、朝廷重臣与一度出家修道的僧侣数重身份于一身，历经数代皇帝更迭，始终主导君士坦丁堡的知识生活。作为复兴哲学院之首，自号'哲学家之执政官'，他倡导认真研习柏拉图与新柏拉图主义思想——尽管此类兴趣在保守教士眼中，颇易招致异教嫌疑。\n\n普塞洛斯著述宏富，涉猎法律、医学、修辞、神学乃至自然科学诸领域，培养了整整一代官员与学者，其中包括后来居上、终因柏拉图主义倾向过于激进而遭正式谴责的对手兼继任者约翰·伊塔洛斯。\n\n普塞洛斯留给后世最重要的遗产，是其《编年史》——一部记述其历侍诸帝、自巴西尔二世至米海尔七世的私密而不乏尖锐笔触的史著，以精湛的人物心理刻画与对时代宫廷政治的独到洞察而备受珍视。其生平堪称十一世纪世俗学问在依然深植基督教信仰的知识世界中蓬勃复兴的典范。"
+    }
+  },
+  {
+    "id": "debasement-of-the-nomisma",
+    "year": 1042,
+    "endYear": 1092,
+    "category": "economy",
+    "lonlat": [28.98, 41.01],
+    "importance": 2,
+    "title": {
+      "en": "The Debasement of the Nomisma",
+      "zh": "诺米斯玛金币的成色贬损"
+    },
+    "summary": {
+      "en": "After some seven centuries of near-constant purity, the gold nomisma was progressively debased from the reign of Constantine IX onward, its gold content falling by three-quarters by the 1080s and eroding confidence in imperial coinage.",
+      "zh": "历经近七百年成色几近恒定之后，金币诺米斯玛自君士坦丁九世治下起逐步遭到贬损，至1080年代其含金量已下跌四分之三，动摇了人们对帝国铸币的信心。"
+    },
+    "detail": {
+      "en": "Since its introduction by Constantine the Great, the gold solidus — the nomisma — had held its 24-carat purity with remarkable consistency, becoming the most trusted currency of the medieval Mediterranean world. Beginning under Constantine IX Monomachos in the 1040s, rising court expenditure, an inflated bureaucracy, and costly wars led emperors to quietly reduce its gold content.\n\nThe process accelerated sharply under Michael VII, Nikephoros III, and the early years of Alexios I Komnenos, as military crises on multiple frontiers drained the treasury; by the 1080s nomismata in circulation might contain as little as a quarter of their nominal gold content, alongside a bewildering variety of debased and counterfeit issues.\n\nThe resulting confusion and loss of confidence contributed to the fiscal emergency Alexios I inherited, and only his coinage reform of 1092 — introducing the new high-purity hyperpyron — restored a stable gold standard, though the older nomisma's centuries-long reputation for reliability was never fully recovered.",
+      "zh": "自君士坦丁大帝始铸以来，金币索利都斯——即诺米斯玛——始终保持二十四K纯金的成色，历久不变，成为中古地中海世界最受信赖的货币。然而自1040年代君士坦丁九世·莫诺马库斯治下起，宫廷开支日增、官僚机构臃肿、战事耗资浩繁，历代皇帝遂悄然削减其含金量。\n\n这一趋势在米海尔七世、尼基弗鲁斯三世治下及阿莱克修斯一世·科穆宁在位初期急剧加速，彼时多线军事危机耗尽国库；至1080年代，流通中的诺米斯玛金币含金量或仅及名义值的四分之一，且伴随着五花八门、成色不一乃至伪造的各类铸币。\n\n由此引发的混乱与信心丧失，加剧了阿莱克修斯一世接手之际的财政危局；唯有他于1092年推行的币制改革——发行成色更高的新币'海珀皮隆'（hyperpyron）——才重建了稳定的金本位制度，然而旧诺米斯玛数百年来所积累的信誉，却再未完全恢复。"
+    }
+  },
+  {
+    "id": "manzikert-and-loss-of-bari",
+    "year": 1071,
+    "category": "military",
+    "lonlat": [42.5, 39.15],
+    "importance": 1,
+    "title": {
+      "en": "Manzikert and the Loss of Bari",
+      "zh": "曼齐刻尔特之败与巴里的陷落"
+    },
+    "summary": {
+      "en": "In a single catastrophic year the Empire lost its last foothold in Italy at Bari to the Normans in April and saw its main field army destroyed and Emperor Romanos IV captured by the Seljuk Turks at Manzikert in August.",
+      "zh": "短短一年之内，帝国先是于四月在巴里失去意大利最后一处据点，落入诺曼人之手；八月又在曼齐刻尔特遭塞尔柱突厥人重创主力野战军，皇帝罗曼努斯四世本人亦被俘虏——真是灾难性的一年。"
+    },
+    "detail": {
+      "en": "The year 1071 brought two blows from opposite ends of the Roman world. In April, after a three-year siege, the Norman adventurer Robert Guiscard took Bari, the Empire's last stronghold in southern Italy, ending some five centuries of Roman presence on the Italian peninsula since Justinian's reconquest.\n\nFar to the east that August, Emperor Romanos IV Diogenes led a large army to confront Sultan Alp Arslan near Manzikert in Armenia. Betrayal by rival commanders, poor reconnaissance, and a mistimed withdrawal turned an already difficult battle into a rout; Romanos himself was captured, an unprecedented humiliation, though the sultan released him on terms.\n\nManzikert's true catastrophe unfolded afterward: the civil war that followed Romanos's capture and deposition left Anatolia's defences hollow, and Turkish warbands poured across the plateau in the ensuing decade, permanently transforming the demographic and political map of the Roman heartland.",
+      "zh": "1071年，帝国在东西两端同时遭受重创。四月，诺曼冒险家罗贝尔·吉斯卡尔经三年围攻，攻陷巴里——帝国在意大利南部的最后据点，自查士丁尼收复失地以来罗马在亚平宁半岛延续约五百年的存在就此终结。\n\n同年八月，远在东方，皇帝罗曼努斯四世·狄奥根尼斯率大军于亚美尼亚境内的曼齐刻尔特附近迎战苏丹阿尔普·阿尔斯兰。由于对手将领的背叛、侦察不力与撤退时机失当，一场本已艰难的战役演变为溃败；罗曼努斯本人被俘——此乃空前之奇耻大辱，尽管苏丹后来以条件将其释放。\n\n曼齐刻尔特真正的灾难性后果，实发生于战后：罗曼努斯被俘及其后遭废黜所引发的内战，使安纳托利亚防务陷入空虚，此后十年间突厥部众蜂拥涌入高原地带，永久改变了罗马腹心之地的人口与政治版图。"
+    }
+  },
+  {
+    "id": "alexios-i-accession",
+    "year": 1081,
+    "category": "politics",
+    "lonlat": [28.98, 41.01],
+    "importance": 1,
+    "title": {
+      "en": "Accession of Alexios I Komnenos",
+      "zh": "阿莱克修斯一世·科穆宁登基"
+    },
+    "summary": {
+      "en": "The general Alexios Komnenos seized the throne amid simultaneous Norman invasion and Turkish advance, founding the Komnenian dynasty that would stabilize and partially restore the Empire over the following century.",
+      "zh": "将领阿莱克修斯·科穆宁在诺曼人入侵与突厥人步步进逼的双重危局之中夺取皇位，开创科穆宁王朝，此后一个世纪，该王朝使帝国得以稳定并部分中兴。"
+    },
+    "detail": {
+      "en": "A decade of coups and countercoups following Manzikert had left the Empire drained and nearly ungovernable, its Anatolian heartland overrun by Turkish bands and its Balkan flank menaced by an imminent Norman invasion under Robert Guiscard. Into this crisis stepped Alexios Komnenos, a talented young general from an established military aristocratic family.\n\nIn April 1081 Alexios marched on Constantinople with an army drawn substantially from mercenaries and allied contingents, and after negotiations and a brief but brutal sack of parts of the city by his own troops, secured the throne with backing from the powerful Doukas family through marriage.\n\nAlexios inherited a treasury debased and empty, an army in tatters, and enemies on every frontier, yet his thirty-seven-year reign — through desperate improvisation, diplomacy, and the fortuitous arrival of the First Crusade — would arrest the Empire's collapse and lay the foundations of the twelfth-century Komnenian restoration.",
+      "zh": "曼齐刻尔特之后十年间政变迭起，帝国元气大伤，几近无法治理：安纳托利亚腹地为突厥部众所侵占，巴尔干侧翼又面临罗贝尔·吉斯卡尔麾下诺曼大军迫在眉睫的入侵。正当此危局之际，出身显赫军事贵族世家、才干过人的青年将领阿莱克修斯·科穆宁挺身而出。\n\n1081年4月，阿莱克修斯率一支主要由雇佣兵与盟军组成的军队进军君士坦丁堡，经谈判并放任部下短暂而残酷地劫掠城中部分街区之后，凭借与权势煊赫的杜卡斯家族联姻所获支持，登上帝位。\n\n阿莱克修斯所接手的，是一座成色贬损、几近空虚的国库，一支残破不堪的军队，以及四境皆敌的困局；然而他在位三十七年间，凭借孤注一掷的应变之策、纵横捭阖的外交手腕，以及恰逢其时的第一次十字军东征，终使帝国摆脱崩溃边缘，为十二世纪科穆宁王朝的中兴奠定了根基。"
+    }
+  },
+  {
+    "id": "chrysobull-to-venice",
+    "year": 1082,
+    "category": "economy",
+    "lonlat": [28.98, 41.01],
+    "importance": 2,
+    "title": {
+      "en": "The Chrysobull to Venice",
+      "zh": "颁予威尼斯的金玺诏书"
+    },
+    "summary": {
+      "en": "In exchange for naval aid against the Normans, Alexios I granted Venice sweeping trade privileges — tax exemption and a permanent quarter in Constantinople — a concession that would reshape the Empire's commercial economy for generations.",
+      "zh": "为换取威尼斯出动舰队助其抵御诺曼人，阿莱克修斯一世颁赐威尼斯极为优厚的通商特权——免税待遇及在君士坦丁堡设立永久居留区——这一让步此后数代之间深刻改变了帝国的商业经济格局。"
+    },
+    "detail": {
+      "en": "Facing Robert Guiscard's Norman invasion of the Balkans and lacking a fleet capable of contesting the Adriatic, Alexios I turned to the maritime republic of Venice for naval support. In return, around 1082 he issued a chrysobull of extraordinary generosity: Venetian merchants were exempted from the customary trade duties levied on foreign traders throughout the Empire, and Venice received wharves, warehouses, and a church in its own quarter of Constantinople along the Golden Horn.\n\nThe immediate military benefit was real — Venetian galleys helped harass Norman supply lines — but the long-term economic cost proved severe. Freed from taxation, Venetian merchants steadily displaced Roman shippers and traders from the Empire's own carrying trade, a privilege later extended in modified form to Pisa and Genoa as well.\n\nBy the twelfth century, resentment at this dominant, tax-exempt Italian merchant presence in Constantinople itself would become a source of serious social and political tension, culminating in the violence of 1182.",
+      "zh": "面对罗贝尔·吉斯卡尔麾下诺曼大军入侵巴尔干、而自身舰队又无力在亚得里亚海域与之抗衡的局面，阿莱克修斯一世遂转求海上共和国威尼斯出兵相助。作为回报，他约于1082年颁布一份极为慷慨的金玺诏书：威尼斯商人获准免缴帝国境内向外商惯常征收的各项通商税项，威尼斯并在君士坦丁堡金角湾沿岸获得码头、仓库及一处教堂，设立本国专属居留区。\n\n此举在军事上确实收效——威尼斯战船协助袭扰诺曼人的补给线；然而其长远经济代价却颇为沉重。免税经营的威尼斯商人逐步排挤了罗马本土的船商与商贾在帝国自身运输贸易中的份额，这一特权此后又以不同程度延及比萨与热那亚。\n\n至十二世纪，君士坦丁堡城内这批享有免税特权、势力日盛的意大利商人群体，逐渐引发严重的社会与政治紧张，终在1182年酿成流血冲突。"
+    }
+  },
+  {
+    "id": "first-crusade-in-constantinople",
+    "year": 1096,
+    "endYear": 1097,
+    "category": "civilization",
+    "lonlat": [28.98, 41.01],
+    "importance": 2,
+    "title": {
+      "en": "The First Crusade Passes Through Constantinople",
+      "zh": "第一次十字军途经君士坦丁堡"
+    },
+    "summary": {
+      "en": "Successive waves of crusader armies passed through Constantinople in 1096-97; Alexios I exacted oaths of allegiance from their leaders, ferried them into Asia Minor, and helped recover Nicaea, in a fraught first encounter between Latin Crusaders and the Roman world.",
+      "zh": "1096至1097年间，一批批十字军队伍相继抵达君士坦丁堡；阿莱克修斯一世要求各路首领宣誓效忠，随后将其渡运至小亚细亚，并协助收复尼西亚——这是拉丁十字军与罗马世界之间一次充满猜忌与张力的初次相遇。"
+    },
+    "detail": {
+      "en": "Alexios I's appeal to Pope Urban II for mercenary support against the Turks unexpectedly produced a mass popular and then noble armed pilgrimage toward Jerusalem. From 1096 successive contingents under leaders such as Godfrey of Bouillon, Bohemond of Taranto, and Raymond of Toulouse arrived at Constantinople, vastly larger and more independent than the reinforcements Alexios had envisioned.\n\nWary of a force he could neither fully control nor trust — Bohemond in particular had recently warred against the Empire in the Balkans — Alexios housed the crusaders outside the city walls, provisioned them carefully, and extracted oaths that any reconquered former Roman territory would be restored to imperial rule.\n\nIn June 1097 combined Roman and crusader forces recovered Nicaea, and Alexios ferried the crusading armies across the Bosporus into Anatolia. The uneasy cooperation soon frayed — Bohemond's seizure of Antioch for himself in 1098 broke his oath outright — inaugurating a century of suspicion and rivalry between Constantinople and the Latin West.",
+      "zh": "阿莱克修斯一世本欲向教皇乌尔班二世求援雇佣兵以抗突厥，不料却意外催生了一场声势浩大、先民众后贵族相继投身的武装朝圣运动，直指耶路撒冷。自1096年起，戈弗雷·德·布永、塔兰托的博希蒙德、图卢兹的雷蒙等首领所率各路人马相继抵达君士坦丁堡，其规模与独立性都远超阿莱克修斯原先设想的援军。\n\n对这支既难以掌控、又难以信任的军队——尤其博希蒙德此前刚在巴尔干与帝国交战——阿莱克修斯颇为戒备，将十字军安置于城墙之外，谨慎供给粮秣，并要求各首领宣誓：凡收复之原罗马领土，皆须归还帝国治下。\n\n1097年6月，罗马与十字军联军收复尼西亚，阿莱克修斯随即将十字军渡过博斯普鲁斯海峡送入安纳托利亚。然而这种微妙的合作旋即破裂——博希蒙德于1098年径自夺取安条克，公然背弃誓言——由此开启了此后一个世纪君士坦丁堡与拉丁西方之间猜忌与争斗交织的局面。"
+    }
+  },
+  {
+    "id": "john-ii-reconquests",
+    "year": 1119,
+    "endYear": 1135,
+    "category": "military",
+    "lonlat": [29.1, 37.8],
+    "importance": 2,
+    "title": {
+      "en": "John II Komnenos's Anatolian Reconquests",
+      "zh": "约翰二世·科穆宁的安纳托利亚收复战"
+    },
+    "summary": {
+      "en": "The pious and disciplined John II Komnenos spent much of his reign campaigning to recover Roman territory in Anatolia, retaking Sozopolis and other strongholds and forcing the submission of Crusader Antioch.",
+      "zh": "虔敬而治军严明的约翰二世·科穆宁在位期间大力用兵，志在收复安纳托利亚失地，先后夺回索佐波利斯等要塞，并迫使十字军治下的安条克臣服。"
+    },
+    "detail": {
+      "en": "Succeeding his father Alexios I in 1118, John II Komnenos continued the Komnenian project of methodical territorial recovery, campaigning almost every year of his twenty-five-year reign against Turkish emirates in western and southern Anatolia. In 1120 his forces stormed Sozopolis, a strategic fortress-city commanding routes through the Anatolian plateau, restoring Roman control over territory lost since Manzikert.\n\nJohn's campaigns steadily pushed Roman authority back into regions along the old military roads toward Attaleia and the Cilician coast, methodically undoing decades of Turkish encroachment through siegecraft rather than dramatic pitched battles, in keeping with his cautious, disciplined generalship.\n\nIn 1137-38 he extended this pressure into Cilicia and northern Syria, compelling Prince Raymond of Antioch to acknowledge Roman overlordship. Known to contemporaries for his personal piety and restraint from the luxuries of court life, John II is often regarded as the ablest of the Komnenian emperors, though his reign's gains were only partially consolidated by his successors.",
+      "zh": "约翰二世·科穆宁于1118年继承其父阿莱克修斯一世之位，延续科穆宁王朝步步为营、渐次收复失地的方略，在长达二十五年的统治期间几乎年年出征，讨伐安纳托利亚西部与南部的突厥诸酋长国。1120年，其军队攻克索佐波利斯——一座扼守安纳托利亚高原通道、地位关键的要塞城市，重新确立罗马对这一自曼齐刻尔特以来沦陷已久之地的控制。\n\n约翰历次征战，逐步将罗马势力沿古军道推回阿塔利亚与奇里乞亚沿海地区，以稳健的围城战术而非惊天动地的大会战，有条不紊地扭转数十年来突厥人的蚕食之势，这也与其审慎、严谨的治军风格一脉相承。\n\n1137至1138年间，他进一步将压力延伸至奇里乞亚与叙利亚北部，迫使安条克亲王雷蒙德承认罗马宗主权。约翰二世素以虔诚自律、不耽宫廷奢靡著称于当世，常被视为科穆宁诸帝中最为杰出者，尽管其所获战果，此后仅被继任者部分巩固。"
+    }
+  },
+  {
+    "id": "anna-komnene-alexiad",
+    "year": 1148,
+    "category": "culture",
+    "lonlat": [28.98, 41.01],
+    "importance": 2,
+    "title": {
+      "en": "Anna Komnene Completes the Alexiad",
+      "zh": "安娜·科穆宁娜完成《阿莱克修斯传》"
+    },
+    "summary": {
+      "en": "In retirement at the Kecharitomene convent, the princess and scholar Anna Komnene completed the Alexiad, a fifteen-book history of her father Alexios I's reign and one of the great works of medieval literature by a woman historian.",
+      "zh": "隐居于凯哈里托梅尼女修道院期间，公主学者安娜·科穆宁娜完成了记述其父阿莱克修斯一世统治的十五卷本史著《阿莱克修斯传》，堪称中古时代出自女性史家之手的伟大著作。"
+    },
+    "detail": {
+      "en": "Eldest daughter of Alexios I and once the intended heir to the throne, Anna Komnene was sidelined after a failed conspiracy against her brother John II and spent her later decades in the Kecharitomene convent she had helped found. There, around 1148, she completed the Alexiad, an ambitious history in fifteen books recounting her father's reign from the eve of his accession through the passage of the First Crusade.\n\nWritten in a deliberately archaizing, classicizing Greek modeled on Thucydides and Polybius, the work combines genuine historical research, access to court documents and veterans of the campaigns, and unabashed filial devotion, presenting Alexios as the wily saviour of a collapsing state.\n\nDespite its partisan aims, the Alexiad remains an indispensable and vividly detailed source for the era, including a famously skeptical Roman perspective on the crusaders as unruly, land-hungry barbarians — a rare instance of a medieval woman composing a full-scale work of secular history and political analysis.",
+      "zh": "安娜·科穆宁娜身为阿莱克修斯一世长女，一度被内定为皇位继承人，后因图谋废黜其弟约翰二世未遂而遭排挤，晚年隐居于她曾协助创立的凯哈里托梅尼女修道院。约1148年，她在此完成了雄心勃勃的十五卷本史著《阿莱克修斯传》，记述其父自登基前夕直至第一次十字军东征期间的统治历程。\n\n此书刻意仿效修昔底德与波利比乌斯的古典希腊文风，兼具扎实的史料考证——得益于宫廷档案与历次战役老兵的口述——与毫不掩饰的孝女深情，将阿莱克修斯塑造为力挽狂澜、拯救危亡国家的睿智君主。\n\n尽管带有鲜明的护父立场，《阿莱克修斯传》仍是研究这一时代不可或缺、细节生动的重要史料，其中包括著名的、对十字军颇多疑虑的罗马视角，视其为贪求土地、桀骜难驯的蛮族——这也是中古时代女性撰写大部头世俗史学与政治评论著作的罕见范例。"
+    }
+  },
+  {
+    "id": "manuel-i-westernizing-court",
+    "year": 1143,
+    "endYear": 1180,
+    "category": "politics",
+    "lonlat": [28.98, 41.01],
+    "importance": 1,
+    "title": {
+      "en": "Manuel I Komnenos and His Westernizing Court",
+      "zh": "曼努埃尔一世·科穆宁及其西化宫廷"
+    },
+    "summary": {
+      "en": "Manuel I Komnenos cultivated close ties with the Crusader states and the Latin West, favouring Western knights, tournaments, and marriage alliances at court, an ambitious cosmopolitan policy that ended in disaster at Myriokephalon in 1176.",
+      "zh": "曼努埃尔一世·科穆宁与十字军诸国及拉丁西方交往密切，宫廷之中偏爱西方骑士、马上比武与联姻结盟，此一雄心勃勃的世界主义政策，最终却在1176年的米里奥克法隆惨遭挫败。"
+    },
+    "detail": {
+      "en": "The most flamboyant and ambitious of the Komnenian emperors, Manuel I surrounded himself with Latin knights, hosted Western-style jousting tournaments in Constantinople, married two Latin wives in succession, and pursued an expansive foreign policy stretching from Italy and Hungary to the Crusader states of Outremer, whose princes he brought under nominal Roman suzerainty.\n\nHis reign saw genuine achievements: the submission of Antioch in 1158, effective diplomacy with the German and Sicilian courts, and a Constantinople more open to Latin merchants, scholars, and soldiers than at any point before or after. Critics among his own aristocracy, however, resented what they saw as an excessive taste for things foreign at the expense of Roman tradition.\n\nManuel's overreach culminated in 1176 at Myriokephalon, where Sultan Kilij Arslan II ambushed and mauled a massive Roman expeditionary force in an Anatolian mountain pass. Though not as ruinous as Manzikert, the defeat shattered Manuel's prestige and revealed the limits of Komnenian power on the very eve of the dynasty's decline.",
+      "zh": "曼努埃尔一世乃科穆宁诸帝中最为张扬而雄心勃勃者，宫廷中广纳拉丁骑士，在君士坦丁堡举办西式马上比武大会，先后两度迎娶拉丁公主为妻，并推行一项版图广及意大利、匈牙利乃至海外十字军诸国的扩张外交，将后者诸位王公纳入名义上的罗马宗主权之下。\n\n其治世确有实绩：1158年安条克归顺，与德意志及西西里宫廷之间的外交手腕颇为得力，君士坦丁堡对拉丁商贾、学者与士兵之开放程度，亦为前后各朝所未有。然而其本国贵族中的批评者，则颇为不满其对异域风尚的过度偏爱，以为有损罗马传统。\n\n曼努埃尔的雄图终在1176年米里奥克法隆遭遇重挫：苏丹基利杰·阿尔斯兰二世在安纳托利亚一处山隘伏击并重创一支庞大的罗马远征军。此役虽不及曼齐刻尔特惨烈，却令曼努埃尔威望扫地，也在科穆宁王朝行将衰落的前夕，暴露出其权势之极限。"
+    }
+  },
+  {
+    "id": "massacre-of-the-latins",
+    "year": 1182,
+    "category": "economy",
+    "lonlat": [28.98, 41.01],
+    "importance": 2,
+    "title": {
+      "en": "The Massacre of the Latins",
+      "zh": "屠杀拉丁人事件"
+    },
+    "summary": {
+      "en": "As Andronikos I Komnenos seized power, a Constantinopolitan mob turned on the city's privileged, tax-exempt Latin merchant community, killing thousands and burning their quarters in an explosion of long-simmering economic resentment.",
+      "zh": "安德罗尼库斯一世·科穆宁夺权之际，君士坦丁堡的暴民转而攻击城中享有免税特权的拉丁商人社群，屠杀数千人，焚毁其居留区——这是长期积压的经济怨愤所爆发的一场浩劫。"
+    },
+    "detail": {
+      "en": "Decades of trade concessions to Venice, Genoa, and Pisa had produced a large, wealthy, and legally privileged community of Latin merchants resident in Constantinople, resented by native Roman traders whom Italian competitors, exempt from customs duties, had steadily displaced from lucrative branches of commerce.\n\nIn April 1182, as the general Andronikos Komnenos marched on the capital to seize power from the regency of the child emperor Alexios II, this resentment exploded into mob violence. Constantinopolitan crowds, with the tacit encouragement of Andronikos's supporters, stormed the Latin quarters, killing an estimated several thousand residents — men, women, and clergy alike — and burning warehouses and churches to the ground; many survivors fled to Italian ships in the harbour.\n\nThe massacre poisoned relations between the Empire and the Italian maritime republics for a generation, feeding a cycle of retaliation and distrust that historians count among the deeper, long-building causes of the catastrophe of 1204.",
+      "zh": "数十年来对威尼斯、热那亚与比萨所作的通商让步，使君士坦丁堡聚居了一个人数众多、财力雄厚且享有法律特权的拉丁商人社群；本地罗马商贾眼见这些享受免税待遇的意大利竞争者逐步挤占利润丰厚的商业领域，早已心怀怨愤。\n\n1182年4月，将领安德罗尼库斯·科穆宁进军都城，欲从幼帝阿莱克修斯二世的摄政手中夺取大权，此时长期积压的怨愤终于化作暴民骚乱。君士坦丁堡民众在安德罗尼库斯党羽的默许纵容之下，冲入拉丁人居留区，据估计屠杀数千居民——男女老幼与神职人员皆未能幸免——并将仓库教堂付之一炬；不少幸存者逃至港内意大利船只上避难。\n\n此次屠杀使帝国与意大利诸海上共和国之间的关系恶化整整一代人之久，助长了报复与猜忌的恶性循环，史家普遍将其列为1204年浩劫背后深层而长期积累的诱因之一。"
+    }
+  },
+  {
+    "id": "sack-of-thessaloniki-1185",
+    "year": 1185,
+    "category": "military",
+    "lonlat": [22.94, 40.64],
+    "importance": 2,
+    "title": {
+      "en": "The Norman Sack of Thessaloniki",
+      "zh": "诺曼人洗劫塞萨洛尼基"
+    },
+    "summary": {
+      "en": "A Norman-Sicilian army under William II captured the Empire's second city, Thessaloniki, in August 1185, subjecting it to a brutal sack that killed thousands and exposed the hollowness of Andronikos I's regime.",
+      "zh": "1185年8月，威廉二世麾下的诺曼—西西里大军攻陷帝国第二大城塞萨洛尼基，纵兵大肆劫掠屠戮，死者数以千计，安德罗尼库斯一世政权之虚弱由此暴露无遗。"
+    },
+    "detail": {
+      "en": "Exploiting the instability and terror of Andronikos I Komnenos's brief, bloody reign, King William II of Sicily launched a major invasion of the Balkans in 1185, landing a Norman army that advanced rapidly on Thessaloniki, the Empire's second city after Constantinople.\n\nAfter a short siege the city fell in August, and the Norman soldiery subjected it to several days of massacre, rape, and pillage; contemporary eyewitness Eustathios, the city's own archbishop, left a harrowing account of the atrocities, estimating thousands killed and the city's churches and wealth despoiled.\n\nThe disaster, following swiftly on news of Andronikos's tyrannical purges in Constantinople, helped trigger the revolt that overthrew and lynched Andronikos weeks later, bringing Isaac II Angelos to the throne — though Roman forces did manage to expel the Normans from Thessaloniki before the year's end, the sack stood as a stark demonstration of the Empire's weakened defenses.",
+      "zh": "西西里国王威廉二世趁安德罗尼库斯一世短暂而血腥的统治所引发的动荡与恐惧，于1185年发动大规模巴尔干入侵，其诺曼大军登陆后迅速进逼帝国仅次于君士坦丁堡的第二大城塞萨洛尼基。\n\n经短暂围攻，该城于8月陷落，诺曼士兵连日纵兵屠戮、奸淫掳掠；该城大主教、当时的目击者尤斯塔提乌斯留下了一份令人触目惊心的记述，估计死者数以千计，教堂财货亦遭洗劫一空。\n\n这场浩劫紧随安德罗尼库斯在君士坦丁堡暴虐清洗的消息之后传来，助推了数周后推翻并将其处以私刑的叛乱，伊萨克二世·安苴鲁斯由此登上帝位——尽管罗马军队最终于年内成功将诺曼人逐出塞萨洛尼基，此次浩劫仍赤裸裸地暴露出帝国防务已何等衰弱。"
+    }
+  },
+  {
+    "id": "rise-of-the-angeloi",
+    "year": 1185,
+    "endYear": 1203,
+    "category": "politics",
+    "lonlat": [28.98, 41.01],
+    "importance": 1,
+    "title": {
+      "en": "The Rise of the Angeloi and Fiscal Decay",
+      "zh": "安苴鲁斯王朝的兴起与财政衰败"
+    },
+    "summary": {
+      "en": "Isaac II Angelos's overthrow of Andronikos I in 1185 began the Angelid dynasty, whose eighteen years of weak governance, lost provinces, and collapsing finances left the Empire dangerously unprepared for the crusading army that reached its walls in 1203.",
+      "zh": "1185年伊萨克二世·安苴鲁斯推翻安德罗尼库斯一世，开创安苴鲁斯王朝；此后十八年间，治理孱弱、行省沦丧、财政崩溃，使帝国在1203年十字军兵临城下之际，已然陷入极度危殆而毫无防备的境地。"
+    },
+    "detail": {
+      "en": "The lynching of the tyrannical Andronikos I in September 1185 brought the obscure aristocrat Isaac II Angelos to power, founding a dynasty that would prove markedly less capable than its Komnenian predecessors. Within months a Vlach-Bulgarian revolt under the brothers Peter and Asen broke out in the Balkans, and by 1188 had succeeded in re-establishing an independent Bulgarian state north of the Haemus mountains, undoing Basil II's conquest of 1018.\n\nIsaac and his brother and successor Alexios III, who deposed and blinded him in 1195, presided over a court riddled with corruption, a countryside plagued by rebel warlords, and a treasury drained by extravagant spending, tax farming abuses, and the loss of Balkan revenues to the resurgent Bulgarians and to Serbian expansion.\n\nBy 1203, when the diverted armies of the Fourth Crusade appeared before Constantinople demanding the restoration of a deposed prince, the Empire's central authority had grown so hollow, its treasury so bare, and its provincial loyalties so frayed that it could offer only fitful resistance to the catastrophe that would engulf the city the following year.",
+      "zh": "1185年9月，暴君安德罗尼库斯一世为暴民处以私刑，出身寒微的贵族伊萨克二世·安苴鲁斯登上帝位，开创了一个远逊于科穆宁前朝的王朝。数月之内，巴尔干爆发彼得与阿森兄弟领导的瓦拉赫—保加利亚人起义，至1188年，海姆斯山脉以北的独立保加利亚国家宣告重建，巴西尔二世1018年的征服成果由此化为乌有。\n\n伊萨克及其兄弟兼继承者、1195年将其废黜并刺瞎双目的阿莱克修斯三世，治下宫廷腐败丛生，乡野遍布割据军阀，国库因奢靡挥霍、包税弊政以及巴尔干税源因保加利亚复兴与塞尔维亚扩张而不断流失，日渐枯竭。\n\n至1203年，第四次十字军改道而来的军队兵临君士坦丁堡城下，要求复立被废黜的皇子之位时，帝国中央权威已然虚弱不堪，国库空空如也，各行省离心离德，面对次年即将吞噬这座都城的浩劫，帝国已只能作出零星而无力的抵抗。"
+    }
+  }
+]
