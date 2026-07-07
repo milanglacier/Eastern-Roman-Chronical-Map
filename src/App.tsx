@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { MapCanvas } from './map/MapCanvas';
 import { EventMarkers } from './map/EventMarkers';
+import { CityMarkers } from './map/CityMarkers';
 import { Header } from './ui/Header';
 import { Timeline } from './ui/Timeline';
 import { EventPanel } from './ui/EventPanel';
@@ -44,6 +45,7 @@ export default function App() {
       <Header />
       <main className="map-stage">
         <MapCanvas />
+        <CityMarkers />
         <EventMarkers />
         <Legend />
         <p className="drag-hint">{t('dragHint')}</p>

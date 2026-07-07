@@ -208,6 +208,59 @@ button {
   border-top-color: var(--gold-bright);
 }
 
+/* ————— City markers ————— */
+
+.city-markers {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.city-marker {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.city-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #ffe9a8, var(--gold-bright) 60%, #7a5b16);
+  border: 1px solid rgba(26, 16, 40, 0.85);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.city-name {
+  font-family: 'Cinzel', 'Songti SC', 'Noto Serif SC', serif;
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  color: #f3ead6;
+  text-shadow:
+    0 1px 2px rgba(10, 8, 20, 0.95),
+    0 0 6px rgba(10, 8, 20, 0.8);
+  white-space: nowrap;
+}
+
+.city-marker.rank-1 .city-dot {
+  width: 10px;
+  height: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6), 0 0 8px 1px rgba(216, 182, 74, 0.45);
+}
+
+.city-marker.rank-1 .city-name {
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+.city-marker.rank-2 {
+  opacity: 0.92;
+}
+
 /* ————— Event panel ————— */
 
 .event-panel {

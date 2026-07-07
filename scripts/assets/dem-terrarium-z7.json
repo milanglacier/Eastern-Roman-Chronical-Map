@@ -1,0 +1,12 @@
+{
+  "source": "AWS Terrain Tiles (Terrarium), s3://elevation-tiles-prod",
+  "encoding": "meters = (R * 256 + G + B / 256) - 32768",
+  "zoom": 7,
+  "tileSize": 256,
+  "tileXMin": 59,
+  "tileXMax": 80,
+  "tileYMin": 43,
+  "tileYMax": 55,
+  "width": 5632,
+  "height": 3328
+}

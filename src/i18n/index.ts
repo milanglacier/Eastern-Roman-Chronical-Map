@@ -19,6 +19,7 @@ const dict = {
   terrainHills: { en: 'Hills', zh: '丘陵' },
   terrainMountain: { en: 'Mountains', zh: '山脉' },
   terrainDesert: { en: 'Desert', zh: '沙漠' },
+  terrainSnow: { en: 'Snowcaps', zh: '雪峰' },
   eventsInEra: { en: 'Events of this era', zh: '本时代大事记' },
   dragHint: { en: 'Drag to pan · scroll to zoom', zh: '拖拽平移 · 滚轮缩放' },
   languageToggle: { en: '中文', zh: 'EN' },

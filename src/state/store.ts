@@ -4,25 +4,24 @@ import { YEAR_MIN, YEAR_MAX } from '../data/schema';
 
 export type Language = 'en' | 'zh';
 
-export interface CameraState {
-  x: number;
-  y: number;
-  scale: number;
-}
-
 interface AppState {
   year: number;
   isPlaying: boolean;
   language: Language;
   selectedEventId: string | null;
-  camera: CameraState;
+  /**
+   * Monotone counter bumped by the 3D camera whenever the view changes; DOM
+   * overlays subscribe to it and re-project via map/three/projection.ts (a
+   * function has no place in a persisted store).
+   */
+  viewVersion: number;
   setYear: (year: number) => void;
   play: () => void;
   pause: () => void;
   togglePlay: () => void;
   selectEvent: (id: string | null) => void;
   setLanguage: (lang: Language) => void;
-  setCamera: (camera: CameraState) => void;
+  bumpView: () => void;
 }
 
 export const clampYear = (year: number): number =>
@@ -35,7 +34,7 @@ export const useAppStore = create<AppState>()(
       isPlaying: false,
       language: 'zh',
       selectedEventId: null,
-      camera: { x: 0, y: 0, scale: 1 },
+      viewVersion: 0,
       setYear: (year) => set({ year: clampYear(year) }),
       play: () =>
         set((s) => ({
@@ -49,7 +48,7 @@ export const useAppStore = create<AppState>()(
       // Selecting an event always stops autoplay (user requirement).
       selectEvent: (id) => set((s) => ({ selectedEventId: id, isPlaying: id === null ? s.isPlaying : false })),
       setLanguage: (language) => set({ language }),
-      setCamera: (camera) => set({ camera }),
+      bumpView: () => set((s) => ({ viewVersion: (s.viewVersion + 1) % 0x7fffffff })),
     }),
     {
       name: 'east-roman-map-prefs',

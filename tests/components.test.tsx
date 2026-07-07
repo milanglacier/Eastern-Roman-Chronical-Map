@@ -16,7 +16,7 @@ beforeEach(() => {
     isPlaying: false,
     selectedEventId: null,
     language: 'zh',
-    camera: { x: 0, y: 0, scale: 1 },
+    viewVersion: 0,
   });
 });
 

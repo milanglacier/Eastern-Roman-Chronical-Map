@@ -2,17 +2,17 @@ import { useState } from 'react';
 import { useT, useLang, categoryNames } from '../i18n';
 import { EVENT_CATEGORIES } from '../data/schema';
 import { CategoryIcon } from './CategoryIcon';
-import { CATEGORY_COLORS, TERRAIN_COLORS, TERRITORY_FILL } from '../map/colors';
+import { CATEGORY_COLORS, TERRITORY_TINT } from '../map/colors';
+import { LEGEND_TERRAIN } from '../map/three/palette';
 
 const hex = (n: number) => `#${n.toString(16).padStart(6, '0')}`;
 
 const TERRAIN_ITEMS = [
-  { key: 'terrainSea', color: TERRAIN_COLORS.s },
-  { key: 'terrainGrass', color: TERRAIN_COLORS.g },
-  { key: 'terrainPlains', color: TERRAIN_COLORS.p },
-  { key: 'terrainHills', color: TERRAIN_COLORS.h },
-  { key: 'terrainMountain', color: TERRAIN_COLORS.m },
-  { key: 'terrainDesert', color: TERRAIN_COLORS.d },
+  { key: 'terrainSea', color: LEGEND_TERRAIN.sea },
+  { key: 'terrainGrass', color: LEGEND_TERRAIN.grass },
+  { key: 'terrainDesert', color: LEGEND_TERRAIN.desert },
+  { key: 'terrainMountain', color: LEGEND_TERRAIN.mountain },
+  { key: 'terrainSnow', color: LEGEND_TERRAIN.snow },
 ] as const;
 
 export function Legend() {
@@ -28,7 +28,7 @@ export function Legend() {
       {open && (
         <div className="legend-body">
           <div className="legend-section">
-            <span className="legend-swatch territory" style={{ background: hex(TERRITORY_FILL) }} />
+            <span className="legend-swatch territory" style={{ background: hex(TERRITORY_TINT) }} />
             <span>{t('territory')}</span>
           </div>
           <h3>{t('categories')}</h3>

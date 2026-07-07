@@ -1,18 +1,19 @@
 import { events, snapshots } from '../data';
 import { eventsForYear } from '../lib/timeline';
 import { useAppStore } from '../state/store';
-import { lonLatToIso } from './iso';
+import { projectLonLat } from './three/projection';
 import { CategoryIcon } from '../ui/CategoryIcon';
 import { CATEGORY_COLORS } from './colors';
 import { useLang } from '../i18n';
 
 /**
- * DOM overlay of clickable event widgets, positioned over the Pixi canvas at
+ * DOM overlay of clickable event widgets, positioned over the 3D canvas at
  * each event's map location. Clicking one stops autoplay and opens the panel.
+ * Re-renders whenever the camera bumps `viewVersion` in the store.
  */
 export function EventMarkers() {
   const year = useAppStore((s) => s.year);
-  const camera = useAppStore((s) => s.camera);
+  useAppStore((s) => s.viewVersion);
   const selectEvent = useAppStore((s) => s.selectEvent);
   const selectedId = useAppStore((s) => s.selectedEventId);
   const lang = useLang();
@@ -25,13 +26,12 @@ export function EventMarkers() {
   return (
     <div className="event-markers" aria-label="events">
       {visible.map((event) => {
-        const iso = lonLatToIso(event.lonlat[0], event.lonlat[1]);
-        const key = `${Math.round(iso.x / 8)},${Math.round(iso.y / 8)}`;
+        const p = projectLonLat(event.lonlat[0], event.lonlat[1]);
+        if (!p.visible) return null;
+        const key = `${Math.round(p.x / 8)},${Math.round(p.y / 8)}`;
         const stack = seenAt.get(key) ?? 0;
         seenAt.set(key, stack + 1);
         const fan = stack === 0 ? 0 : (stack % 2 === 1 ? 1 : -1) * Math.ceil(stack / 2) * 26;
-        const x = iso.x * camera.scale + camera.x + fan;
-        const y = iso.y * camera.scale + camera.y;
         const major = event.importance === 1;
         return (
           <button
@@ -41,8 +41,8 @@ export function EventMarkers() {
               selectedId === event.id ? ' selected' : ''
             }`}
             style={{
-              left: `${x}px`,
-              top: `${y}px`,
+              left: `${p.x + fan}px`,
+              top: `${p.y}px`,
               ['--cat-color' as string]: CATEGORY_COLORS[event.category],
             }}
             title={event.title[lang]}

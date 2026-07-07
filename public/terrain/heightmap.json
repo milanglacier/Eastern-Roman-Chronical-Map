@@ -1,0 +1,17 @@
+{
+  "width": 2320,
+  "height": 1000,
+  "bbox": {
+    "lonMin": -12,
+    "lonMax": 46,
+    "latMin": 24,
+    "latMax": 49
+  },
+  "encoding": "uint16 v = R*256 + G; meters = v * scale + offset",
+  "scale": 0.25,
+  "offset": -8192,
+  "seaLevelValue": 32768,
+  "verticalExaggeration": 2.5,
+  "unitsPerDegree": 4,
+  "metersPerWorldUnit": 27830
+}

@@ -1,4 +1,3 @@
-import tilesJson from './tiles.json';
 import snapshotsJson from './snapshots.json';
 import citiesJson from './cities.json';
 import era1 from './events/era1.json';
@@ -6,19 +5,15 @@ import era2 from './events/era2.json';
 import era3 from './events/era3.json';
 import era4 from './events/era4.json';
 import {
-  TilesFileSchema,
   SnapshotsFileSchema,
   CitiesFileSchema,
   EventsFileSchema,
   type HistoricalEvent,
   type Snapshot,
   type City,
-  type TilesFile,
   type Territory,
   TerritorySchema,
 } from './schema';
-
-export const tiles: TilesFile = TilesFileSchema.parse(tilesJson);
 
 export const snapshots: Snapshot[] = SnapshotsFileSchema.parse(snapshotsJson).sort(
   (a, b) => a.year - b.year,

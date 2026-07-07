@@ -1,21 +1,44 @@
 import { useEffect, useRef } from 'react';
-import { Application, Container, Sprite } from 'pixi.js';
+import {
+  ACESFilmicToneMapping,
+  NoColorSpace,
+  PCFShadowMap,
+  Scene,
+  SRGBColorSpace,
+  Texture,
+  TextureLoader,
+  Vector3,
+  WebGLRenderer,
+} from 'three';
 import { snapshots } from '../data';
 import { snapshotForYear } from '../lib/timeline';
 import { useAppStore } from '../state/store';
-import { ISO_SQUASH, WORLD_H, WORLD_W } from '../lib/hex';
-import { loadTerrainAtlas, loadMacroTintTexture, loadOceanTexture } from './renderer/atlas';
-import { buildTerrainLayers } from './renderer/terrainSprites';
-import { buildRiversGraphics, strokeRiversMask } from './renderer/rivers';
-import { createShimmer, type Shimmer } from './renderer/water';
-import { buildTerritoryGraphics } from './renderer/territory';
-import { buildCitiesLayer, visibleCities } from './renderer/cities';
-import { createCamera } from './camera';
-import { lonLatToIso } from './iso';
+import { heightFieldToDataTexture, loadHeightField } from './three/heightField';
+import { createTerritoryController } from './three/territory';
+import { buildSkirt, buildTerrain } from './three/terrain';
+import { createWater } from './three/water';
+import { createLighting } from './three/lights';
+import { createAtmosphere } from './three/atmosphere';
+import { createCameraRig } from './three/cameraRig';
+import { lonLatToGround } from './three/geo';
+import { setProjector } from './three/projection';
 
-const CROSSFADE_MS = 550;
+const HOME_LONLAT: [number, number] = [25, 38.5];
+const HOME_DISTANCE = 120;
 
-/** Pixi host. All map drawing is imperative; React only owns the container div. */
+async function loadWorldTexture(url: string, srgb: boolean): Promise<Texture | null> {
+  try {
+    const tex = await new TextureLoader().loadAsync(url);
+    tex.flipY = false; // all world textures: image row 0 = north = V 0
+    tex.colorSpace = srgb ? SRGBColorSpace : NoColorSpace;
+    return tex;
+  } catch {
+    console.warn(`texture unavailable: ${url}`);
+    return null;
+  }
+}
+
+/** Three.js host. All map drawing is imperative; React only owns the container div. */
 export function MapCanvas() {
   const hostRef = useRef<HTMLDivElement>(null);
 
@@ -23,129 +46,150 @@ export function MapCanvas() {
     const host = hostRef.current;
     if (!host) return;
     let disposed = false;
-    let app: Application | null = null;
-    let camera: ReturnType<typeof createCamera> | null = null;
-    let unsubscribe: (() => void) | null = null;
-    let shimmer: Shimmer | null = null;
+    let cleanup: (() => void) | null = null;
 
     (async () => {
-      const pixi = new Application();
-      await pixi.init({ backgroundAlpha: 0, antialias: true, resizeTo: host });
-      const [atlas, macroTint, ocean] = await Promise.all([
-        loadTerrainAtlas(pixi.renderer),
-        loadMacroTintTexture(),
-        loadOceanTexture(),
+      const [heightField, albedo, normal, worldMask, waterNormal] = await Promise.all([
+        loadHeightField(),
+        loadWorldTexture('terrain/albedo.jpg', true),
+        loadWorldTexture('terrain/normal.png', false),
+        loadWorldTexture('terrain/worldmask.png', false),
+        loadWorldTexture('terrain/waternormal.png', false),
       ]);
       if (disposed) {
-        pixi.destroy(true);
+        albedo?.dispose();
+        normal?.dispose();
+        worldMask?.dispose();
+        waterNormal?.dispose();
         return;
       }
-      if (import.meta.env.DEV) {
-        // Dev-console handle for inspecting the atlas and scene. Assigned
-        // after the disposed check so a StrictMode-destroyed first mount
-        // never wins the race against the surviving one.
-        (globalThis as Record<string, unknown>).__ercmDebug = { app: pixi, atlas };
+
+      let renderer: WebGLRenderer;
+      try {
+        // Log depth: true-scale heights are tiny next to the 232-unit world,
+        // so linear depth would z-fight the water plane against coastal land.
+        renderer = new WebGLRenderer({ antialias: true, logarithmicDepthBuffer: true });
+      } catch (err) {
+        console.warn('WebGL unavailable, map disabled:', err);
+        return;
       }
-      app = pixi;
-      host.appendChild(pixi.canvas);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.outputColorSpace = SRGBColorSpace;
+      renderer.toneMapping = ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.1;
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = PCFShadowMap;
+      if (albedo) albedo.anisotropy = renderer.capabilities.getMaxAnisotropy();
+      host.appendChild(renderer.domElement);
 
-      // Layer stack (bottom → top): ocean sheet, water, shimmer, land,
-      // macro tint, rivers, territoryHost (crossfades inside it), cities.
-      const world = new Container();
-      pixi.stage.addChild(world);
-      const { water, land } = buildTerrainLayers(atlas, { deepSeaSheet: ocean !== null });
-      if (ocean) {
-        // One static sprite of continuous deep water replaces ~1.7k tiled
-        // D sprites; shelf tiles and s-over-D strips blend into it above.
-        const oceanSprite = new Sprite(ocean);
-        oceanSprite.width = WORLD_W;
-        oceanSprite.height = WORLD_H * ISO_SQUASH;
-        world.addChild(oceanSprite);
-      }
-      world.addChild(water);
-      shimmer = createShimmer(pixi.renderer, pixi.ticker, strokeRiversMask);
-      world.addChild(shimmer.container);
-      world.addChild(land);
-      if (macroTint) {
-        // Near-white multiply sheet (≈ ±4-7% darken-only mottling) breaking
-        // up terrain repetition at low zoom; one static Sprite, no filters.
-        const macro = new Sprite(macroTint);
-        macro.blendMode = 'multiply';
-        macro.alpha = 0.85;
-        macro.width = WORLD_W;
-        macro.height = WORLD_H * ISO_SQUASH;
-        world.addChild(macro);
-      }
-      world.addChild(buildRiversGraphics());
-      const territoryHost = new Container();
-      world.addChild(territoryHost);
+      const scene = new Scene();
+      const terrain = buildTerrain(heightField, { albedo, normal, detail: waterNormal });
+      scene.add(terrain.mesh);
+      const skirt = buildSkirt(heightField);
+      scene.add(skirt.mesh);
+      const water = createWater({
+        waterNormal,
+        heightY: heightFieldToDataTexture(heightField),
+        worldMask,
+      });
+      scene.add(water.mesh);
+      const lighting = createLighting();
+      scene.add(lighting.group);
+      const atmosphere = createAtmosphere(scene);
 
-      const state = useAppStore.getState();
-      let snapYear = snapshotForYear(snapshots, state.year).year;
-      let territoryLayer = buildTerritoryGraphics(snapYear);
-      territoryHost.addChild(territoryLayer);
-
-      let citiesKey = '';
-      let citiesLayer: Container | null = null;
-      const refreshCities = (year: number, language: 'en' | 'zh') => {
-        const key = `${language}:${visibleCities(year).map((c) => c.id).join(',')}`;
-        if (key === citiesKey) return;
-        citiesKey = key;
-        if (citiesLayer) {
-          world.removeChild(citiesLayer);
-          citiesLayer.destroy({ children: true });
-        }
-        citiesLayer = buildCitiesLayer(year, language);
-        world.addChild(citiesLayer);
-      };
-      refreshCities(state.year, state.language);
-
-      const swapTerritory = (newSnapYear: number) => {
-        const oldLayer = territoryLayer;
-        const newLayer = buildTerritoryGraphics(newSnapYear);
-        newLayer.alpha = 0;
-        territoryHost.addChild(newLayer);
-        territoryLayer = newLayer;
-        let elapsed = 0;
-        const tick = () => {
-          elapsed += pixi.ticker.deltaMS;
-          const t = Math.min(1, elapsed / CROSSFADE_MS);
-          newLayer.alpha = t;
-          oldLayer.alpha = 1 - t;
-          if (t >= 1) {
-            pixi.ticker.remove(tick);
-            territoryHost.removeChild(oldLayer);
-            oldLayer.destroy();
-          }
-        };
-        pixi.ticker.add(tick);
-      };
-
-      unsubscribe = useAppStore.subscribe((s) => {
+      // Territory drape: instant on load, crossfading on snapshot changes.
+      const territoryCtl = createTerritoryController(terrain.uniforms);
+      let snapYear = snapshotForYear(snapshots, useAppStore.getState().year).year;
+      territoryCtl.setSnapshot(snapYear, false);
+      const unsubscribe = useAppStore.subscribe((s) => {
         const newSnapYear = snapshotForYear(snapshots, s.year).year;
         if (newSnapYear !== snapYear) {
           snapYear = newSnapYear;
-          swapTerritory(newSnapYear);
+          territoryCtl.setSnapshot(newSnapYear);
         }
-        refreshCities(s.year, s.language);
       });
 
-      camera = createCamera(pixi.canvas, world);
-      // Open wide over the imperial heartland so the whole empire reads at a
-      // glance; the camera clamps to its fill-the-viewport minimum scale.
-      const home = lonLatToIso(25, 38.5);
-      camera.centerOn(home.x, home.y, 1.0);
+      let viewDirty = true;
+      const rig = createCameraRig(renderer.domElement, () => {
+        viewDirty = true;
+      });
+
+      const resize = () => {
+        const w = host.clientWidth || 1;
+        const h = host.clientHeight || 1;
+        renderer.setSize(w, h);
+        rig.resize(w, h);
+      };
+      const observer = new ResizeObserver(resize);
+      observer.observe(host);
+      resize();
+
+      // Open over the imperial heartland so the whole east reads at a glance.
+      const home = lonLatToGround(...HOME_LONLAT);
+      rig.centerOn(home.x, home.z, HOME_DISTANCE);
+
+      // Screen projection for the DOM marker overlays.
+      const projected = new Vector3();
+      setProjector((lon, lat) => {
+        const g = lonLatToGround(lon, lat);
+        projected.set(g.x, heightField.yAt(lon, lat), g.z).project(rig.camera);
+        return {
+          x: ((projected.x + 1) / 2) * (host.clientWidth || 1),
+          y: ((1 - projected.y) / 2) * (host.clientHeight || 1),
+          visible:
+            projected.z < 1 &&
+            Math.abs(projected.x) <= 1.05 &&
+            Math.abs(projected.y) <= 1.05,
+        };
+      });
+
+      const bumpView = useAppStore.getState().bumpView;
+      let lastTimeMs = 0;
+      renderer.setAnimationLoop((timeMs: number) => {
+        const delta = Math.min(0.1, (timeMs - lastTimeMs) / 1000);
+        lastTimeMs = timeMs;
+        terrain.uniforms.uTime.value = timeMs / 1000;
+        water.setTime(timeMs / 1000);
+        territoryCtl.update(delta);
+        if (viewDirty) {
+          viewDirty = false;
+          lighting.updateShadowFrustum(rig.camera, host.clientWidth, host.clientHeight);
+          atmosphere.update(rig.distance);
+          bumpView();
+        }
+        renderer.render(scene, rig.camera);
+      });
+
+      if (import.meta.env.DEV) {
+        // Dev-console handle for inspecting the scene. Assigned after the
+        // disposed check so a StrictMode-destroyed first mount never wins
+        // the race against the surviving one.
+        (globalThis as Record<string, unknown>).__ercmDebug = { renderer, scene, rig, terrain, water };
+      }
+
+      cleanup = () => {
+        setProjector(null);
+        unsubscribe();
+        territoryCtl.dispose();
+        observer.disconnect();
+        rig.dispose();
+        renderer.setAnimationLoop(null);
+        terrain.dispose();
+        skirt.dispose();
+        water.dispose();
+        lighting.dispose();
+        albedo?.dispose();
+        normal?.dispose();
+        worldMask?.dispose();
+        waterNormal?.dispose();
+        renderer.dispose();
+      };
     })();
 
     return () => {
       disposed = true;
-      unsubscribe?.();
-      camera?.destroy();
-      shimmer?.destroy();
-      if (app) {
-        app.destroy(true, { children: true });
-        app = null;
-      }
+      cleanup?.();
+      cleanup = null;
       host.replaceChildren();
     };
   }, []);
