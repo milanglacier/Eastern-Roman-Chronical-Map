@@ -30,6 +30,14 @@ import {
 } from '../src/lib/heightEncoding.ts';
 import { signedDistanceField } from '../src/lib/distanceField.ts';
 import { hashStringSeed, mulberry32 } from '../src/lib/prng.ts';
+import {
+  shapedMeters,
+  SEA_EXAGGERATION,
+  LAND_EXAGGERATION_MIN,
+  LAND_EXAGGERATION_MAX,
+  LAND_RAMP_START_M,
+  LAND_RAMP_END_M,
+} from '../src/lib/heightShaping.ts';
 
 const dir = dirname(fileURLToPath(import.meta.url));
 const asset = (name) => join(dir, 'assets', name);
@@ -42,7 +50,9 @@ const HM_W = 2320; // 40 px/degree over 58 degrees of longitude
 const HM_H = 1000; // 40 px/degree over 25 degrees of latitude
 const ALB_W = 8192;
 const ALB_H = 3532; // same 58:25 aspect
-const VERTICAL_EXAGGERATION = 2.5;
+// Base (sea) factor documented in the sidecar; land uses the elevation-shaped
+// curve from src/lib/heightShaping.ts (shared with the runtime height field).
+const VERTICAL_EXAGGERATION = SEA_EXAGGERATION;
 const UNITS_PER_DEGREE = 4;
 const METERS_PER_WORLD_UNIT = 111320 / UNITS_PER_DEGREE; // 27,830 m per unit
 const LON_SPAN = LON_MAX - LON_MIN;
@@ -55,7 +65,10 @@ const OCEAN_MAX_M = -12; // ocean pixels forced at or below this
 const LAND_MIN_M = 4;
 const STRAIT_DEPTH_M = -25;
 const STRAIT_RADIUS_PX = 1.6;
-const RIVER_INCISION_M = 4;
+// Deep enough that, with the land exaggeration curve, river courses sit in
+// visibly shaded grooves instead of relying on the painted stroke alone.
+const RIVER_INCISION_M = 12;
+const RIVER_INCISION_RADIUS_PX = 1.4;
 
 const pxToLon = (x, w) => LON_MIN + ((x + 0.5) / w) * LON_SPAN;
 const pxToLat = (y, h) => LAT_MAX - ((y + 0.5) / h) * LAT_SPAN;
@@ -152,6 +165,44 @@ function polylineDistancePx(line, w, h, px, py) {
   return best;
 }
 
+/**
+ * Deterministic meander: resample a sparse hand-drawn polyline to ~0.04°
+ * steps and displace it perpendicular with seeded value noise, so rivers
+ * wander like rivers instead of ruling dead-straight lines between control
+ * points (the Nile spans 7° of latitude on 6 points). Endpoints stay
+ * anchored (source/mouth) and the amplitude eases in from both ends.
+ */
+function meanderLine(line, seedLabel) {
+  if (line.length < 2) return line;
+  const noise = makeValueNoise(`meander-${seedLabel}`, 64);
+  const cum = [0];
+  for (let i = 1; i < line.length; i++) {
+    cum.push(cum[i - 1] + Math.hypot(line[i][0] - line[i - 1][0], line[i][1] - line[i - 1][1]));
+  }
+  const total = cum[cum.length - 1];
+  const STEP_DEG = 0.04;
+  const n = Math.max(2, Math.ceil(total / STEP_DEG));
+  const out = [];
+  for (let k = 0; k <= n; k++) {
+    const s = (k / n) * total;
+    let i = 1;
+    while (i < line.length - 1 && cum[i] < s) i++;
+    const t = (s - cum[i - 1]) / Math.max(1e-9, cum[i] - cum[i - 1]);
+    const x = lerp(line[i - 1][0], line[i][0], t);
+    const y = lerp(line[i - 1][1], line[i][1], t);
+    const dx = line[i][0] - line[i - 1][0];
+    const dy = line[i][1] - line[i - 1][1];
+    const inv = 1 / Math.max(1e-9, Math.hypot(dx, dy));
+    // Perpendicular offset: broad sweep + a finer wiggle, zero-mean.
+    const wander =
+      (noise(s * 0.9, 3.7) - 0.5) * 1.6 + (noise(s * 2.8, 11.2) - 0.5) * 0.5;
+    const envelope = smoothstep(0, 0.5, s) * smoothstep(0, 0.5, total - s);
+    const amp = 0.11 * envelope;
+    out.push([x + -dy * inv * wander * amp, y + dx * inv * wander * amp]);
+  }
+  return out;
+}
+
 /** Deterministic tileable value noise on a coarse lattice, fbm-summed. */
 function makeValueNoise(seedLabel, period) {
   const rand = mulberry32(hashStringSeed(seedLabel));
@@ -232,27 +283,122 @@ const coast = JSON.parse(await readFile(asset('coastline-50m.json'), 'utf8'));
 const allRings = coast.coordinates.flat();
 const landMask = fillPolygonsMask(allRings, HM_W, HM_H);
 
+const rawHeights = heights.slice(); // pre-conform DEM, for un-drowning slits below
 for (let i = 0; i < heights.length; i++) {
   heights[i] = landMask[i]
     ? Math.max(heights[i], LAND_MIN_M)
     : Math.min(heights[i], OCEAN_MAX_M);
 }
 
+// Natural Earth land polygons slit major rivers (e.g. the Po) into the
+// coast; at 2.2 km/px those become 1-2 px ocean trenches running across
+// whole valleys, rendered as bright foam-lined canals. Close water that is
+// both thin (land within 2 px on opposite sides) and above sea level in the
+// raw DEM — real sea channels have negative bathymetry, so genuine straits
+// and lagoon mouths survive. Two sweeps catch slits the first pass narrows.
+// The configured straits are narrow, misregistered against the DEM, and
+// meant to stay open — never slit-close anywhere near them (the Bosporus
+// channel is thin water the closing pass would otherwise eat whole).
+const straitProtect = new Uint8Array(HM_W * HM_H);
+for (const strait of config.straits) {
+  stampPolyline(strait.line, HM_W, HM_H, 10, (i) => {
+    straitProtect[i] = 1;
+  });
+}
+for (let pass = 0; pass < 2; pass++) {
+  const nearLand = (x, y, dx, dy) => {
+    for (let s = 1; s <= 2; s++) {
+      const nx = x + dx * s;
+      const ny = y + dy * s;
+      if (nx < 0 || nx >= HM_W || ny < 0 || ny >= HM_H) return false;
+      if (landMask[ny * HM_W + nx]) return true;
+    }
+    return false;
+  };
+  const toClose = [];
+  for (let y = 0; y < HM_H; y++) {
+    for (let x = 0; x < HM_W; x++) {
+      const i = y * HM_W + x;
+      if (landMask[i] || straitProtect[i] || rawHeights[i] <= 2) continue;
+      if ((nearLand(x, y, 0, -1) && nearLand(x, y, 0, 1)) || (nearLand(x, y, -1, 0) && nearLand(x, y, 1, 0))) {
+        toClose.push(i);
+      }
+    }
+  }
+  for (const i of toClose) {
+    landMask[i] = 1;
+    heights[i] = Math.max(rawHeights[i], LAND_MIN_M);
+  }
+  console.log(`  river-slit water px closed (pass ${pass + 1}): ${toClose.length}`);
+}
+
 // Straits narrower than a heightmap pixel would close into land bridges at
 // 2.2 km/px (the hex pipeline hit the same failure); force them open.
+const straitCarved = new Uint8Array(HM_W * HM_H);
 for (const strait of config.straits) {
   stampPolyline(strait.line, HM_W, HM_H, STRAIT_RADIUS_PX, (i) => {
     heights[i] = Math.min(heights[i], STRAIT_DEPTH_M);
     landMask[i] = 0;
+    straitCarved[i] = 1;
   });
 }
 
-// Subtle valley incision along rivers (cosmetic; rivers are painted in the
-// albedo). Floor well above sea level so riverbeds never read as ocean.
-for (const river of config.rivers) {
-  stampPolyline(river.line, HM_W, HM_H, 1.2, (i, d) => {
+// Mop up small orphaned water fragments (lagoon shreds the slit closing cut
+// off). Flood-fill sea from the map border through the carved straits, then
+// land-fill only *small* unreached components — big ones are real seas that
+// must survive even if a data quirk ever pinches their connection.
+{
+  const reached = new Uint8Array(HM_W * HM_H);
+  const fill = (seeds, mark) => {
+    const stack = [];
+    const push = (i) => {
+      if (!reached[i] && !landMask[i]) {
+        reached[i] = mark;
+        stack.push(i);
+      }
+    };
+    for (const s of seeds) push(s);
+    const component = [];
+    while (stack.length) {
+      const i = stack.pop();
+      component.push(i);
+      const x = i % HM_W;
+      if (x > 0) push(i - 1);
+      if (x < HM_W - 1) push(i + 1);
+      if (i >= HM_W) push(i - HM_W);
+      if (i < (HM_H - 1) * HM_W) push(i + HM_W);
+    }
+    return component;
+  };
+  const border = [];
+  for (let x = 0; x < HM_W; x++) border.push(x, (HM_H - 1) * HM_W + x);
+  for (let y = 0; y < HM_H; y++) border.push(y * HM_W, y * HM_W + HM_W - 1);
+  fill(border, 1);
+  let closed = 0;
+  for (let i = 0; i < landMask.length; i++) {
+    if (landMask[i] || reached[i]) continue;
+    const component = fill([i], 2);
+    if (component.length >= 500) continue; // a real (if pinched) sea — keep
+    if (component.some((j) => straitCarved[j])) continue; // carved straits stay water
+    for (const j of component) {
+      landMask[j] = 1;
+      heights[j] = Math.max(rawHeights[j], LAND_MIN_M);
+      closed++;
+    }
+  }
+  console.log(`  orphaned water px reclassified as land: ${closed}`);
+}
+
+// One meandered course per river, shared by the incision, the worldmask
+// river channel and the albedo stroke so they always coincide.
+const riverLines = config.rivers.map((r) => ({ ...r, line: meanderLine(r.line, r.name) }));
+
+// Valley incision along rivers so courses sit in shaded grooves. Floor well
+// above sea level so riverbeds never read as ocean.
+for (const river of riverLines) {
+  stampPolyline(river.line, HM_W, HM_H, RIVER_INCISION_RADIUS_PX, (i, d) => {
     if (!landMask[i]) return;
-    const cut = RIVER_INCISION_M * (1 - d / 1.2);
+    const cut = RIVER_INCISION_M * (1 - d / RIVER_INCISION_RADIUS_PX);
     heights[i] = Math.max(heights[i] - cut, LAND_MIN_M);
   });
 }
@@ -284,6 +430,14 @@ console.log('writing heightmap…');
         offset: HEIGHT_OFFSET,
         seaLevelValue: SEA_LEVEL_VALUE,
         verticalExaggeration: VERTICAL_EXAGGERATION,
+        heightShaping: {
+          note: 'runtime Y uses shapedMeters() from src/lib/heightShaping.ts, not the flat factor',
+          seaExaggeration: SEA_EXAGGERATION,
+          landExaggerationMin: LAND_EXAGGERATION_MIN,
+          landExaggerationMax: LAND_EXAGGERATION_MAX,
+          landRampStartM: LAND_RAMP_START_M,
+          landRampEndM: LAND_RAMP_END_M,
+        },
         unitsPerDegree: UNITS_PER_DEGREE,
         metersPerWorldUnit: METERS_PER_WORLD_UNIT,
       },
@@ -297,15 +451,19 @@ console.log('writing heightmap…');
 /* 4. Object-space normal map (exaggeration baked in)                  */
 
 // Gradients are taken in *world units* (plate carrée, 4 units/degree on both
-// axes) so shading matches the rendered mesh, not true ground meters.
+// axes) so shading matches the rendered mesh, not true ground meters. The
+// elevation-shaped exaggeration is applied to the heights first — exactly
+// what the runtime metersToY does to the mesh vertices.
 const PX_PER_UNIT = HM_W / (LON_SPAN * UNITS_PER_DEGREE); // = 10 px per world unit
-const metersToUnits = VERTICAL_EXAGGERATION / METERS_PER_WORLD_UNIT;
+const metersToUnits = 1 / METERS_PER_WORLD_UNIT;
+const heightsShaped = new Float32Array(heights.length);
+for (let i = 0; i < heights.length; i++) heightsShaped[i] = shapedMeters(heights[i]);
 
 function normalAt(x, y, boost = 1) {
-  const l = heights[y * HM_W + Math.max(0, x - 1)];
-  const r = heights[y * HM_W + Math.min(HM_W - 1, x + 1)];
-  const u = heights[Math.max(0, y - 1) * HM_W + x];
-  const d = heights[Math.min(HM_H - 1, y + 1) * HM_W + x];
+  const l = heightsShaped[y * HM_W + Math.max(0, x - 1)];
+  const r = heightsShaped[y * HM_W + Math.min(HM_W - 1, x + 1)];
+  const u = heightsShaped[Math.max(0, y - 1) * HM_W + x];
+  const d = heightsShaped[Math.min(HM_H - 1, y + 1) * HM_W + x];
   const gx = (((r - l) * metersToUnits) / (2 / PX_PER_UNIT)) * boost; // dY/dX (world)
   const gz = (((d - u) * metersToUnits) / (2 / PX_PER_UNIT)) * boost; // dY/dZ (+Z = south)
   const inv = 1 / Math.hypot(gx, 1, gz);
@@ -334,11 +492,13 @@ console.log('writing normal map…');
 
 console.log('building worldmask…');
 const coastSdf = signedDistanceField(HM_W, HM_H, landMask); // +land / -water, px
+// Slightly tighter than the painted stroke so the runtime water shimmer
+// stays inside the visible channel instead of licking the banks.
 const riverMask = new Float32Array(HM_W * HM_H);
-for (const river of config.rivers) {
-  stampPolyline(river.line, HM_W, HM_H, 2.2, (i, d) => {
+for (const river of riverLines) {
+  stampPolyline(river.line, HM_W, HM_H, 1.3, (i, d) => {
     if (!landMask[i]) return;
-    riverMask[i] = Math.max(riverMask[i], 1 - smoothstep(0.6, 2.2, d));
+    riverMask[i] = Math.max(riverMask[i], 1 - smoothstep(0.3, 1.3, d));
   });
 }
 {
@@ -364,10 +524,10 @@ const SUN = (() => {
   const alt = (48 * Math.PI) / 180;
   return [Math.sin(az) * Math.cos(alt), Math.sin(alt), -Math.cos(az) * Math.cos(alt)];
 })();
-// True world-scale slopes are gentle (a whole mountain range spans ~1 world
-// unit), so the *painterly* baked shading amplifies gradients well past the
-// geometric truth; the runtime normal map (above) stays geometry-consistent.
-const HILLSHADE_BOOST = 4;
+// The shaped exaggeration already amplifies upland gradients ~2-3x over the
+// old flat factor, so the painterly boost drops accordingly (4 -> 2) to keep
+// the baked shading from double-darkening under the real-time sun.
+const HILLSHADE_BOOST = 2;
 let hillshade = new Float32Array(HM_W * HM_H);
 for (let y = 0; y < HM_H; y++) {
   for (let x = 0; x < HM_W; x++) {
@@ -435,7 +595,7 @@ const C = {
   rock: [122, 112, 100],
   highRock: [140, 132, 122],
   snow: [235, 236, 234],
-  riverWater: [46, 92, 108],
+  riverWater: [56, 102, 114],
 };
 
 const noiseBiome = makeValueNoise('east-roman-biome', 256);
@@ -511,32 +671,45 @@ for (let y = 0; y < ALB_H; y++) {
   }
 }
 
-// Stroke rivers into the albedo (feathered banks, widening downstream).
+// Stroke rivers into the albedo: a soft riparian green band under a
+// narrower water core. Coverage is accumulated as max-alpha first and
+// composited once — the meandered courses are dense polylines whose stamp
+// bounding boxes overlap heavily, and lerping per segment would band.
 console.log('stroking rivers…');
 const ALB_PER_HM = ALB_W / HM_W;
-for (const river of config.rivers) {
+const riparianCov = new Uint8Array(ALB_W * ALB_H);
+const waterCov = new Uint8Array(ALB_W * ALB_H);
+const onLand = (idx) => {
+  const ax = idx % ALB_W;
+  const ay = (idx / ALB_W) | 0;
+  return sampleBilinear(coastSdf, HM_W, HM_H, ax / ALB_PER_HM - 0.5, ay / ALB_PER_HM - 0.5) >= 0.8;
+};
+for (const river of riverLines) {
   const pts = river.line;
   for (let i = 0; i + 1 < pts.length; i++) {
     const t0 = i / (pts.length - 1);
-    const t1 = (i + 1) / (pts.length - 1);
-    const w0 = lerp(1.4, 3.4, t0);
-    const w1 = lerp(1.4, 3.4, t1);
+    const w = lerp(1.1, 2.8, t0); // water half-width, widening downstream
     const seg = [pts[i], pts[i + 1]];
-    const radius = Math.max(w0, w1) + 1.5;
-    stampPolyline(seg, ALB_W, ALB_H, radius, (idx, d) => {
-      // Land check at heightmap res so rivers stop at the sea.
-      const ax = idx % ALB_W;
-      const ay = (idx / ALB_W) | 0;
-      const sdf = sampleBilinear(coastSdf, HM_W, HM_H, ax / ALB_PER_HM - 0.5, ay / ALB_PER_HM - 0.5);
-      if (sdf < 0.8) return;
-      const wHere = (w0 + w1) / 2;
-      const alpha = (1 - smoothstep(wHere * 0.45, wHere, d)) * 0.85;
-      if (alpha <= 0.01) return;
-      const o = idx * 3;
-      albedo[o] = Math.round(lerp(albedo[o], C.riverWater[0], alpha));
-      albedo[o + 1] = Math.round(lerp(albedo[o + 1], C.riverWater[1], alpha));
-      albedo[o + 2] = Math.round(lerp(albedo[o + 2], C.riverWater[2], alpha));
+    stampPolyline(seg, ALB_W, ALB_H, w * 3.2, (idx, d) => {
+      if (!onLand(idx)) return;
+      const band = Math.round((1 - smoothstep(w * 0.7, w * 3.2, d)) * 255);
+      if (band > riparianCov[idx]) riparianCov[idx] = band;
+      const core = Math.round((1 - smoothstep(w * 0.4, w, d)) * 255);
+      if (core > waterCov[idx]) waterCov[idx] = core;
     });
+  }
+}
+{
+  const riparian = mixRgb(C.richGreen, C.lowGreen, 0.35);
+  for (let i = 0; i < riparianCov.length; i++) {
+    if (riparianCov[i] === 0 && waterCov[i] === 0) continue;
+    const ra = (riparianCov[i] / 255) * 0.3;
+    const wa = (waterCov[i] / 255) * 0.82;
+    const o = i * 3;
+    for (let c = 0; c < 3; c++) {
+      const banked = lerp(albedo[o + c], riparian[c], ra);
+      albedo[o + c] = Math.round(lerp(banked, C.riverWater[c], wa));
+    }
   }
 }
 

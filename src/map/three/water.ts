@@ -97,6 +97,10 @@ void main() {
   col = mix(col, uFoamColor, clamp(foam, 0.0, 1.0) * 0.55);
   float alpha = mix(0.45, 0.8, depthT);
   alpha = max(alpha, foam * 0.6);
+  // The coarse mesh can dip below Y=0 between low coastal land pixels
+  // (deltas, lagoons) and let the sheet bleed inland in quad-sized blocks;
+  // the baked coast SDF knows better — fade the sheet out over land.
+  alpha *= 1.0 - smoothstep(0.8, 2.5, sdfPx);
 
   gl_FragColor = vec4(col, alpha);
   #include <tonemapping_fragment>

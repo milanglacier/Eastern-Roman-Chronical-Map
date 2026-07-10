@@ -14,10 +14,14 @@ import { SUN_COLOR, HEMI_SKY_COLOR, HEMI_GROUND_COLOR } from './palette';
 
 const SHADOW_MAP_SIZE = 2048;
 
-/** Sun direction: from the WSW at ~42° altitude (matches the baked hillshade sun). */
+/**
+ * Sun direction: from the WSW, same azimuth as the baked hillshade sun but
+ * lower (34° vs 48°) — the baked pass is the soft painterly base while the
+ * real-time sun rakes the exaggerated relief with long cast shadows.
+ */
 export const SUN_DIRECTION = (() => {
   const az = (247 * Math.PI) / 180; // clockwise from north; north = -Z, east = +X
-  const alt = (42 * Math.PI) / 180;
+  const alt = (34 * Math.PI) / 180;
   return new Vector3(
     Math.sin(az) * Math.cos(alt),
     Math.sin(alt),

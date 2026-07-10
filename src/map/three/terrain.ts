@@ -106,11 +106,18 @@ export function buildTerrainGeometry(hf: HeightField): BufferGeometry {
 
 export function buildTerrain(
   hf: HeightField,
-  textures: { albedo: Texture | null; normal: Texture | null; detail: Texture | null },
+  textures: {
+    albedo: Texture | null;
+    normal: Texture | null;
+    detail: Texture | null;
+    worldMask?: Texture | null;
+  },
 ): Terrain {
   const detailTex = textures.detail ?? blankDetailTexture();
   detailTex.wrapS = RepeatWrapping;
   detailTex.wrapT = RepeatWrapping;
+  // Missing worldmask -> RG zeros -> river mask 0 everywhere (no shimmer).
+  const worldMaskTex = textures.worldMask ?? blankTerritoryTexture();
   const uniforms: TerrainUniforms = {
     uTime: { value: 0 },
     uTerritoryA: { value: blankTerritoryTexture() },
@@ -133,9 +140,11 @@ export function buildTerrain(
     material.normalMapType = ObjectSpaceNormalMap;
   }
   const uDetailTex = { value: detailTex as Texture };
+  const uWorldMask = { value: worldMaskTex as Texture };
   material.onBeforeCompile = (shader) => {
     Object.assign(shader.uniforms, uniforms);
     shader.uniforms.uDetailTex = uDetailTex;
+    shader.uniforms.uWorldMask = uWorldMask;
     shader.fragmentShader = shader.fragmentShader
       .replace(
         '#include <common>',
@@ -148,17 +157,32 @@ export function buildTerrain(
         uniform vec3 uBorderColor;
         uniform float uBorderIntensity;
         uniform float uTime;
-        uniform sampler2D uDetailTex;`,
+        uniform sampler2D uDetailTex;
+        uniform sampler2D uWorldMask;`,
       )
       .replace(
         '#include <map_fragment>',
         /* glsl */ `#include <map_fragment>
+        float riverM = 0.0;
+        float riverWave = 0.0;
         #ifdef USE_MAP
           vec2 territoryUv = vMapUv;
           // High-frequency painterly grain so close zoom never reads as a
           // blurry upscale of the baked albedo (tiling aspect-corrected).
           float terrainDetail = texture2D(uDetailTex, vMapUv * vec2(170.0, 73.3)).b;
           diffuseColor.rgb *= 0.93 + 0.14 * terrainDetail;
+          // River channels (worldmask.G): two counter-scrolling noise reads
+          // make the painted course move like water instead of a decal.
+          riverM = texture2D(uWorldMask, vMapUv).g;
+          if (riverM > 0.003) {
+            // R/G of the wave normal map are zero-mean around 0.5 (B is
+            // normal-Z ~= 1.0 and would just brighten constantly).
+            float flowA = texture2D(uDetailTex, vMapUv * vec2(310.0, 133.6) + uTime * vec2(0.016, 0.006)).r;
+            float flowB = texture2D(uDetailTex, vMapUv * vec2(214.0, 92.2) - uTime * vec2(0.009, 0.013)).g;
+            riverWave = flowA * 0.5 + flowB * 0.5;
+            diffuseColor.rgb = mix(diffuseColor.rgb, vec3(0.055, 0.13, 0.16), riverM * 0.3);
+            diffuseColor.rgb *= 1.0 + riverM * (riverWave - 0.5) * 0.6;
+          }
         #else
           vec2 territoryUv = vec2(0.0);
         #endif
@@ -170,10 +194,20 @@ export function buildTerrain(
         diffuseColor.rgb = mix(diffuseColor.rgb, uTerritoryTint, territory.r * uTerritoryStrength);`,
       )
       .replace(
+        '#include <roughnessmap_fragment>',
+        /* glsl */ `#include <roughnessmap_fragment>
+        // Rivers are glossier than the matte terrain, but only in the channel
+        // core (riverM^2) and kept semi-rough — a full gloss streak reads as
+        // a silver ruler line from the 45-degree sun.
+        roughnessFactor = mix(roughnessFactor, 0.62, riverM * riverM);`,
+      )
+      .replace(
         '#include <emissivemap_fragment>',
         /* glsl */ `#include <emissivemap_fragment>
         float borderPulse = 0.86 + 0.14 * sin(uTime * 1.6);
-        totalEmissiveRadiance += uBorderColor * territory.g * uBorderIntensity * borderPulse;`,
+        totalEmissiveRadiance += uBorderColor * territory.g * uBorderIntensity * borderPulse;
+        // Drifting sparkle crests on river water (riverWave is ~0.5-mean).
+        totalEmissiveRadiance += vec3(0.75, 0.85, 0.9) * riverM * pow(max(riverWave - 0.5, 0.0) * 2.0, 3.0) * 0.2;`,
       );
   };
   material.customProgramCacheKey = () => 'east-roman-terrain';

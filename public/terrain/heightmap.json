@@ -12,6 +12,14 @@
   "offset": -8192,
   "seaLevelValue": 32768,
   "verticalExaggeration": 2.5,
+  "heightShaping": {
+    "note": "runtime Y uses shapedMeters() from src/lib/heightShaping.ts, not the flat factor",
+    "seaExaggeration": 2.5,
+    "landExaggerationMin": 2.8,
+    "landExaggerationMax": 7,
+    "landRampStartM": 60,
+    "landRampEndM": 1500
+  },
   "unitsPerDegree": 4,
   "metersPerWorldUnit": 27830
 }

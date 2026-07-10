@@ -7,6 +7,7 @@
 import { DataTexture, RedFormat, HalfFloatType, LinearFilter, ClampToEdgeWrapping, DataUtils } from 'three';
 import { z } from 'zod';
 import { bytesToMeters } from '../../lib/heightEncoding';
+import { shapedMeters } from '../../lib/heightShaping';
 import { LON_MIN, LON_MAX, LAT_MIN, LAT_MAX } from '../../lib/hex';
 
 export const HeightmapMetaSchema = z.object({
@@ -42,7 +43,10 @@ export interface HeightField {
 
 function makeHeightField(width: number, height: number, meta: HeightmapMeta, data: Float32Array): HeightField {
   const { bbox } = meta;
-  const metersToY = (m: number) => (m * meta.verticalExaggeration) / meta.metersPerWorldUnit;
+  // Elevation-shaped exaggeration (src/lib/heightShaping.ts) — the bake uses
+  // the same curve for the normal map, so lighting matches the mesh. The
+  // sidecar's flat `verticalExaggeration` remains the sea/base factor.
+  const metersToY = (m: number) => shapedMeters(m) / meta.metersPerWorldUnit;
   const heightAt = (lon: number, lat: number): number => {
     const fx = ((lon - bbox.lonMin) / (bbox.lonMax - bbox.lonMin)) * width - 0.5;
     const fy = ((bbox.latMax - lat) / (bbox.latMax - bbox.latMin)) * height - 0.5;

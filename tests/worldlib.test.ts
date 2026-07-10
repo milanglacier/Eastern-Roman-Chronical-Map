@@ -12,6 +12,14 @@ import {
 } from '../src/lib/heightEncoding';
 import { distanceTransform, signedDistanceField } from '../src/lib/distanceField';
 import { hashStringSeed, mulberry32 } from '../src/lib/prng';
+import {
+  SEA_EXAGGERATION,
+  LAND_EXAGGERATION_MIN,
+  LAND_EXAGGERATION_MAX,
+  LAND_RAMP_END_M,
+  exaggerationAt,
+  shapedMeters,
+} from '../src/lib/heightShaping';
 
 describe('heightEncoding', () => {
   it('encodes sea level at the documented value', () => {
@@ -75,6 +83,34 @@ describe('distanceField', () => {
     // Boundary straddles cells 2|3: both should be within half a pixel of zero.
     expect(Math.abs(sdf[3])).toBeLessThanOrEqual(0.5);
     expect(Math.abs(sdf[2])).toBeLessThanOrEqual(0.5);
+  });
+});
+
+describe('heightShaping', () => {
+  it('keeps the base factor below sea level (bathymetry / depth tint unchanged)', () => {
+    expect(exaggerationAt(0)).toBe(SEA_EXAGGERATION);
+    expect(exaggerationAt(-3000)).toBe(SEA_EXAGGERATION);
+  });
+
+  it('ramps land from the min to the max factor', () => {
+    expect(exaggerationAt(1)).toBeCloseTo(LAND_EXAGGERATION_MIN, 2);
+    expect(exaggerationAt(LAND_RAMP_END_M)).toBe(LAND_EXAGGERATION_MAX);
+    expect(exaggerationAt(5000)).toBe(LAND_EXAGGERATION_MAX);
+  });
+
+  it('shapedMeters is strictly monotonic (height ordering preserved)', () => {
+    let prev = shapedMeters(-6000);
+    for (let m = -5990; m <= 5000; m += 10) {
+      const cur = shapedMeters(m);
+      expect(cur).toBeGreaterThan(prev);
+      prev = cur;
+    }
+  });
+
+  it('preserves the sign of heights (straits stay under water)', () => {
+    expect(shapedMeters(-25)).toBeLessThan(0);
+    expect(shapedMeters(4)).toBeGreaterThan(0);
+    expect(shapedMeters(0)).toBe(0);
   });
 });
 

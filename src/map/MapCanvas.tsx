@@ -83,7 +83,7 @@ export function MapCanvas() {
       host.appendChild(renderer.domElement);
 
       const scene = new Scene();
-      const terrain = buildTerrain(heightField, { albedo, normal, detail: waterNormal });
+      const terrain = buildTerrain(heightField, { albedo, normal, detail: waterNormal, worldMask });
       scene.add(terrain.mesh);
       const skirt = buildSkirt(heightField);
       scene.add(skirt.mesh);
