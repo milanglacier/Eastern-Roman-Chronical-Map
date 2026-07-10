@@ -6,8 +6,7 @@ Mediterranean world showing the empire's changing borders across 26 era snapshot
 with 100+ clickable event widgets covering politics, war, economy, culture, art,
 law, religion, and civilization — each placed at the location where it happened.
 
-> **Project rule #1:** the state is never called "Byzantium" — it is the Eastern
-> Roman Empire (东罗马帝国). A test enforces this across all data files.
+![Eastern Roman Chronicle Map screenshot](docs/screenshot.jpg)
 
 ## Running
 
