@@ -32,7 +32,7 @@ export const useAppStore = create<AppState>()(
     (set) => ({
       year: YEAR_MIN,
       isPlaying: false,
-      language: 'zh',
+      language: 'en',
       selectedEventId: null,
       viewVersion: 0,
       setYear: (year) => set({ year: clampYear(year) }),
