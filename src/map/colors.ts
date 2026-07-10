@@ -3,12 +3,12 @@ import type { EventCategory } from '../data/schema';
 export const TERRITORY_BORDER = 0xd8b64a; // mosaic gold
 
 /**
- * Territory drape: a warm Tyrian-leaning imperial tint blended into the
- * terrain diffuse (strength kept low so relief stays readable inside the
- * empire), plus the gold frontier glow above.
+ * Territory drape: imperial purple at the old hex-map boldness. The tint
+ * mixes into the diffuse before lighting, so sun/shadow relief still shades
+ * the empire; a crisp gold frontier line rims it (see terrain.ts shader).
  */
-export const TERRITORY_TINT = 0x9a4a7a;
-export const TERRITORY_TINT_STRENGTH = 0.18;
+export const TERRITORY_TINT = 0x6b2fa0;
+export const TERRITORY_TINT_STRENGTH = 0.45;
 
 export const CITY_BUILDING = 0xf3ead6;
 export const CITY_ROOF = 0xc9a227;

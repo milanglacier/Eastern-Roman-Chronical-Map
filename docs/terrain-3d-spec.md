@@ -81,7 +81,9 @@ lives in `src/lib/distanceField.ts`. Both are unit-tested and shared with the ru
 - `heightField.ts` — PNG → Float32Array; flat 2×2 fallback if assets are missing
   (scene must boot regardless — same philosophy as the old procedural atlas).
 - `terrain.ts` — 928×400-segment mesh, CPU-displaced; `MeshStandardMaterial` with
-  `onBeforeCompile` injections for territory tint + gold frontier glow + detail grain
+  `onBeforeCompile` injections for the imperial-purple territory fill (#6B2FA0 mixed
+  into the diffuse pre-lighting) + crisp gold frontier line with faint halo (the line
+  is thresholded per crossfade slot so it stays sharp mid-fade) + detail grain
   + **river water** (worldmask.G: counter-scrolling ripple tint, lowered roughness in
   the channel core for a sun glint, drifting sparkle crests — sample the wave normal
   map's R/G for shimmer, never B, which is normal-Z ≈ 1 and just brightens);
@@ -101,8 +103,13 @@ lives in `src/lib/distanceField.ts`. Both are unit-tested and shared with the ru
 - `cameraRig.ts` — fixed north-up heading; pitch eases 55°→40° with zoom; drag-pan
   keeps the grabbed ground point under the cursor; wheel zooms toward the cursor.
   Pure math exported for tests.
-- `territory.ts` — snapshot MultiPolygon → offscreen-canvas raster → EDT → RG8
-  texture (R = inside mask, G = frontier glow); 550 ms crossfade via `uTerritoryMix`.
+- `territory.ts` — snapshot MultiPolygon → offscreen-canvas raster → land clip →
+  EDT → RG8 texture (R = inside mask **clipped to land**, G = frontier glow);
+  550 ms crossfade via `uTerritoryMix`. The clip samples the runtime heightfield
+  (height > 0 ⇔ land — the bake floors land and river incisions at +4 m and carves
+  sea/straits below 0), because snapshot polygons are drawn loosely over open sea;
+  it also makes the frontier trace coastlines. All-sea land mask (flat fallback
+  heightfield) disables the clip so territory never vanishes.
 - `projection.ts` — `projectLonLat` for the DOM overlays (EventMarkers, CityMarkers);
   plate-carrée fallback before the scene mounts / in jsdom.
 

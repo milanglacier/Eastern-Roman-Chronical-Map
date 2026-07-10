@@ -1,15 +1,20 @@
 /**
  * Territory drape: each snapshot's MultiPolygon is rasterized once into an
- * RG8 texture in the shared world UV space (R = antialiased inside-mask,
- * G = frontier glow from a distance field) and sampled by the terrain
- * shader as tint + glowing border. Snapshot changes crossfade by animating
- * the uTerritoryMix uniform between the A and B texture slots.
+ * RG8 texture in the shared world UV space (R = antialiased inside-mask
+ * clipped to land, G = frontier glow from a distance field) and sampled by
+ * the terrain shader as purple fill + gold border. The polygons are drawn
+ * loosely over sea (the whole Aegean sits inside 555's Balkan ring), so the
+ * mask is intersected with a heightfield land mask — the empire tints land
+ * only and its frontier hugs the coastline, like the old hex renderer.
+ * Snapshot changes crossfade by animating the uTerritoryMix uniform between
+ * the A and B texture slots.
  */
 import { DataTexture, LinearFilter, RGFormat, UnsignedByteType } from 'three';
 import { territories } from '../../data';
 import type { Territory as TerritoryGeometry } from '../../data/schema';
 import { distanceTransform } from '../../lib/distanceField';
 import { LON_MIN, LON_MAX, LAT_MIN, LAT_MAX } from '../../lib/hex';
+import type { HeightField } from './heightField';
 import type { TerrainUniforms } from './terrain';
 import { blankTerritoryTexture } from './terrain';
 
@@ -42,8 +47,45 @@ export function multiPolygonToPixelRings(
   return rings;
 }
 
+/**
+ * Land coverage in territory-texture space: 2×2 supersamples of the land
+ * predicate per texel, averaged so the coast edge stays antialiased after
+ * the clip. Pure — unit-testable in jsdom.
+ */
+export function buildLandMask(
+  width: number,
+  height: number,
+  isLand: (lon: number, lat: number) => boolean,
+): Uint8Array {
+  const mask = new Uint8Array(width * height);
+  const offsets = [0.25, 0.75];
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      let hits = 0;
+      for (const oy of offsets) {
+        const lat = LAT_MAX - ((y + oy) / height) * (LAT_MAX - LAT_MIN);
+        for (const ox of offsets) {
+          const lon = LON_MIN + ((x + ox) / width) * (LON_MAX - LON_MIN);
+          if (isLand(lon, lat)) hits++;
+        }
+      }
+      mask[y * width + x] = Math.round((hits * 255) / 4);
+    }
+  }
+  return mask;
+}
+
+/** Intersect a polygon coverage mask with the land mask (null = no clip). */
+export function clipMaskToLand(mask: Uint8Array, land: Uint8Array | null): Uint8Array {
+  if (!land) return mask;
+  for (let i = 0; i < mask.length; i++) {
+    mask[i] = Math.round((mask[i] * land[i]) / 255);
+  }
+  return mask;
+}
+
 /** Rasterize a snapshot's territory into RG8 (R = mask, G = border glow). */
-function rasterizeTerritory(geometry: TerritoryGeometry): DataTexture {
+function rasterizeTerritory(geometry: TerritoryGeometry, land: Uint8Array | null): DataTexture {
   const w = TERRITORY_TEX_W;
   const h = TERRITORY_TEX_H;
   const canvas = document.createElement('canvas');
@@ -61,9 +103,11 @@ function rasterizeTerritory(geometry: TerritoryGeometry): DataTexture {
   ctx.fill('evenodd');
   const rgba = ctx.getImageData(0, 0, w, h).data;
 
-  // Antialiased inside mask from the canvas alpha channel.
+  // Antialiased inside mask from the canvas alpha channel, clipped to land
+  // BEFORE the distance fields so the frontier glow traces coastlines too.
   const mask = new Uint8Array(w * h);
   for (let i = 0; i < mask.length; i++) mask[i] = rgba[i * 4 + 3];
+  clipMaskToLand(mask, land);
 
   // Frontier glow: falloff of the distance to the mask boundary (both sides).
   const inside = distanceTransform(w, h, (i) => mask[i] > 127);
@@ -91,15 +135,29 @@ export interface TerritoryController {
   dispose(): void;
 }
 
-export function createTerritoryController(uniforms: TerrainUniforms): TerritoryController {
+export function createTerritoryController(
+  uniforms: TerrainUniforms,
+  heightField: HeightField,
+): TerritoryController {
   const cache = new Map<number, DataTexture>();
   let fading = false;
+
+  // Bake guarantee: land ≥ +4 m (LAND_MIN_M, river incisions floor there
+  // too), sea/carved straits < 0 — so the height sign is an exact land test.
+  let landMask: Uint8Array | null = buildLandMask(
+    TERRITORY_TEX_W,
+    TERRITORY_TEX_H,
+    (lon, lat) => heightField.heightAt(lon, lat) > 0,
+  );
+  // The flat fallback heightfield (assets missing) is all sea; clipping with
+  // it would erase every territory, so skip the clip instead.
+  if (!landMask.some((v) => v > 0)) landMask = null;
 
   const textureFor = (year: number): DataTexture => {
     let tex = cache.get(year);
     if (!tex) {
       const geometry = territories.get(year);
-      tex = geometry ? rasterizeTerritory(geometry) : blankTerritoryTexture();
+      tex = geometry ? rasterizeTerritory(geometry, landMask) : blankTerritoryTexture();
       cache.set(year, tex);
     }
     return tex;

@@ -186,9 +186,20 @@ export function buildTerrain(
         #else
           vec2 territoryUv = vec2(0.0);
         #endif
-        vec2 territory = mix(
-          texture2D(uTerritoryA, territoryUv).rg,
-          texture2D(uTerritoryB, territoryUv).rg,
+        vec2 territoryA = texture2D(uTerritoryA, territoryUv).rg;
+        vec2 territoryB = texture2D(uTerritoryB, territoryUv).rg;
+        vec2 territory = mix(territoryA, territoryB, uTerritoryMix);
+        // Crisp frontier: fwidth-adaptive iso-contour of the inside mask
+        // (r = 0.5 lies exactly on the border), so the line holds a few
+        // SCREEN px at every zoom — a texture-space threshold would fatten
+        // into a 13 km ribbon up close. Width capped so extreme far zoom
+        // (fwidth spanning the whole falloff) can't wash the interior gold.
+        // Per snapshot slot: an iso of the mixed masks would swim mid-fade.
+        float borderWA = min(fwidth(territoryA.r) * 1.6, 0.35) + 0.001;
+        float borderWB = min(fwidth(territoryB.r) * 1.6, 0.35) + 0.001;
+        float borderLine = mix(
+          1.0 - smoothstep(0.0, borderWA, abs(territoryA.r - 0.5)),
+          1.0 - smoothstep(0.0, borderWB, abs(territoryB.r - 0.5)),
           uTerritoryMix
         );
         diffuseColor.rgb = mix(diffuseColor.rgb, uTerritoryTint, territory.r * uTerritoryStrength);`,
@@ -204,8 +215,9 @@ export function buildTerrain(
       .replace(
         '#include <emissivemap_fragment>',
         /* glsl */ `#include <emissivemap_fragment>
-        float borderPulse = 0.86 + 0.14 * sin(uTime * 1.6);
-        totalEmissiveRadiance += uBorderColor * territory.g * uBorderIntensity * borderPulse;
+        // Gold frontier: solid Civ-style line + a faint halo, breathing gently.
+        float borderPulse = 0.92 + 0.08 * sin(uTime * 1.6);
+        totalEmissiveRadiance += uBorderColor * (borderLine + territory.g * territory.g * 0.2) * uBorderIntensity * borderPulse;
         // Drifting sparkle crests on river water (riverWave is ~0.5-mean).
         totalEmissiveRadiance += vec3(0.75, 0.85, 0.9) * riverM * pow(max(riverWave - 0.5, 0.0) * 2.0, 3.0) * 0.2;`,
       );

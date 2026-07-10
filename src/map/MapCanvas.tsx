@@ -98,7 +98,7 @@ export function MapCanvas() {
       const atmosphere = createAtmosphere(scene);
 
       // Territory drape: instant on load, crossfading on snapshot changes.
-      const territoryCtl = createTerritoryController(terrain.uniforms);
+      const territoryCtl = createTerritoryController(terrain.uniforms, heightField);
       let snapYear = snapshotForYear(snapshots, useAppStore.getState().year).year;
       territoryCtl.setSnapshot(snapYear, false);
       const unsubscribe = useAppStore.subscribe((s) => {
