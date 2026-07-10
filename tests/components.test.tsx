@@ -42,6 +42,18 @@ describe('Timeline', () => {
     expect(useAppStore.getState().year).toBeLessThan(950);
   });
 
+  it('scrubs while dragging along the track', () => {
+    render(<Timeline />);
+    const track = screen.getByTestId('timeline-track');
+    track.getBoundingClientRect = () =>
+      ({ left: 0, width: 1000, top: 0, height: 22, right: 1000, bottom: 22, x: 0, y: 0, toJSON: () => ({}) }) as DOMRect;
+    fireEvent.pointerDown(track, { clientX: 500, pointerId: 1 });
+    fireEvent.pointerMove(track, { clientX: 750, pointerId: 1, buttons: 1 });
+    // Three-quarters along the track ≈ year 1172
+    expect(useAppStore.getState().year).toBeGreaterThan(1100);
+    expect(useAppStore.getState().year).toBeLessThan(1250);
+  });
+
   it('shows the year in the active language', () => {
     render(<Timeline />);
     expect(screen.getByTestId('year-display').textContent).toContain('公元330年');

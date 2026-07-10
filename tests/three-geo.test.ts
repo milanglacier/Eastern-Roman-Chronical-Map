@@ -14,6 +14,8 @@ import {
   PITCH_NEAR,
   clampDistance,
   clampTarget,
+  pinchMidSpan,
+  pinchZoomFactor,
   pitchForDistance,
 } from '../src/map/three/cameraRig';
 import { LON_MIN, LON_MAX, LAT_MIN, LAT_MAX } from '../src/lib/hex';
@@ -69,5 +71,28 @@ describe('camera rig math', () => {
     expect(clampTarget(-10, -10)).toEqual({ x: 0, z: 0 });
     expect(clampTarget(1e4, 1e4)).toEqual({ x: GROUND_W, z: GROUND_H });
     expect(clampTarget(50, 50)).toEqual({ x: 50, z: 50 });
+  });
+
+  it('pinch spread zooms in, squeeze zooms out', () => {
+    expect(pinchZoomFactor(100, 200)).toBe(0.5);
+    expect(pinchZoomFactor(100, 50)).toBe(2);
+  });
+
+  it('degenerate pinch spans leave the distance unchanged', () => {
+    expect(pinchZoomFactor(0, 100)).toBe(1);
+    expect(pinchZoomFactor(100, 0)).toBe(1);
+    expect(pinchZoomFactor(-5, 100)).toBe(1);
+  });
+
+  it('pinch zoom stays within distance bounds under extreme ratios', () => {
+    expect(clampDistance(100 * pinchZoomFactor(1, 1e6))).toBeGreaterThanOrEqual(DIST_MIN);
+    expect(clampDistance(100 * pinchZoomFactor(1e6, 1))).toBeLessThanOrEqual(DIST_MAX);
+  });
+
+  it('computes pinch midpoint and span symmetrically', () => {
+    const a = { x: 0, y: 0 };
+    const b = { x: 6, y: 8 };
+    expect(pinchMidSpan(a, b)).toEqual({ mid: { x: 3, y: 4 }, span: 10 });
+    expect(pinchMidSpan(b, a)).toEqual(pinchMidSpan(a, b));
   });
 });

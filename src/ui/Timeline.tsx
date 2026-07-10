@@ -36,7 +36,7 @@ export function Timeline() {
   const onPointerDown = (e: React.PointerEvent) => {
     pause();
     seekFromPointer(e.clientX);
-    (e.target as HTMLElement).setPointerCapture(e.pointerId);
+    e.currentTarget.setPointerCapture(e.pointerId);
   };
   const onPointerMove = (e: React.PointerEvent) => {
     if (e.buttons & 1) seekFromPointer(e.clientX);

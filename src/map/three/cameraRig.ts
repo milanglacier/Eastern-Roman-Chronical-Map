@@ -1,8 +1,9 @@
 /**
  * Strategy-game camera: fixed north-up heading, pitch easing 55° (far) → 40°
  * (near), drag-to-pan on the ground plane (the grabbed point sticks to the
- * cursor), wheel zoom toward the cursor's ground point, target clamped to the
- * world rect. Pure math (pitch/clamp) is exported for unit tests.
+ * cursor), wheel zoom toward the cursor's ground point, two-finger pinch zoom
+ * toward the pinch midpoint, target clamped to the world rect. Pure math
+ * (pitch/clamp/pinch) is exported for unit tests.
  */
 import { PerspectiveCamera, Vector3 } from 'three';
 import { GROUND_W, GROUND_H } from './geo';
@@ -28,6 +29,23 @@ export function clampTarget(x: number, z: number): { x: number; z: number } {
   return {
     x: Math.min(GROUND_W, Math.max(0, x)),
     z: Math.min(GROUND_H, Math.max(0, z)),
+  };
+}
+
+/** Distance multiplier from a pinch span change: fingers spreading zooms in. */
+export function pinchZoomFactor(prevSpan: number, span: number): number {
+  if (prevSpan <= 0 || span <= 0) return 1;
+  return prevSpan / span;
+}
+
+/** Midpoint and span of a two-finger gesture in client coordinates. */
+export function pinchMidSpan(
+  a: { x: number; y: number },
+  b: { x: number; y: number },
+): { mid: { x: number; y: number }; span: number } {
+  return {
+    mid: { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 },
+    span: Math.hypot(a.x - b.x, a.y - b.y),
   };
 }
 
@@ -73,28 +91,66 @@ export function createCameraRig(
     return { x: camera.position.x + dir.x * t, z: camera.position.z + dir.z * t };
   }
 
-  let dragging = false;
+  // One pointer drags the grabbed ground point; two pointers pinch-zoom around
+  // the ground point under their midpoint (which also pans — one rule covers both).
+  const pointers = new Map<number, { x: number; y: number }>();
   let grabbed: { x: number; z: number } | null = null;
+  let pinchPrevSpan = 0;
 
-  const onPointerDown = (e: PointerEvent) => {
-    if (e.button !== 0) return;
-    dragging = true;
-    grabbed = groundAt(e.clientX, e.clientY);
-    domElement.setPointerCapture(e.pointerId);
-  };
-  const onPointerMove = (e: PointerEvent) => {
-    if (!dragging || !grabbed) return;
-    const now = groundAt(e.clientX, e.clientY);
+  function twoPointers(): { mid: { x: number; y: number }; span: number } {
+    const [a, b] = [...pointers.values()];
+    return pinchMidSpan(a, b);
+  }
+
+  /** Re-anchor the gesture after any pointer count change. */
+  function regrab(): void {
+    if (pointers.size === 1) {
+      const [p] = [...pointers.values()];
+      grabbed = groundAt(p.x, p.y);
+    } else if (pointers.size === 2) {
+      const { mid, span } = twoPointers();
+      grabbed = groundAt(mid.x, mid.y);
+      pinchPrevSpan = span;
+    } else {
+      grabbed = null; // idle, or 3+ fingers: suspend until the count settles
+    }
+  }
+
+  /** Shift the target so the grabbed ground point returns under the client point. */
+  function panGrabbedTo(clientX: number, clientY: number): void {
+    if (!grabbed) return;
+    const now = groundAt(clientX, clientY);
     if (!now) return;
     const c = clampTarget(state.x + (grabbed.x - now.x), state.z + (grabbed.z - now.z));
     state.x = c.x;
     state.z = c.z;
     apply();
+  }
+
+  const onPointerDown = (e: PointerEvent) => {
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    regrab();
+    // Last: capture can throw for pointers the browser no longer tracks.
+    domElement.setPointerCapture(e.pointerId);
   };
-  const endDrag = (e: PointerEvent) => {
-    dragging = false;
-    grabbed = null;
+  const onPointerMove = (e: PointerEvent) => {
+    if (!pointers.has(e.pointerId)) return;
+    pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (pointers.size === 1) {
+      panGrabbedTo(e.clientX, e.clientY);
+    } else if (pointers.size === 2) {
+      const { mid, span } = twoPointers();
+      state.distance = clampDistance(state.distance * pinchZoomFactor(pinchPrevSpan, span));
+      pinchPrevSpan = span;
+      apply();
+      panGrabbedTo(mid.x, mid.y);
+    }
+  };
+  const onPointerEnd = (e: PointerEvent) => {
+    if (!pointers.delete(e.pointerId)) return;
     if (domElement.hasPointerCapture(e.pointerId)) domElement.releasePointerCapture(e.pointerId);
+    regrab();
   };
   const onWheel = (e: WheelEvent) => {
     e.preventDefault();
@@ -113,8 +169,8 @@ export function createCameraRig(
 
   domElement.addEventListener('pointerdown', onPointerDown);
   domElement.addEventListener('pointermove', onPointerMove);
-  domElement.addEventListener('pointerup', endDrag);
-  domElement.addEventListener('pointercancel', endDrag);
+  domElement.addEventListener('pointerup', onPointerEnd);
+  domElement.addEventListener('pointercancel', onPointerEnd);
   domElement.addEventListener('wheel', onWheel, { passive: false });
 
   apply();
@@ -139,8 +195,8 @@ export function createCameraRig(
     dispose() {
       domElement.removeEventListener('pointerdown', onPointerDown);
       domElement.removeEventListener('pointermove', onPointerMove);
-      domElement.removeEventListener('pointerup', endDrag);
-      domElement.removeEventListener('pointercancel', endDrag);
+      domElement.removeEventListener('pointerup', onPointerEnd);
+      domElement.removeEventListener('pointercancel', onPointerEnd);
       domElement.removeEventListener('wheel', onWheel);
     },
   };
