@@ -19,9 +19,9 @@ import type { TerrainUniforms } from './terrain';
 import { blankTerritoryTexture } from './terrain';
 
 export const TERRITORY_TEX_W = 1024;
-export const TERRITORY_TEX_H = 442; // same 232:100 aspect as the world rect
-/** Frontier glow half-width in territory-texture px (~1.6 world units). */
-const GLOW_PX = 7;
+export const TERRITORY_TEX_H = 498; // same 288:140 aspect as the world rect
+/** Frontier glow half-width in territory-texture px (~1.7 world units). */
+const GLOW_PX = 6;
 export const CROSSFADE_MS = 550;
 
 /**

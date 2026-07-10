@@ -85,6 +85,11 @@ describe('straits stay open water', () => {
     ['Dardanelles east', 26.77, 40.71],
     ['Bosporus', 29.4, 41.15],
     ['Kerch', 36.39, 45.15],
+    ['Oresund', 12.68, 55.8],
+    // Wide enough to survive DEM sampling without a config entry; pinned so
+    // a future resolution change can't silently close them.
+    ['Dover', 1.4, 51.0],
+    ['Hormuz', 56.5, 26.6],
   ];
 
   it.each(straitPoints)('%s is below sea level', async (_name, lon, lat) => {
@@ -100,6 +105,9 @@ describe('land anchors stay land', () => {
     ['Antioch', 36.16, 36.2],
     ['Alexandria hinterland', 30.0, 30.8],
     ['Constantinople (European side)', 28.9, 41.1],
+    ['Londinium', -0.1, 51.5],
+    ['Lutetia', 2.35, 48.85],
+    ['Persepolis', 52.9, 29.9],
   ];
 
   it.each(landPoints)('%s is above sea level', async (_name, lon, lat) => {

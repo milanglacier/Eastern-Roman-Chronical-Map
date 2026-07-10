@@ -4,8 +4,17 @@
  * runtime/lighting/UI counterparts.
  */
 
-/** Sky / fog — the warm haze that swallows the far edge of the world. */
-export const SKY_COLOR = 0xb8c4cf;
+/**
+ * Sky / fog — deep blue-slate sitting between the baked deep-sea (0x10263a)
+ * and shelf-sea (0x1e475c) tones, so background beyond the ocean apron reads
+ * as distant ocean instead of washing white at far zoom.
+ */
+export const SKY_COLOR = 0x263646;
+/**
+ * Grazing-angle sheen on the water. Decoupled from SKY_COLOR so darkening
+ * the background doesn't dull the whole sea surface.
+ */
+export const WATER_FRESNEL_TINT = 0x93aabb;
 /** Directional sun, warm late-afternoon tone. */
 export const SUN_COLOR = 0xffe0b3;
 /** Hemisphere fill: cool sky bounce over warm earth bounce. */

@@ -16,7 +16,7 @@ import { useAppStore } from '../state/store';
 import { heightFieldToDataTexture, loadHeightField } from './three/heightField';
 import { createTerritoryController } from './three/territory';
 import { buildSkirt, buildTerrain } from './three/terrain';
-import { createWater } from './three/water';
+import { createOceanApron, createWater } from './three/water';
 import { createLighting } from './three/lights';
 import { createAtmosphere } from './three/atmosphere';
 import { createCameraRig } from './three/cameraRig';
@@ -66,7 +66,7 @@ export function MapCanvas() {
 
       let renderer: WebGLRenderer;
       try {
-        // Log depth: true-scale heights are tiny next to the 232-unit world,
+        // Log depth: true-scale heights are tiny next to the 288-unit world,
         // so linear depth would z-fight the water plane against coastal land.
         renderer = new WebGLRenderer({ antialias: true, logarithmicDepthBuffer: true });
       } catch (err) {
@@ -93,6 +93,8 @@ export function MapCanvas() {
         worldMask,
       });
       scene.add(water.mesh);
+      const oceanApron = createOceanApron({ waterNormal });
+      scene.add(oceanApron.mesh);
       const lighting = createLighting();
       scene.add(lighting.group);
       const atmosphere = createAtmosphere(scene);
@@ -150,6 +152,7 @@ export function MapCanvas() {
         lastTimeMs = timeMs;
         terrain.uniforms.uTime.value = timeMs / 1000;
         water.setTime(timeMs / 1000);
+        oceanApron.setTime(timeMs / 1000);
         territoryCtl.update(delta);
         if (viewDirty) {
           viewDirty = false;
@@ -177,6 +180,7 @@ export function MapCanvas() {
         terrain.dispose();
         skirt.dispose();
         water.dispose();
+        oceanApron.dispose();
         lighting.dispose();
         albedo?.dispose();
         normal?.dispose();

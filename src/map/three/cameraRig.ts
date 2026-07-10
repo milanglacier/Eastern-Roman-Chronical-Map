@@ -8,7 +8,7 @@ import { PerspectiveCamera, Vector3 } from 'three';
 import { GROUND_W, GROUND_H } from './geo';
 
 export const DIST_MIN = 14;
-export const DIST_MAX = 175;
+export const DIST_MAX = 220;
 export const PITCH_NEAR = (40 * Math.PI) / 180;
 export const PITCH_FAR = (55 * Math.PI) / 180;
 const ZOOM_EXP = 0.0014;

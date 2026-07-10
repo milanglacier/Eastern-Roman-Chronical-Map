@@ -8,11 +8,11 @@
  *   scripts/assets/terrain-config.json          — straits/rivers/regions/corridors
  *
  * Writes (committed):
- *   public/terrain/heightmap.png   2320x1000 split-byte RGB (R=hi, G=lo) heights
+ *   public/terrain/heightmap.png   2880x1400 split-byte RGB (R=hi, G=lo) heights
  *   public/terrain/heightmap.json  sidecar: bbox, encoding, exaggeration, units
- *   public/terrain/normal.png      2320x1000 object-space normals (exaggerated)
- *   public/terrain/albedo.jpg      4096x1766 stylized painterly terrain color
- *   public/terrain/worldmask.png   2320x1000 R=coast SDF, G=river mask, B=0
+ *   public/terrain/normal.png      2880x1400 object-space normals (exaggerated)
+ *   public/terrain/albedo.jpg      8192x3982 stylized painterly terrain color
+ *   public/terrain/worldmask.png   2880x1400 R=coast SDF, G=river mask, B=0
  *   public/terrain/waternormal.png 512x512 tileable water-wave normal map
  *   scripts/assets/dem-preview.png hillshade for human eyeballing (not shipped)
  */
@@ -46,10 +46,10 @@ const out = (name) => join(dir, '..', 'public', 'terrain', name);
 /* ------------------------------------------------------------------ */
 /* World constants (must match src/map/three/geo.ts)                   */
 
-const HM_W = 2320; // 40 px/degree over 58 degrees of longitude
-const HM_H = 1000; // 40 px/degree over 25 degrees of latitude
+const HM_W = 2880; // 40 px/degree over 72 degrees of longitude
+const HM_H = 1400; // 40 px/degree over 35 degrees of latitude
 const ALB_W = 8192;
-const ALB_H = 3532; // same 58:25 aspect
+const ALB_H = 3982; // same 72:35 aspect
 // Base (sea) factor documented in the sidecar; land uses the elevation-shaped
 // curve from src/lib/heightShaping.ts (shared with the runtime height field).
 const VERTICAL_EXAGGERATION = SEA_EXAGGERATION;

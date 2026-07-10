@@ -8,8 +8,8 @@ territory tint. This doc records the world model and the offline bake that feeds
 ## World model (single source of truth)
 
 - **Ground plane**: plate carrée, `4 world units / degree` (same linear semantics as
-  the retired hex grid's `lonLatToWorld`). lon −12..46 → X 0..232 (east+), lat 49..24 →
-  Z 0..100 (south+), Y up. Constants + converters: `src/map/three/geo.ts`.
+  the retired hex grid's `lonLatToWorld`). lon −12..60 → X 0..288 (east+), lat 59..24 →
+  Z 0..140 (south+), Y up. Constants + converters: `src/map/three/geo.ts`.
 - **UV space**: every world texture (heightmap, normal, albedo, worldmask, territory)
   shares one UV space over that rect, **north = V 0**; all textures are loaded with
   `flipY = false`. lon/lat → UV is a two-multiply affine.
@@ -29,7 +29,7 @@ territory tint. This doc records the world model and the offline bake that feeds
   displacement, `heightAt(lon,lat)` marker projection, and an R16F depth-tint texture
   for the water shader — no vertex-texture-fetch, no raycasts.
 - **Depth**: the renderer uses a **logarithmic depth buffer** — true-scale heights are
-  so small next to the 232-unit world that linear depth would z-fight the water plane
+  so small next to the 288-unit world that linear depth would z-fight the water plane
   (Y=0) against coastal land (clamped to ≥ +4 m ≈ 0.00036 units).
 
 ## Offline bake (deterministic, offline, committed outputs)
@@ -42,22 +42,24 @@ territory tint. This doc records the world model and the offline bake that feeds
 
 `npm run world:build` → `scripts/build-world-textures.mjs` (pure transform of committed
 inputs; run twice → identical sha256):
-1. **heightmap.png** 2320×1000 (40 px/°) + sidecar. Bilinear-samples the mosaic
+1. **heightmap.png** 2880×1400 (40 px/°) + sidecar. Bilinear-samples the mosaic
    (Terrarium decode first, then blend), **conforms to the Natural Earth coastline**
    (ocean ≤ −12 m, land ≥ +4 m) so the waterline matches the vector coast, **closes
    river slits** (Natural Earth slits big rivers like the Po into its land polygons;
    at 2.2 km/px they become 1-px ocean canals across whole valleys — thin water that
    is above sea level in the raw DEM is reclassified as land, except within 10 px of
-   a configured strait), **carves the six straits** from `terrain-config.json`
-   (Gibraltar, Bonifacio, Messina, Dardanelles, Bosporus, Kerch — they close at
-   2.2 km/px otherwise; the old tile pipeline had the same failure mode), mops up
+   a configured strait), **carves the seven straits** from `terrain-config.json`
+   (Gibraltar, Bonifacio, Messina, Dardanelles, Bosporus, Kerch, Öresund — they
+   close at 2.2 km/px otherwise; the old tile pipeline had the same failure mode;
+   Dover and Hormuz are wide enough to survive sampling and are only pinned by the
+   regression tests), mops up
    small orphaned water fragments (components ≥ 500 px or containing carved strait
    pixels always stay water), and incises river valleys (12 m) along the meandered
    courses below.
 2. **normal.png** — object-space normals computed from the **shaped** heights
    (`shapedMeters`), gradients taken in world units so shading matches the rendered
    mesh exactly (`material.normalMapType = ObjectSpaceNormalMap`, no tangents needed).
-3. **albedo.jpg** 8192×3532 — stylized painterly color: biome ramp from
+3. **albedo.jpg** 8192×3982 — stylized painterly color: biome ramp from
    elevation/latitude/slope, `terrain-config.json` region + green-corridor overrides
    with **domain-warped lookups** (no straight polygon borders), baked hillshade
    (computed on shaped heights, gradient-boosted 2× as a soft painterly base under
@@ -80,7 +82,7 @@ lives in `src/lib/distanceField.ts`. Both are unit-tested and shared with the ru
 - `geo.ts` — ground↔lon/lat↔UV (pure).
 - `heightField.ts` — PNG → Float32Array; flat 2×2 fallback if assets are missing
   (scene must boot regardless — same philosophy as the old procedural atlas).
-- `terrain.ts` — 928×400-segment mesh, CPU-displaced; `MeshStandardMaterial` with
+- `terrain.ts` — 1152×560-segment mesh, CPU-displaced; `MeshStandardMaterial` with
   `onBeforeCompile` injections for the imperial-purple territory fill (#6B2FA0 mixed
   into the diffuse pre-lighting) + crisp gold frontier line with faint halo (the line
   is thresholded per crossfade slot so it stays sharp mid-fade) + detail grain
@@ -93,7 +95,11 @@ lives in `src/lib/distanceField.ts`. Both are unit-tested and shared with the ru
   worldmask.R). Includes logdepth + fog + tonemapping chunks so it composits
   correctly with the standard-material terrain. Alpha fades out over land (coast
   SDF > ~1 px): the coarse mesh dips below Y=0 between low delta/lagoon pixels and
-  the sheet would otherwise bleed inland in quad-sized blocks.
+  the sheet would otherwise bleed inland in quad-sized blocks. `createOceanApron()`
+  adds an opaque open-ocean ring 500 units past the world rect (vertex-exact seam,
+  world-position UVs so the waves are phase-continuous, no height/mask sampling —
+  border texels are land on the south/east edges) so max zoom-out shows sea, not
+  bare background.
 - `lights.ts` — warm sun + hemisphere fill; the sun shares the baked hillshade's
   azimuth but sits lower (34° vs 48°) so it rakes the shaped relief with long cast
   shadows. `updateShadowFrustum` fits one ortho cascade to the visible ground
@@ -120,9 +126,9 @@ DOM overlays subscribe and re-project. `MapCanvas.tsx` owns lifecycle (StrictMod
 
 ## Regression tests
 
-- `tests/world-assets.test.ts` — sidecar ↔ PNG agreement; **six straits below sea
-  level** and land anchors above (successor to the old tile strait test); texture
-  dimension/aspect contracts.
+- `tests/world-assets.test.ts` — sidecar ↔ PNG agreement; **straits below sea
+  level** (the seven carved ones plus Dover and Hormuz) and land anchors above
+  (successor to the old tile strait test); texture dimension/aspect contracts.
 - `tests/worldlib.test.ts` — height codec round-trip, exact EDT, PRNG determinism,
   height-shaping monotonicity/sign preservation (strait regressions depend on it).
 - `tests/three-geo.test.ts` — ground mapping round-trip, camera pitch/clamp math.

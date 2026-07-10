@@ -4,9 +4,9 @@
   "zoom": 7,
   "tileSize": 256,
   "tileXMin": 59,
-  "tileXMax": 80,
-  "tileYMin": 43,
+  "tileXMax": 85,
+  "tileYMin": 37,
   "tileYMax": 55,
-  "width": 5632,
-  "height": 3328
+  "width": 6912,
+  "height": 4864
 }

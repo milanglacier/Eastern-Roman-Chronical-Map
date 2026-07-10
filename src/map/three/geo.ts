@@ -8,8 +8,8 @@ import { LON_MIN, LON_MAX, LAT_MIN, LAT_MAX } from '../../lib/hex';
 
 export const UNITS_PER_DEGREE = 4;
 /** World rect in ground units: X spans longitude, Z spans latitude. */
-export const GROUND_W = (LON_MAX - LON_MIN) * UNITS_PER_DEGREE; // 232
-export const GROUND_H = (LAT_MAX - LAT_MIN) * UNITS_PER_DEGREE; // 100
+export const GROUND_W = (LON_MAX - LON_MIN) * UNITS_PER_DEGREE; // 288
+export const GROUND_H = (LAT_MAX - LAT_MIN) * UNITS_PER_DEGREE; // 140
 
 export interface GroundPoint {
   x: number;

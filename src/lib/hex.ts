@@ -10,9 +10,9 @@
  */
 
 export const LON_MIN = -12;
-export const LON_MAX = 46;
+export const LON_MAX = 60;
 export const LAT_MIN = 24;
-export const LAT_MAX = 49;
+export const LAT_MAX = 59;
 
 export const COLS = 90;
 export const ROWS = 56;

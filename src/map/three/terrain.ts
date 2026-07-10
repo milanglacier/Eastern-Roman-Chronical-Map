@@ -23,9 +23,9 @@ import type { HeightField } from './heightField';
 import { GROUND_W, GROUND_H, groundToLonLat } from './geo';
 import { TERRITORY_TINT, TERRITORY_TINT_STRENGTH, TERRITORY_BORDER } from '../colors';
 
-/** 16 quads per degree — ~743k tris; trivial for real GPUs (llvmpipe FPS is not a target). */
-export const SEGMENTS_X = 928;
-export const SEGMENTS_Z = 400;
+/** 16 quads per degree — ~1.29M tris; trivial for real GPUs (llvmpipe FPS is not a target). */
+export const SEGMENTS_X = 1152;
+export const SEGMENTS_Z = 560;
 
 export interface TerrainUniforms {
   uTime: { value: number };
@@ -169,7 +169,7 @@ export function buildTerrain(
           vec2 territoryUv = vMapUv;
           // High-frequency painterly grain so close zoom never reads as a
           // blurry upscale of the baked albedo (tiling aspect-corrected).
-          float terrainDetail = texture2D(uDetailTex, vMapUv * vec2(170.0, 73.3)).b;
+          float terrainDetail = texture2D(uDetailTex, vMapUv * vec2(211.0, 102.6)).b;
           diffuseColor.rgb *= 0.93 + 0.14 * terrainDetail;
           // River channels (worldmask.G): two counter-scrolling noise reads
           // make the painted course move like water instead of a decal.
@@ -177,8 +177,8 @@ export function buildTerrain(
           if (riverM > 0.003) {
             // R/G of the wave normal map are zero-mean around 0.5 (B is
             // normal-Z ~= 1.0 and would just brighten constantly).
-            float flowA = texture2D(uDetailTex, vMapUv * vec2(310.0, 133.6) + uTime * vec2(0.016, 0.006)).r;
-            float flowB = texture2D(uDetailTex, vMapUv * vec2(214.0, 92.2) - uTime * vec2(0.009, 0.013)).g;
+            float flowA = texture2D(uDetailTex, vMapUv * vec2(384.8, 187.0) + uTime * vec2(0.016, 0.006)).r;
+            float flowB = texture2D(uDetailTex, vMapUv * vec2(265.7, 129.1) - uTime * vec2(0.009, 0.013)).g;
             riverWave = flowA * 0.5 + flowB * 0.5;
             diffuseColor.rgb = mix(diffuseColor.rgb, vec3(0.055, 0.13, 0.16), riverM * 0.3);
             diffuseColor.rgb *= 1.0 + riverM * (riverWave - 0.5) * 0.6;

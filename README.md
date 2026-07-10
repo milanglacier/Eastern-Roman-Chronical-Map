@@ -50,7 +50,7 @@ Add an event: append an object to the matching era file, run `npm test`.
 Add a snapshot: add a row to `snapshots.json` **and** a matching
 `territories/<year>.json`; the tests check the pairing.
 
-Coordinates must lie within the map bbox: lon **−12…46**, lat **24…49**.
+Coordinates must lie within the map bbox: lon **−12…60**, lat **24…59**.
 
 ## Regenerating the terrain
 

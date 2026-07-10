@@ -12,7 +12,7 @@ const URL =
 
 // Map bbox from src/lib/hex.ts, padded so coastal tiles at the edge classify correctly.
 const PAD = 2;
-const XMIN = -12 - PAD, XMAX = 46 + PAD, YMIN = 24 - PAD, YMAX = 49 + PAD;
+const XMIN = -12 - PAD, XMAX = 60 + PAD, YMIN = 24 - PAD, YMAX = 59 + PAD;
 
 /** Sutherland–Hodgman clip of a ring against one half-plane. */
 function clipHalfPlane(ring, inside, intersect) {

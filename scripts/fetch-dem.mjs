@@ -25,8 +25,8 @@ const CONCURRENCY = 6;
 
 // Map bbox from src/lib/hex.ts, padded 1° so edge pixels sample cleanly.
 const PAD = 1;
-const LON_MIN = -12 - PAD, LON_MAX = 46 + PAD;
-const LAT_MIN = 24 - PAD, LAT_MAX = 49 + PAD;
+const LON_MIN = -12 - PAD, LON_MAX = 60 + PAD;
+const LAT_MIN = 24 - PAD, LAT_MAX = 59 + PAD;
 
 const n = 2 ** ZOOM;
 const lonToTileX = (lon) => ((lon + 180) / 360) * n;

@@ -1,11 +1,11 @@
 {
-  "width": 2320,
-  "height": 1000,
+  "width": 2880,
+  "height": 1400,
   "bbox": {
     "lonMin": -12,
-    "lonMax": 46,
+    "lonMax": 60,
     "latMin": 24,
-    "latMax": 49
+    "latMax": 59
   },
   "encoding": "uint16 v = R*256 + G; meters = v * scale + offset",
   "scale": 0.25,
