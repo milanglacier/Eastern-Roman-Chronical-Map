@@ -27,6 +27,8 @@ import { createCloudUniforms } from '../clouds';
 import { heightFieldToDataTexture } from '../heightField';
 import { loadCityHeightField, type CityHeightField } from './cityFrame';
 import type { CityScene as CitySceneData } from '../../../data/schema';
+import { createCityModel } from './cityModel';
+import { createUrbanGround, URBAN_GROUND_GLSL } from './urbanGround';
 
 /** Terrain grid resolution (~36 m quads over the ~28 km bake). */
 const SEGMENTS_X = 800;
@@ -133,6 +135,19 @@ export async function createCityScene(opts: CitySceneOptions): Promise<CityScene
     material.normalMap = normal;
     material.normalMapType = ObjectSpaceNormalMap;
   }
+  const coreLonLat =
+    opts.data.structures.find((s) => s.id === 'column-of-constantine')?.position ?? opts.data.home.lonlat;
+  const urban = createUrbanGround(opts.data, heightField.frame, heightField.frame.lonLatToLocal(...coreLonLat));
+  material.onBeforeCompile = (shader) => {
+    Object.assign(shader.uniforms, urban.uniforms);
+    shader.fragmentShader = shader.fragmentShader
+      .replace(
+        '#include <common>',
+        '#include <common>\nuniform sampler2D uUrbanMask;\nuniform float uUrbanStrength;\nuniform vec3 uUrbanSoil;',
+      )
+      .replace('#include <map_fragment>', `#include <map_fragment>\n${URBAN_GROUND_GLSL}`);
+  };
+  material.customProgramCacheKey = () => 'city-terrain';
   const geometry = buildCityTerrainGeometry(heightField);
   const terrain = new Mesh(geometry, material);
   terrain.receiveShadow = true;
@@ -157,6 +172,9 @@ export async function createCityScene(opts: CitySceneOptions): Promise<CityScene
     },
   );
   scene.add(water.mesh);
+
+  const model = createCityModel(opts.data, heightField, meta.verticalExaggeration);
+  scene.add(model.group);
 
   const lighting = createLighting({ maxRayLength: 30000, normalBias: 3 });
   scene.add(lighting.group);
@@ -199,9 +217,14 @@ export async function createCityScene(opts: CitySceneOptions): Promise<CityScene
     rig,
     heightField,
     home,
-    setYear() {},
-    update(timeSec, _deltaSec, viewDirty, viewportW, viewportH) {
+    setYear(year) {
+      model.setYear(year);
+      urban.setYear(year);
+    },
+    update(timeSec, deltaSec, viewDirty, viewportW, viewportH) {
       water.setTime(timeSec);
+      model.update(timeSec, deltaSec);
+      urban.update(deltaSec);
       if (viewDirty) {
         lighting.updateShadowFrustum(rig.camera, viewportW, viewportH);
         camPos.copy(rig.camera.position);
@@ -210,6 +233,8 @@ export async function createCityScene(opts: CitySceneOptions): Promise<CityScene
     },
     dispose() {
       rig.dispose();
+      model.dispose();
+      urban.dispose();
       geometry.dispose();
       material.dispose();
       water.dispose();
