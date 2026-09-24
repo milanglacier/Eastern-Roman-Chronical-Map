@@ -3,7 +3,7 @@
     "id": "dedication-of-constantinople",
     "year": 330,
     "category": "politics",
-    "lonlat": [28.98, 41.01],
+    "lonlat": [28.9713, 41.0087],
     "importance": 1,
     "title": {
       "en": "Dedication of Constantinople",
@@ -79,7 +79,7 @@
     "id": "first-council-of-constantinople",
     "year": 381,
     "category": "religion",
-    "lonlat": [28.97, 41.005],
+    "lonlat": [28.9813, 41.0095],
     "importance": 2,
     "title": {
       "en": "First Council of Constantinople",
@@ -117,7 +117,7 @@
     "id": "theodosian-walls",
     "year": 413,
     "category": "military",
-    "lonlat": [28.92, 41.02],
+    "lonlat": [28.9186, 41.0163],
     "importance": 2,
     "title": {
       "en": "Completion of the Theodosian Walls",
@@ -136,7 +136,7 @@
     "id": "university-of-constantinople",
     "year": 425,
     "category": "culture",
-    "lonlat": [28.975, 41.008],
+    "lonlat": [28.9585, 41.0118],
     "importance": 2,
     "title": {
       "en": "Foundation of the University of Constantinople",
@@ -155,7 +155,7 @@
     "id": "theodosian-code",
     "year": 438,
     "category": "law",
-    "lonlat": [28.98, 41.005],
+    "lonlat": [28.9768, 41.0041],
     "importance": 2,
     "title": {
       "en": "Publication of the Theodosian Code",
@@ -174,7 +174,7 @@
     "id": "council-of-chalcedon",
     "year": 451,
     "category": "religion",
-    "lonlat": [29.03, 40.99],
+    "lonlat": [29.026, 40.992],
     "importance": 1,
     "title": {
       "en": "Council of Chalcedon",
@@ -212,7 +212,7 @@
     "id": "anastasius-coinage-reform",
     "year": 498,
     "category": "economy",
-    "lonlat": [28.985, 41.012],
+    "lonlat": [28.9795, 41.0048],
     "importance": 2,
     "title": {
       "en": "Anastasius' Coinage and Fiscal Reforms",
@@ -251,7 +251,7 @@
     "year": 529,
     "endYear": 534,
     "category": "law",
-    "lonlat": [28.977, 41.006],
+    "lonlat": [28.9776, 41.0083],
     "importance": 1,
     "title": {
       "en": "Corpus Juris Civilis",
@@ -270,7 +270,7 @@
     "id": "nika-riots",
     "year": 532,
     "category": "politics",
-    "lonlat": [28.976, 41.006],
+    "lonlat": [28.9751, 41.0058],
     "importance": 1,
     "title": {
       "en": "Nika Riots",
@@ -329,7 +329,7 @@
     "id": "hagia-sophia",
     "year": 537,
     "category": "art",
-    "lonlat": [28.980, 41.008],
+    "lonlat": [28.98, 41.0086],
     "importance": 1,
     "title": {
       "en": "Consecration of Hagia Sophia",
@@ -349,7 +349,7 @@
     "year": 541,
     "endYear": 544,
     "category": "civilization",
-    "lonlat": [28.99, 41.015],
+    "lonlat": [28.975, 41.0165],
     "importance": 1,
     "title": {
       "en": "Plague of Justinian",
@@ -387,7 +387,7 @@
     "id": "silkworm-smuggling",
     "year": 552,
     "category": "economy",
-    "lonlat": [28.99, 41.005],
+    "lonlat": [28.9776, 41.0033],
     "importance": 2,
     "title": {
       "en": "Silkworms Smuggled to Constantinople",
@@ -406,7 +406,7 @@
     "id": "death-of-justinian",
     "year": 565,
     "category": "politics",
-    "lonlat": [28.984, 41.003],
+    "lonlat": [28.9762, 41.0036],
     "importance": 2,
     "title": {
       "en": "Death of Justinian I",
@@ -465,7 +465,7 @@
     "id": "strategikon-of-maurice",
     "year": 600,
     "category": "culture",
-    "lonlat": [28.97, 41.01],
+    "lonlat": [28.866, 40.976],
     "importance": 2,
     "title": {
       "en": "The Strategikon",

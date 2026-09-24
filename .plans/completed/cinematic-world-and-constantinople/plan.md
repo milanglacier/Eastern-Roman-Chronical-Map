@@ -276,3 +276,28 @@ before implementing (project convention).
   before the land walls, and the ships dragged overland into the Golden Horn).
 - Phase 3: more city views (Rome, Antioch, Alexandria, Thessalonica) reusing the
   city generators with new JSON.
+
+---
+
+## Outcome (2026-09-24)
+
+Implemented in commits b335b22 → (final docs commit): satellite albedo +
+territory veil; sky/clouds/cloud shadows/post grade/ground detail; city-lens
+bake + transition; procedural Constantinople by year; landmark labels, event
+sites, docs.
+
+Deviations from the plan:
+- BMNG month: only the July 2004 record (74092) had a verified URL; snow comes
+  from a raised procedural snowline instead of a May composite.
+- Detail textures are high-pass luminance only (colour stays satellite): at
+  map scale, photo colour tiles read as repeating patterns.
+- Ships are procedural lateen-rigged hulls, not a Kenney kit; no CC0 tree
+  models yet — `public/models/` is not created. The licence test covers it
+  when it appears.
+- Tilt-shift DoF for the city view was not added (the post chain has the hook
+  via `postFx.setView`).
+- Found and fixed along the way: the Dardanelles carve line cut a fake canal
+  across Thrace north of the Gulf of Saros (the real strait was closed at
+  heightmap resolution); shallow-sea z-fight dashes (Azov/Caspian/Baltic).
+- Not done: touch-screen orbit (two-finger twist) in the city view; the Gate
+  of the Spring / Blachernae Komnenian wall are not modelled separately.

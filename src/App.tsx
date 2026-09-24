@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { MapCanvas } from './map/MapCanvas';
 import { EventMarkers } from './map/EventMarkers';
 import { CityMarkers } from './map/CityMarkers';
+import { CityLandmarks } from './map/CityLandmarks';
 import { Header } from './ui/Header';
 import { Timeline } from './ui/Timeline';
 import { EventPanel } from './ui/EventPanel';
@@ -48,6 +49,7 @@ export default function App() {
       <main className="map-stage">
         <MapCanvas />
         <CityMarkers />
+        <CityLandmarks />
         <EventMarkers />
         <Legend />
         <CityLens />

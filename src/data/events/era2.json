@@ -3,7 +3,7 @@
     "id": "heraclius-accession-610",
     "year": 610,
     "category": "politics",
-    "lonlat": [28.98, 41.01],
+    "lonlat": [28.977, 41.0042],
     "importance": 1,
     "title": {
       "en": "Accession of Heraclius",
@@ -42,7 +42,7 @@
     "id": "hexagram-wartime-finance-615",
     "year": 615,
     "category": "economy",
-    "lonlat": [28.98, 41.01],
+    "lonlat": [28.9795, 41.0078],
     "importance": 2,
     "title": {
       "en": "The Silver Hexagram and Wartime Finance",
@@ -61,7 +61,7 @@
     "id": "greek-official-language",
     "year": 620,
     "category": "culture",
-    "lonlat": [28.98, 41.01],
+    "lonlat": [28.9758, 41.0045],
     "importance": 2,
     "title": {
       "en": "Greek Becomes the Language of State",
@@ -80,7 +80,7 @@
     "id": "avar-persian-siege-626",
     "year": 626,
     "category": "military",
-    "lonlat": [28.98, 41.01],
+    "lonlat": [28.9402, 41.0368],
     "importance": 1,
     "title": {
       "en": "Avar-Persian Siege of Constantinople",
@@ -177,7 +177,7 @@
     "year": 674,
     "endYear": 678,
     "category": "military",
-    "lonlat": [28.98, 41.01],
+    "lonlat": [28.965, 40.998],
     "importance": 1,
     "title": {
       "en": "First Arab Siege and the Invention of Greek Fire",
@@ -215,7 +215,7 @@
     "id": "quinisext-council-692",
     "year": 692,
     "category": "law",
-    "lonlat": [28.98, 41.01],
+    "lonlat": [28.9772, 41.0048],
     "importance": 2,
     "title": {
       "en": "Justinian II and the Quinisext Council",
@@ -235,7 +235,7 @@
     "year": 717,
     "endYear": 718,
     "category": "military",
-    "lonlat": [28.98, 41.01],
+    "lonlat": [28.9174, 41.0074],
     "importance": 1,
     "title": {
       "en": "Second Arab Siege: Leo III Saves the City",
@@ -255,7 +255,7 @@
     "year": 726,
     "endYear": 730,
     "category": "religion",
-    "lonlat": [28.98, 41.01],
+    "lonlat": [28.9785, 41.0065],
     "importance": 1,
     "title": {
       "en": "Iconoclasm Begins",
@@ -274,7 +274,7 @@
     "id": "ecloga-law-code-741",
     "year": 741,
     "category": "law",
-    "lonlat": [28.98, 41.01],
+    "lonlat": [28.9764, 41.004],
     "importance": 2,
     "title": {
       "en": "The Ecloga: Law in Greek for a New Age",
@@ -331,7 +331,7 @@
     "id": "hagia-eirene-aniconic-apse",
     "year": 753,
     "category": "art",
-    "lonlat": [28.98, 41.01],
+    "lonlat": [28.9813, 41.0095],
     "importance": 2,
     "title": {
       "en": "The Cross of Hagia Eirene: Iconoclast Art",
@@ -369,7 +369,7 @@
     "id": "charlemagne-coronation-two-emperors",
     "year": 800,
     "category": "politics",
-    "lonlat": [28.98, 41.01],
+    "lonlat": [28.9772, 41.0036],
     "importance": 2,
     "title": {
       "en": "Two Emperors: Charlemagne's Coronation Seen from Constantinople",
@@ -407,7 +407,7 @@
     "id": "triumph-of-orthodoxy-843",
     "year": 843,
     "category": "religion",
-    "lonlat": [28.98, 41.01],
+    "lonlat": [28.98, 41.0086],
     "importance": 1,
     "title": {
       "en": "The Triumph of Orthodoxy: Icons Restored",
@@ -426,7 +426,7 @@
     "id": "leo-mathematician-magnaura-855",
     "year": 855,
     "category": "culture",
-    "lonlat": [28.98, 41.01],
+    "lonlat": [28.9815, 41.0075],
     "importance": 2,
     "title": {
       "en": "Leo the Mathematician and the Magnaura School",

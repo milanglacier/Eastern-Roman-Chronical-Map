@@ -3,7 +3,7 @@
     "id": "sack-of-constantinople-1204",
     "year": 1204,
     "category": "military",
-    "lonlat": [28.98, 41.01],
+    "lonlat": [28.952, 41.032],
     "importance": 1,
     "title": {
       "en": "The Fourth Crusade Sacks Constantinople",
@@ -61,7 +61,7 @@
     "id": "recovery-of-constantinople-1261",
     "year": 1261,
     "category": "politics",
-    "lonlat": [28.98, 41.02],
+    "lonlat": [28.9178, 41.0074],
     "importance": 1,
     "title": {
       "en": "Michael VIII Recovers Constantinople",
@@ -99,7 +99,7 @@
     "id": "metochites-planoudes-scholarship",
     "year": 1300,
     "category": "culture",
-    "lonlat": [28.97, 41.01],
+    "lonlat": [28.9395, 41.0305],
     "importance": 2,
     "title": {
       "en": "Metochites, Planoudes, and the Scholars' Revival",
@@ -159,7 +159,7 @@
     "year": 1316,
     "endYear": 1321,
     "category": "art",
-    "lonlat": [28.94, 41.03],
+    "lonlat": [28.939, 41.031],
     "importance": 2,
     "title": {
       "en": "The Chora Church: Summit of the Palaiologan Renaissance",
@@ -179,7 +179,7 @@
     "year": 1321,
     "endYear": 1328,
     "category": "politics",
-    "lonlat": [28.96, 41.0],
+    "lonlat": [28.9392, 41.0352],
     "importance": 2,
     "title": {
       "en": "The Civil War of the Two Andronikoi",
@@ -198,7 +198,7 @@
     "id": "universal-judges-reform",
     "year": 1329,
     "category": "law",
-    "lonlat": [28.97, 41.0],
+    "lonlat": [28.9776, 41.0083],
     "importance": 2,
     "title": {
       "en": "The Universal Judges of the Romans",
@@ -276,7 +276,7 @@
     "id": "black-death-constantinople",
     "year": 1347,
     "category": "economy",
-    "lonlat": [28.99, 41.02],
+    "lonlat": [28.968, 41.019],
     "importance": 1,
     "title": {
       "en": "The Black Death Strikes Constantinople",
@@ -334,7 +334,7 @@
     "year": 1399,
     "endYear": 1403,
     "category": "politics",
-    "lonlat": [28.98, 41.0],
+    "lonlat": [28.9782, 41.0183],
     "importance": 2,
     "title": {
       "en": "Manuel II's Journey to the West",
@@ -431,7 +431,7 @@
     "id": "rumeli-hisari-construction",
     "year": 1452,
     "category": "military",
-    "lonlat": [29.04, 41.08],
+    "lonlat": [29.0556, 41.0847],
     "importance": 2,
     "title": {
       "en": "Mehmed II Builds Rumeli Hisarı",
@@ -450,7 +450,7 @@
     "id": "fall-of-constantinople-1453",
     "year": 1453,
     "category": "military",
-    "lonlat": [28.94, 41.01],
+    "lonlat": [28.9217, 41.0212],
     "importance": 1,
     "title": {
       "en": "The Fall of Constantinople and the Last Stand of Constantine XI",

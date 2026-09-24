@@ -3,7 +3,7 @@
     "id": "basil-i-macedonian-dynasty",
     "year": 867,
     "category": "politics",
-    "lonlat": [28.98, 41.01],
+    "lonlat": [28.977, 41.0042],
     "importance": 1,
     "title": {
       "en": "Basil I Founds the Macedonian Dynasty",
@@ -22,7 +22,7 @@
     "id": "hagia-sophia-apse-mosaic",
     "year": 867,
     "category": "art",
-    "lonlat": [28.98, 41.01],
+    "lonlat": [28.98, 41.0086],
     "importance": 2,
     "title": {
       "en": "Unveiling of the Apse Mosaic in Hagia Sophia",
@@ -41,7 +41,7 @@
     "id": "basilika-law-code",
     "year": 892,
     "category": "law",
-    "lonlat": [28.98, 41.01],
+    "lonlat": [28.9766, 41.0038],
     "importance": 2,
     "title": {
       "en": "Promulgation of the Basilika",
@@ -60,7 +60,7 @@
     "id": "book-of-the-eparch",
     "year": 912,
     "category": "economy",
-    "lonlat": [28.98, 41.01],
+    "lonlat": [28.9713, 41.0087],
     "importance": 2,
     "title": {
       "en": "Leo VI's Book of the Eparch",
@@ -98,7 +98,7 @@
     "id": "constantine-vii-encyclopedism",
     "year": 950,
     "category": "culture",
-    "lonlat": [28.98, 41.01],
+    "lonlat": [28.9772, 41.0044],
     "importance": 2,
     "title": {
       "en": "The Encyclopedism of Constantine VII Porphyrogennetos",
@@ -174,7 +174,7 @@
     "id": "varangian-guard-founded",
     "year": 988,
     "category": "military",
-    "lonlat": [28.98, 41.01],
+    "lonlat": [28.9765, 41.0048],
     "importance": 2,
     "title": {
       "en": "Founding of the Varangian Guard",
@@ -213,7 +213,7 @@
     "id": "death-of-basil-ii",
     "year": 1025,
     "category": "politics",
-    "lonlat": [28.98, 41.01],
+    "lonlat": [28.866, 40.976],
     "importance": 1,
     "title": {
       "en": "Death of Basil II: The Empire's Apogee",
@@ -232,7 +232,7 @@
     "id": "law-and-philosophy-schools-1047",
     "year": 1047,
     "category": "law",
-    "lonlat": [28.98, 41.01],
+    "lonlat": [28.9855, 41.0105],
     "importance": 2,
     "title": {
       "en": "Constantine IX Founds the Schools of Law and Philosophy",
@@ -271,7 +271,7 @@
     "id": "great-schism-1054",
     "year": 1054,
     "category": "religion",
-    "lonlat": [28.98, 41.01],
+    "lonlat": [28.98, 41.0086],
     "importance": 1,
     "title": {
       "en": "The Great Schism",
@@ -290,7 +290,7 @@
     "id": "michael-psellos-revival-of-philosophy",
     "year": 1055,
     "category": "culture",
-    "lonlat": [28.98, 41.01],
+    "lonlat": [28.9845, 41.011],
     "importance": 2,
     "title": {
       "en": "Michael Psellos and the Revival of Philosophy",
@@ -310,7 +310,7 @@
     "year": 1042,
     "endYear": 1092,
     "category": "economy",
-    "lonlat": [28.98, 41.01],
+    "lonlat": [28.9795, 41.0048],
     "importance": 2,
     "title": {
       "en": "The Debasement of the Nomisma",
@@ -348,7 +348,7 @@
     "id": "alexios-i-accession",
     "year": 1081,
     "category": "politics",
-    "lonlat": [28.98, 41.01],
+    "lonlat": [28.9392, 41.0352],
     "importance": 1,
     "title": {
       "en": "Accession of Alexios I Komnenos",
@@ -367,7 +367,7 @@
     "id": "chrysobull-to-venice",
     "year": 1082,
     "category": "economy",
-    "lonlat": [28.98, 41.01],
+    "lonlat": [28.97, 41.0175],
     "importance": 2,
     "title": {
       "en": "The Chrysobull to Venice",
@@ -387,7 +387,7 @@
     "year": 1096,
     "endYear": 1097,
     "category": "civilization",
-    "lonlat": [28.98, 41.01],
+    "lonlat": [28.9445, 41.0455],
     "importance": 2,
     "title": {
       "en": "The First Crusade Passes Through Constantinople",
@@ -426,7 +426,7 @@
     "id": "anna-komnene-alexiad",
     "year": 1148,
     "category": "culture",
-    "lonlat": [28.98, 41.01],
+    "lonlat": [28.956, 41.022],
     "importance": 2,
     "title": {
       "en": "Anna Komnene Completes the Alexiad",
@@ -446,7 +446,7 @@
     "year": 1143,
     "endYear": 1180,
     "category": "politics",
-    "lonlat": [28.98, 41.01],
+    "lonlat": [28.9392, 41.0352],
     "importance": 1,
     "title": {
       "en": "Manuel I Komnenos and His Westernizing Court",
@@ -465,7 +465,7 @@
     "id": "massacre-of-the-latins",
     "year": 1182,
     "category": "economy",
-    "lonlat": [28.98, 41.01],
+    "lonlat": [28.972, 41.0185],
     "importance": 2,
     "title": {
       "en": "The Massacre of the Latins",
@@ -504,7 +504,7 @@
     "year": 1185,
     "endYear": 1203,
     "category": "politics",
-    "lonlat": [28.98, 41.01],
+    "lonlat": [28.9392, 41.0352],
     "importance": 1,
     "title": {
       "en": "The Rise of the Angeloi and Fiscal Decay",
