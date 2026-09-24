@@ -3,6 +3,7 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 import { YEAR_MIN, YEAR_MAX } from '../data/schema';
 
 export type Language = 'en' | 'zh';
+export type MapView = { kind: 'world' } | { kind: 'city'; cityId: string };
 
 interface AppState {
   year: number;
@@ -15,6 +16,10 @@ interface AppState {
    * function has no place in a persisted store).
    */
   viewVersion: number;
+  /** Requested view; MapCanvas animates the transition when it changes. */
+  view: MapView;
+  /** City view offered because the world camera is zoomed in near it. */
+  lensCandidate: string | null;
   setYear: (year: number) => void;
   play: () => void;
   pause: () => void;
@@ -22,6 +27,9 @@ interface AppState {
   selectEvent: (id: string | null) => void;
   setLanguage: (lang: Language) => void;
   bumpView: () => void;
+  enterCity: (cityId: string) => void;
+  exitCity: () => void;
+  setLensCandidate: (cityId: string | null) => void;
 }
 
 export const clampYear = (year: number): number =>
@@ -35,6 +43,8 @@ export const useAppStore = create<AppState>()(
       language: 'en',
       selectedEventId: null,
       viewVersion: 0,
+      view: { kind: 'world' },
+      lensCandidate: null,
       setYear: (year) => set({ year: clampYear(year) }),
       play: () =>
         set((s) => ({
@@ -49,6 +59,10 @@ export const useAppStore = create<AppState>()(
       selectEvent: (id) => set((s) => ({ selectedEventId: id, isPlaying: id === null ? s.isPlaying : false })),
       setLanguage: (language) => set({ language }),
       bumpView: () => set((s) => ({ viewVersion: (s.viewVersion + 1) % 0x7fffffff })),
+      enterCity: (cityId) => set({ view: { kind: 'city', cityId }, selectedEventId: null }),
+      exitCity: () => set({ view: { kind: 'world' }, selectedEventId: null }),
+      setLensCandidate: (lensCandidate) =>
+        set((s) => (s.lensCandidate === lensCandidate ? s : { lensCandidate })),
     }),
     {
       name: 'east-roman-map-prefs',

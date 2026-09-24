@@ -11,7 +11,7 @@
     "test:watch": "vitest",
     "world:fetch-dem": "node scripts/fetch-dem.mjs",
     "world:fetch-imagery": "node scripts/fetch-imagery.mjs",
-    "world:build": "node scripts/build-world-textures.mjs"
+    "world:build": "node scripts/build-world-textures.mjs && node scripts/build-city.mjs"
   },
   "dependencies": {
     "@fontsource/cinzel": "^5.1.0",

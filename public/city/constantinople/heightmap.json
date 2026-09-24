@@ -1,0 +1,24 @@
+{
+  "width": 2379,
+  "height": 1670,
+  "bbox": {
+    "lonMin": 28.8,
+    "lonMax": 29.14,
+    "latMin": 40.95,
+    "latMax": 41.13
+  },
+  "origin": {
+    "lon": 28.97,
+    "lat": 41.04
+  },
+  "metersPerPixel": 12,
+  "sizeMeters": {
+    "x": 28547.509659204636,
+    "z": 20037.59999999997
+  },
+  "encoding": "uint16 v = R*256 + G; meters = v * scale + offset",
+  "scale": 0.25,
+  "offset": -8192,
+  "seaLevelValue": 32768,
+  "verticalExaggeration": 1.6
+}

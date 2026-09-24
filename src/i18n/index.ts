@@ -23,6 +23,13 @@ const dict = {
   eventsInEra: { en: 'Events of this era', zh: '本时代大事记' },
   dragHint: { en: 'Drag to pan · scroll to zoom', zh: '拖拽平移 · 滚轮缩放' },
   languageToggle: { en: '中文', zh: 'EN' },
+  enterCity: { en: 'Enter', zh: '进入' },
+  backToMap: { en: 'Back to the map', zh: '返回地图' },
+  population: { en: 'Population', zh: '人口' },
+  cityDragHint: {
+    en: 'Drag to pan · right-drag or shift-drag to turn · scroll to zoom',
+    zh: '拖拽平移 · 右键或按住Shift拖拽旋转 · 滚轮缩放',
+  },
 } as const;
 
 export type DictKey = keyof typeof dict;

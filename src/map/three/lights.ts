@@ -36,14 +36,19 @@ export interface Lighting {
   dispose(): void;
 }
 
-export function createLighting(): Lighting {
+export function createLighting(
+  options: { maxRayLength?: number; normalBias?: number } = {},
+): Lighting {
+  // Longest camera→ground ray the shadow fit trusts (scene units): the
+  // world map's 300 units, or a few km in a city view's metre frame.
+  const maxRay = options.maxRayLength ?? 300;
   const group = new Group();
 
   const sun = new DirectionalLight(SUN_COLOR, 2.4);
   sun.castShadow = true;
   sun.shadow.mapSize.set(SHADOW_MAP_SIZE, SHADOW_MAP_SIZE);
   sun.shadow.bias = -0.0004;
-  sun.shadow.normalBias = 0.02;
+  sun.shadow.normalBias = options.normalBias ?? 0.02;
   group.add(sun);
   group.add(sun.target);
 
@@ -74,8 +79,8 @@ export function createLighting(): Lighting {
       dir.copy(corner).sub(camera.position).normalize();
       // At 40–55° down pitch every corner ray hits the ground; clamp anyway
       // so a near-horizontal ray can't explode the frustum.
-      const t = dir.y < -0.05 ? -camera.position.y / dir.y : 300;
-      const tc = Math.min(t, 300);
+      const t = dir.y < -0.05 ? -camera.position.y / dir.y : maxRay;
+      const tc = Math.min(t, maxRay);
       maxT = Math.max(maxT, tc);
       groundHits[i].copy(camera.position).addScaledVector(dir, tc);
       center.add(groundHits[i]);

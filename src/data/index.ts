@@ -13,6 +13,8 @@ import {
   type City,
   type Territory,
   TerritorySchema,
+  type CityScene,
+  CitySceneSchema,
 } from './schema';
 
 export const snapshots: Snapshot[] = SnapshotsFileSchema.parse(snapshotsJson).sort(
@@ -35,5 +37,15 @@ export const territories: Map<number, Territory> = new Map(
   Object.entries(territoryModules).map(([path, geometry]) => {
     const year = Number(path.match(/(\d+)\.json$/)![1]);
     return [year, TerritorySchema.parse(geometry)];
+  }),
+);
+
+// City views (src/data/cities/<id>.json), keyed by id.
+const citySceneModules = import.meta.glob('./cities/*.json', { eager: true, import: 'default' });
+
+export const cityScenes: Map<string, CityScene> = new Map(
+  Object.values(citySceneModules).map((json) => {
+    const scene = CitySceneSchema.parse(json);
+    return [scene.id, scene];
   }),
 );

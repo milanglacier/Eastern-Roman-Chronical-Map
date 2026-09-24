@@ -65,6 +65,10 @@ uniform vec3 uShallowColor;
 uniform vec3 uSkyColor;
 uniform vec3 uFoamColor;
 uniform vec3 uSunDir;
+uniform vec2 uTileA;
+uniform vec2 uTileB;
+uniform vec2 uFoamTile;
+uniform float uDepthFull;
 varying vec2 vUv;
 varying vec3 vWorldPos;
 ${CLOUD_GLSL}
@@ -74,18 +78,17 @@ void main() {
 
   // Two counter-scrolling samples of the tileable wave normals (tangent
   // space; the plane's up is +Y so tangent XY maps to world XZ). Tiling is
-  // aspect-corrected so waves are isotropic on the 288x140 rect.
-  vec2 tileA = vec2(149.0, 72.4);
-  vec2 tileB = vec2(65.8, 31.9);
-  vec3 na = texture2D(uWaterNormal, vUv * tileA + uTime * vec2(0.010, 0.006)).rgb * 2.0 - 1.0;
-  vec3 nb = texture2D(uWaterNormal, vUv * tileB - uTime * vec2(0.007, 0.010)).rgb * 2.0 - 1.0;
+  // aspect-corrected so waves are isotropic on the sheet's rect.
+  vec3 na = texture2D(uWaterNormal, vUv * uTileA + uTime * vec2(0.010, 0.006)).rgb * 2.0 - 1.0;
+  vec3 nb = texture2D(uWaterNormal, vUv * uTileB - uTime * vec2(0.007, 0.010)).rgb * 2.0 - 1.0;
   vec3 n = normalize(vec3(na.x + nb.x, 2.8, na.y + nb.y));
 
-  float bedY = texture2D(uHeightY, vUv).r; // world-unit Y of the seabed
+  float bedY = texture2D(uHeightY, vUv).r; // scene-unit Y of the seabed
   float depth = max(0.0, -bedY);
-  // ~3100 m at full tint; the square root pulls the bright shallow tone into
-  // a thin coastal fringe instead of a wide glowing band over the shelf.
-  float depthT = sqrt(smoothstep(0.0, 0.28, depth));
+  // Full tint at uDepthFull (world: ~3100 m); the square root pulls the
+  // bright shallow tone into a thin coastal fringe instead of a wide
+  // glowing band over the shelf.
+  float depthT = sqrt(smoothstep(0.0, uDepthFull, depth));
 
   vec3 viewDir = normalize(cameraPosition - vWorldPos);
   vec3 col = mix(uShallowColor, uDeepColor, depthT);
@@ -101,7 +104,7 @@ void main() {
   float sdfPx = (maskR * 255.0 - 128.0) / 6.0; // signed px from coast (+land)
   float foamBand = 1.0 - smoothstep(0.1, 0.8, abs(sdfPx + 0.5));
   float foamWave = 0.55 + 0.45 * sin(uTime * 1.1 - sdfPx * 2.3);
-  float foamNoise = texture2D(uWaterNormal, vUv * vec2(235.9, 114.7) + uTime * vec2(0.020, 0.013)).b;
+  float foamNoise = texture2D(uWaterNormal, vUv * uFoamTile + uTime * vec2(0.020, 0.013)).b;
   float foam = foamBand * foamWave * smoothstep(0.5, 0.85, foamNoise);
 
   col = mix(col, uFoamColor, clamp(foam, 0.0, 1.0) * 0.4);
@@ -267,6 +270,32 @@ export function createOceanApron(
   };
 }
 
+/** Size/placement and scale-dependent tuning of a water sheet. */
+export interface WaterFrame {
+  width: number;
+  height: number;
+  centerX: number;
+  centerZ: number;
+  /** Wave-normal tiles across the sheet (two octaves) and for foam noise. */
+  tileA: [number, number];
+  tileB: [number, number];
+  foamTile: [number, number];
+  /** Seabed depth (scene units, positive) at which the deep tint is full. */
+  depthFull: number;
+}
+
+/** The world map's sheet over the 288x140 rect. */
+export const WORLD_WATER_FRAME: WaterFrame = {
+  width: GROUND_W,
+  height: GROUND_H,
+  centerX: GROUND_W / 2,
+  centerZ: GROUND_H / 2,
+  tileA: [149.0, 72.4],
+  tileB: [65.8, 31.9],
+  foamTile: [235.9, 114.7],
+  depthFull: 0.28,
+};
+
 export function createWater(
   textures: {
     waterNormal: Texture | null;
@@ -274,6 +303,7 @@ export function createWater(
     worldMask: Texture | null;
   },
   clouds: CloudUniforms,
+  frame: WaterFrame = WORLD_WATER_FRAME,
 ): Water {
   if (textures.waterNormal) {
     textures.waterNormal.wrapS = RepeatWrapping;
@@ -288,6 +318,10 @@ export function createWater(
       uSkyColor: { value: new Color(WATER_FRESNEL_TINT) },
       uFoamColor: { value: new Color(0xdfe9e4) },
       uSunDir: { value: new Vector3().copy(SUN_DIRECTION) },
+      uTileA: { value: new Vector2(...frame.tileA) },
+      uTileB: { value: new Vector2(...frame.tileB) },
+      uFoamTile: { value: new Vector2(...frame.foamTile) },
+      uDepthFull: { value: frame.depthFull },
     },
   ]);
   // Textures are assigned after merge (UniformsUtils.merge clones values).
@@ -305,10 +339,10 @@ export function createWater(
     fog: true,
   });
 
-  const geometry = new PlaneGeometry(GROUND_W, GROUND_H);
+  const geometry = new PlaneGeometry(frame.width, frame.height);
   geometry.rotateX(-Math.PI / 2); // plane in XZ, +Y up
   const mesh = new Mesh(geometry, material);
-  mesh.position.set(GROUND_W / 2, 0, GROUND_H / 2);
+  mesh.position.set(frame.centerX, 0, frame.centerZ);
   mesh.renderOrder = 10; // after opaque terrain
   mesh.updateMatrixWorld();
 

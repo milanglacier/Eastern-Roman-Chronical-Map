@@ -90,38 +90,47 @@ export function fallbackHeightField(): HeightField {
 }
 
 /**
+ * Fetch a split-byte heightmap PNG and decode it to meters (row-major, row 0
+ * = north). Throws if the image size disagrees with the sidecar's.
+ */
+export async function decodeHeightPng(url: string, width: number, height: number): Promise<Float32Array> {
+  const imgRes = await fetch(url);
+  if (!imgRes.ok) throw new Error(`heightmap fetch ${imgRes.status}: ${url}`);
+  const bitmap = await createImageBitmap(await imgRes.blob(), {
+    premultiplyAlpha: 'none',
+    colorSpaceConversion: 'none',
+  });
+  const { width: bw, height: bh } = bitmap;
+  if (bw !== width || bh !== height) {
+    bitmap.close();
+    throw new Error(`${url} dimensions disagree with sidecar`);
+  }
+  const canvas = document.createElement('canvas');
+  canvas.width = bw;
+  canvas.height = bh;
+  const ctx = canvas.getContext('2d', { willReadFrequently: true });
+  if (!ctx) throw new Error('2d context unavailable');
+  ctx.drawImage(bitmap, 0, 0);
+  const { data: rgba } = ctx.getImageData(0, 0, bw, bh);
+  bitmap.close();
+  const meters = new Float32Array(width * height);
+  for (let i = 0; i < meters.length; i++) {
+    meters[i] = bytesToMeters(rgba[i * 4], rgba[i * 4 + 1]);
+  }
+  return meters;
+}
+
+/**
  * Fetch + decode public/terrain/heightmap.{png,json}. Returns the fallback
  * (with a console warning) on any failure — same philosophy as the old
  * procedural-atlas fallback: missing art must never blank the app.
  */
 export async function loadHeightField(baseUrl = 'terrain/'): Promise<HeightField> {
   try {
-    const [metaRes, imgRes] = await Promise.all([
-      fetch(`${baseUrl}heightmap.json`),
-      fetch(`${baseUrl}heightmap.png`),
-    ]);
-    if (!metaRes.ok || !imgRes.ok) throw new Error(`heightmap fetch ${metaRes.status}/${imgRes.status}`);
+    const metaRes = await fetch(`${baseUrl}heightmap.json`);
+    if (!metaRes.ok) throw new Error(`heightmap sidecar fetch ${metaRes.status}`);
     const meta = HeightmapMetaSchema.parse(await metaRes.json());
-    const bitmap = await createImageBitmap(await imgRes.blob(), {
-      premultiplyAlpha: 'none',
-      colorSpaceConversion: 'none',
-    });
-    const { width: bw, height: bh } = bitmap;
-    if (bw !== meta.width || bh !== meta.height) {
-      throw new Error('heightmap.png dimensions disagree with sidecar');
-    }
-    const canvas = document.createElement('canvas');
-    canvas.width = bw;
-    canvas.height = bh;
-    const ctx = canvas.getContext('2d', { willReadFrequently: true });
-    if (!ctx) throw new Error('2d context unavailable');
-    ctx.drawImage(bitmap, 0, 0);
-    const { data: rgba } = ctx.getImageData(0, 0, bw, bh);
-    bitmap.close();
-    const meters = new Float32Array(meta.width * meta.height);
-    for (let i = 0; i < meters.length; i++) {
-      meters[i] = bytesToMeters(rgba[i * 4], rgba[i * 4 + 1]);
-    }
+    const meters = await decodeHeightPng(`${baseUrl}heightmap.png`, meta.width, meta.height);
     return makeHeightField(meta.width, meta.height, meta, meters);
   } catch (err) {
     console.warn('height field unavailable, using flat fallback:', err);
@@ -130,10 +139,12 @@ export async function loadHeightField(baseUrl = 'terrain/'): Promise<HeightField
 }
 
 /**
- * Height field as a half-float R texture in world-unit Y (exaggerated), for
- * the water shader's depth tint. Half-float linear filtering is core WebGL2.
+ * Height field as a half-float R texture in scene-unit Y (exaggerated), for
+ * the water shader's depth tint (world map and city views alike). Half-float linear filtering is core WebGL2.
  */
-export function heightFieldToDataTexture(hf: HeightField): DataTexture {
+export function heightFieldToDataTexture(
+  hf: Pick<HeightField, 'width' | 'height' | 'data' | 'metersToY'>,
+): DataTexture {
   const half = new Uint16Array(hf.width * hf.height);
   for (let i = 0; i < half.length; i++) {
     half[i] = DataUtils.toHalfFloat(hf.metersToY(hf.data[i]));

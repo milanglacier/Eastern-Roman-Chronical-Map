@@ -88,3 +88,27 @@ describe('project rule #1: the state is never called Byzantium', () => {
     expect(text).not.toMatch(/拜占庭/);
   });
 });
+
+describe('city views', () => {
+  it('every city with a scene has a matching, valid city view', async () => {
+    const { cities, cityScenes } = await import('../src/data');
+    const withScene = cities.filter((c) => c.scene);
+    expect(withScene.length).toBeGreaterThan(0);
+    for (const c of withScene) expect(cityScenes.has(c.scene!)).toBe(true);
+  });
+
+  it('city structures have unique ids and sane year ranges', async () => {
+    const { cityScenes } = await import('../src/data');
+    for (const scene of cityScenes.values()) {
+      const ids = scene.structures.map((s) => s.id);
+      expect(new Set(ids).size).toBe(ids.length);
+      for (const s of scene.structures) {
+        if (s.to !== undefined) expect(s.to).toBeGreaterThanOrEqual(s.from);
+        for (const st of s.stages ?? []) expect(st.from).toBeGreaterThanOrEqual(s.from);
+      }
+      const years = (k: { year: number }[]) => k.map((x) => x.year);
+      expect(years(scene.density)).toEqual([...years(scene.density)].sort((a, b) => a - b));
+      expect(years(scene.population)).toEqual([...years(scene.population)].sort((a, b) => a - b));
+    }
+  });
+});

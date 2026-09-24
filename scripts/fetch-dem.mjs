@@ -5,6 +5,10 @@
  * the output is committed so the bake step never needs the network; rerun only
  * to change the bbox or zoom.
  *
+ * `--city <id>` instead fetches the high-zoom mosaic for a city view, using
+ * bbox + demZoom from scripts/assets/city/<id>.json, and writes
+ * scripts/assets/city/<id>-dem.png(.json).
+ *
  * Source: AWS Open Data "Terrain Tiles" (no key required), Terrarium PNG:
  *   https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png
  *   elevation_meters = (R * 256 + G + B / 256) - 32768
@@ -14,19 +18,33 @@
  * GeoTIFF, https://www.ncei.noaa.gov/products/etopo-global-relief-model
  * (float32 GeoTIFF; would need a different decode path).
  */
-import { writeFile, mkdir } from 'node:fs/promises';
+import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 
-const ZOOM = 7;
 const TILE_SIZE = 256;
 const CONCURRENCY = 6;
 
-// Map bbox from src/lib/hex.ts, padded 1° so edge pixels sample cleanly.
-const PAD = 1;
-const LON_MIN = -12 - PAD, LON_MAX = 60 + PAD;
-const LAT_MIN = 24 - PAD, LAT_MAX = 59 + PAD;
+const dir = dirname(fileURLToPath(import.meta.url));
+const cityArg = process.argv.indexOf('--city');
+const cityId = cityArg >= 0 ? process.argv[cityArg + 1] : null;
+
+let ZOOM, LON_MIN, LON_MAX, LAT_MIN, LAT_MAX, outBase;
+if (cityId) {
+  const city = JSON.parse(await readFile(join(dir, 'assets', 'city', `${cityId}.json`), 'utf8'));
+  const [w, s, e, n] = city.bbox;
+  const pad = 0.01; // a few pixels of slack around the city bbox
+  ZOOM = city.demZoom;
+  [LON_MIN, LAT_MIN, LON_MAX, LAT_MAX] = [w - pad, s - pad, e + pad, n + pad];
+  outBase = join(dir, 'assets', 'city', `${cityId}-dem`);
+} else {
+  // Map bbox from src/lib/hex.ts, padded 1° so edge pixels sample cleanly.
+  const PAD = 1;
+  ZOOM = 7;
+  [LON_MIN, LAT_MIN, LON_MAX, LAT_MAX] = [-12 - PAD, 24 - PAD, 60 + PAD, 59 + PAD];
+  outBase = join(dir, 'assets', 'dem-terrarium-z7');
+}
 
 const n = 2 ** ZOOM;
 const lonToTileX = (lon) => ((lon + 180) / 360) * n;
@@ -88,13 +106,12 @@ await Promise.all(
   }),
 );
 
-const dir = dirname(fileURLToPath(import.meta.url));
-await mkdir(join(dir, 'assets'), { recursive: true });
+await mkdir(dirname(outBase), { recursive: true });
 await sharp(mosaic, { raw: { width, height, channels: 3 } })
   .png({ compressionLevel: 9 })
-  .toFile(join(dir, 'assets', 'dem-terrarium-z7.png'));
+  .toFile(`${outBase}.png`);
 await writeFile(
-  join(dir, 'assets', 'dem-terrarium-z7.json'),
+  `${outBase}.json`,
   JSON.stringify(
     {
       source: 'AWS Terrain Tiles (Terrarium), s3://elevation-tiles-prod',
@@ -112,4 +129,4 @@ await writeFile(
     2,
   ),
 );
-console.log(`wrote dem-terrarium-z7.png (${width}x${height}) + sidecar`);
+console.log(`wrote ${outBase}.png (${width}x${height}) + sidecar`);

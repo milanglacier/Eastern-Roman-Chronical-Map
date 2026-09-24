@@ -1,0 +1,8 @@
+{
+  "$comment": "Bake config for the Constantinople city view. bbox = [west, south, east, north] in degrees; covers the walled peninsula, the Golden Horn to Kağıthane, Galata/Pera and the Asian shore at Chrysopolis and Chalcedon. demZoom = Terrarium tile zoom for fetch-dem.mjs --city. The local ground frame is metres east/south of `origin`; metersPerPixel sets the baked heightmap/albedo resolution. The runtime exaggerates heights by `verticalExaggeration`.",
+  "bbox": [28.8, 40.95, 29.14, 41.13],
+  "origin": [28.97, 41.04],
+  "demZoom": 13,
+  "metersPerPixel": 12,
+  "verticalExaggeration": 1.6
+}

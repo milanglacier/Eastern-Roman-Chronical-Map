@@ -6,6 +6,7 @@ import { Header } from './ui/Header';
 import { Timeline } from './ui/Timeline';
 import { EventPanel } from './ui/EventPanel';
 import { Legend } from './ui/Legend';
+import { CityLens } from './ui/CityLens';
 import { useAppStore } from './state/store';
 import { YEARS_PER_SECOND } from './lib/timeline';
 import { YEAR_MAX } from './data/schema';
@@ -39,6 +40,7 @@ function useAutoplay() {
 export default function App() {
   useAutoplay();
   const t = useT();
+  const inCity = useAppStore((s) => s.view.kind === 'city');
 
   return (
     <div className="app">
@@ -48,7 +50,8 @@ export default function App() {
         <CityMarkers />
         <EventMarkers />
         <Legend />
-        <p className="drag-hint">{t('dragHint')}</p>
+        <CityLens />
+        <p className="drag-hint">{t(inCity ? 'cityDragHint' : 'dragHint')}</p>
         <EventPanel />
       </main>
       <Timeline />

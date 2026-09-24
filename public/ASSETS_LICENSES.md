@@ -12,3 +12,5 @@ third-party source is listed here with its source and license.
 | `terrain/*` coastline conform | Natural Earth 1:50m land | Public domain |
 | `terrain/clouds.png` | Procedural (seeded Perlin fbm in `scripts/build-world-textures.mjs`) | Project (MIT) |
 | `textures/detail/detail-mix.png` | ambientCG Ground037, Rock030, Ground054 colour maps (<https://ambientcg.com>), reduced to high-pass luminance by the bake | CC0 1.0 |
+| `city/constantinople/heightmap.png`, `normal.png` | AWS Open Data Terrain Tiles (Terrarium z13; SRTM), baked by `scripts/build-city.mjs` | Public domain / open data |
+| `city/constantinople/albedo.jpg`, `worldmask.png` | Procedural (seeded) in `scripts/build-city.mjs` | Project (MIT) |
