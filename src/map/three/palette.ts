@@ -21,11 +21,11 @@ export const SUN_COLOR = 0xffe0b3;
 export const HEMI_SKY_COLOR = 0x91b0d0;
 export const HEMI_GROUND_COLOR = 0x54483a;
 
-/** Legend swatches (match the baked albedo palette, sRGB). */
+/** Legend swatches, sampled from the baked satellite albedo (sRGB). */
 export const LEGEND_TERRAIN = {
   sea: 0x1e475c,
-  grass: 0x607446,
-  desert: 0xccb276,
-  mountain: 0x7a7064,
-  snow: 0xebecea,
+  grass: 0x4c5a30,
+  desert: 0xdabd93,
+  mountain: 0x8e7e60,
+  snow: 0xe6e6e0,
 } as const;

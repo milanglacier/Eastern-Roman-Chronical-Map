@@ -6,12 +6,13 @@
  *   scripts/assets/dem-terrarium-z7.png(.json)  — mercator DEM mosaic (fetch-dem.mjs)
  *   scripts/assets/coastline-50m.json           — Natural Earth land polygons
  *   scripts/assets/terrain-config.json          — straits/rivers/regions/corridors
+ *   scripts/assets/bmng-crop.jpg(.json)         — NASA Blue Marble land colour (fetch-imagery.mjs)
  *
  * Writes (committed):
  *   public/terrain/heightmap.png   2880x1400 split-byte RGB (R=hi, G=lo) heights
  *   public/terrain/heightmap.json  sidecar: bbox, encoding, exaggeration, units
  *   public/terrain/normal.png      2880x1400 object-space normals (exaggerated)
- *   public/terrain/albedo.jpg      8192x3982 stylized painterly terrain color
+ *   public/terrain/albedo.jpg      8192x3982 graded satellite terrain color
  *   public/terrain/worldmask.png   2880x1400 R=coast SDF, G=river mask, B=0
  *   public/terrain/waternormal.png 512x512 tileable water-wave normal map
  *   scripts/assets/dem-preview.png hillshade for human eyeballing (not shipped)
@@ -598,6 +599,128 @@ const C = {
   riverWater: [56, 102, 114],
 };
 
+/* Satellite land colour (NASA Blue Marble NG, public domain). Graded toward
+ * the atlas palette, with modern artefacts (dam reservoirs, pivot farms,
+ * coastline mismatch against Natural Earth) inpainted from a masked low-res
+ * average of the surrounding land. */
+const bmngMeta = JSON.parse(await readFile(asset('bmng-crop.json'), 'utf8'));
+const bmngRaw = await sharp(asset('bmng-crop.jpg')).removeAlpha().raw().toBuffer({ resolveWithObject: true });
+const BM = bmngRaw.data;
+const BM_W = bmngRaw.info.width;
+const BM_H = bmngRaw.info.height;
+const lonToBmPx = (lon) => ((lon - bmngMeta.lonMin) / (bmngMeta.lonMax - bmngMeta.lonMin)) * BM_W - 0.5;
+const latToBmPx = (lat) => ((bmngMeta.latMax - lat) / (bmngMeta.latMax - bmngMeta.latMin)) * BM_H - 0.5;
+
+/** Open water / reservoir colours in BMNG: dark and bluish-cyan, never forest. */
+const isWaterish = (r, g, b) => r < 45 && b > r + 6 && b >= g * 0.55 && r + g + b < 200;
+
+function bmSample(lon, lat) {
+  const x = Math.min(Math.max(lonToBmPx(lon), 0), BM_W - 1);
+  const y = Math.min(Math.max(latToBmPx(lat), 0), BM_H - 1);
+  const x0 = Math.floor(x);
+  const y0 = Math.floor(y);
+  const x1 = Math.min(x0 + 1, BM_W - 1);
+  const y1 = Math.min(y0 + 1, BM_H - 1);
+  const fx = x - x0;
+  const fy = y - y0;
+  const out = [0, 0, 0];
+  for (let c = 0; c < 3; c++) {
+    const a = BM[(y0 * BM_W + x0) * 3 + c] * (1 - fx) + BM[(y0 * BM_W + x1) * 3 + c] * fx;
+    const b = BM[(y1 * BM_W + x0) * 3 + c] * (1 - fx) + BM[(y1 * BM_W + x1) * 3 + c] * fx;
+    out[c] = a * (1 - fy) + b * fy;
+  }
+  return out;
+}
+
+// Masked low-res land average: cells average only non-water pixels, then
+// empty cells are filled by repeated neighbour averaging (inpaint source).
+const FILL_CELL = 12;
+const FILL_W = Math.ceil(BM_W / FILL_CELL);
+const FILL_H = Math.ceil(BM_H / FILL_CELL);
+const fillRgb = new Float32Array(FILL_W * FILL_H * 3);
+{
+  const fillN = new Float32Array(FILL_W * FILL_H);
+  for (let y = 0; y < BM_H; y++) {
+    for (let x = 0; x < BM_W; x++) {
+      const o = (y * BM_W + x) * 3;
+      if (isWaterish(BM[o], BM[o + 1], BM[o + 2])) continue;
+      const cell = ((y / FILL_CELL) | 0) * FILL_W + ((x / FILL_CELL) | 0);
+      fillRgb[cell * 3] += BM[o];
+      fillRgb[cell * 3 + 1] += BM[o + 1];
+      fillRgb[cell * 3 + 2] += BM[o + 2];
+      fillN[cell] += 1;
+    }
+  }
+  // Sparse cells (mostly water) are unreliable — treat as empty.
+  let known = new Uint8Array(FILL_W * FILL_H);
+  for (let i = 0; i < fillN.length; i++) {
+    if (fillN[i] >= FILL_CELL * FILL_CELL * 0.25) {
+      for (let c = 0; c < 3; c++) fillRgb[i * 3 + c] /= fillN[i];
+      known[i] = 1;
+    } else {
+      fillRgb[i * 3] = fillRgb[i * 3 + 1] = fillRgb[i * 3 + 2] = 0;
+    }
+  }
+  for (let pass = 0; pass < 400; pass++) {
+    const next = known.slice();
+    let grew = 0;
+    for (let y = 0; y < FILL_H; y++) {
+      for (let x = 0; x < FILL_W; x++) {
+        const i = y * FILL_W + x;
+        if (known[i]) continue;
+        let n = 0;
+        const acc = [0, 0, 0];
+        for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+          const nx = x + dx;
+          const ny = y + dy;
+          if (nx < 0 || ny < 0 || nx >= FILL_W || ny >= FILL_H) continue;
+          const j = ny * FILL_W + nx;
+          if (!known[j]) continue;
+          for (let c = 0; c < 3; c++) acc[c] += fillRgb[j * 3 + c];
+          n++;
+        }
+        if (n === 0) continue;
+        for (let c = 0; c < 3; c++) fillRgb[i * 3 + c] = acc[c] / n;
+        next[i] = 1;
+        grew++;
+      }
+    }
+    known = next;
+    if (grew === 0) break;
+  }
+}
+function fillSample(lon, lat) {
+  const x = Math.min(Math.max((lonToBmPx(lon) + 0.5) / FILL_CELL - 0.5, 0), FILL_W - 1);
+  const y = Math.min(Math.max((latToBmPx(lat) + 0.5) / FILL_CELL - 0.5, 0), FILL_H - 1);
+  const x0 = Math.floor(x);
+  const y0 = Math.floor(y);
+  const x1 = Math.min(x0 + 1, FILL_W - 1);
+  const y1 = Math.min(y0 + 1, FILL_H - 1);
+  const fx = x - x0;
+  const fy = y - y0;
+  const out = [0, 0, 0];
+  for (let c = 0; c < 3; c++) {
+    const a = fillRgb[(y0 * FILL_W + x0) * 3 + c] * (1 - fx) + fillRgb[(y0 * FILL_W + x1) * 3 + c] * fx;
+    const b = fillRgb[(y1 * FILL_W + x0) * 3 + c] * (1 - fx) + fillRgb[(y1 * FILL_W + x1) * 3 + c] * fx;
+    out[c] = a * (1 - fy) + b * fy;
+  }
+  return out;
+}
+const reservoirs = config.modernReservoirs ?? [];
+const inBox = (lon, lat, [w, so, e, n]) => lon >= w && lon <= e && lat >= so && lat <= n;
+
+/** Cinematic grade: lift the dark satellite land, warm it, ease saturation. */
+const GRADE_GAMMA = 0.72;
+const GRADE_SAT = 0.86;
+const GRADE_WARM = [1.04, 1.0, 0.93];
+function gradeSatellite(rgb) {
+  const lifted = rgb.map((v, c) => 255 * Math.pow(v / 255, GRADE_GAMMA) * GRADE_WARM[c]);
+  const l = lifted[0] * 0.2126 + lifted[1] * 0.7152 + lifted[2] * 0.0722;
+  return lifted.map((v) => l + (v - l) * GRADE_SAT);
+}
+/** Share of the procedural painterly ramp kept under the satellite colour. */
+const PROCEDURAL_MIX = 0.16;
+
 const noiseBiome = makeValueNoise('east-roman-biome', 256);
 const noiseDetail = makeValueNoise('east-roman-detail', 256);
 
@@ -654,14 +777,30 @@ for (let y = 0; y < ALB_H; y++) {
       // Beach band right at the waterline.
       base = mixRgb(C.sand, base, smoothstep(0.5, 3.5, sdf));
 
-      // Elevation: rock above ~1200 m, snow above a lat-adjusted snowline.
+      // Elevation: rock above ~1200 m.
       const rockT = smoothstep(1100, 2100, hMeters);
       base = mixRgb(base, mixRgb(C.rock, C.highRock, nDetail), rockT);
-      const snowline = 2900 - (lat - LAT_MIN) * 44; // ~2900 m south → ~1800 m north
-      base = mixRgb(base, C.snow, smoothstep(snowline, snowline + 420, hMeters));
 
-      // Painterly mottle + baked hillshade.
-      base = base.map((v) => v * (0.90 + nDetail * 0.14) * (0.62 + shade * 0.55));
+      // Satellite colour, with modern artefacts inpainted.
+      const lon = pxToLon(x, ALB_W);
+      let sat = bmSample(lon, lat);
+      let inpaint = isWaterish(sat[0], sat[1], sat[2]) && sdf < 8;
+      for (const r of reservoirs) {
+        if (!inBox(lon, lat, r.bbox)) continue;
+        // Dam lakes are often murky green-black in BMNG: any dark pixel goes.
+        if (!r.kind && sat[0] < 50 && sat[0] + sat[1] + sat[2] < 170) inpaint = true;
+        if (r.kind === 'pivots' && sat[1] > sat[0] * 0.95) inpaint = true;
+      }
+      if (inpaint) sat = fillSample(lon, lat).map((v) => v * (0.94 + nDetail * 0.12));
+      base = mixRgb(gradeSatellite(sat), base, PROCEDURAL_MIX);
+
+      // Snow caps on the highest summits only (the July composite has the
+      // real Alpine snow already; this just crowns the Caucasus/Taurus).
+      const snowline = 3300 - (lat - LAT_MIN) * 30; // ~3300 m south → ~2250 m north
+      base = mixRgb(base, C.snow, 0.7 * smoothstep(snowline, snowline + 600, hMeters));
+
+      // Light mottle + soft baked occlusion; the real-time sun does the relief.
+      base = base.map((v) => v * (0.95 + nDetail * 0.08) * (0.8 + shade * 0.32));
       rgb = base;
     }
     const o = (y * ALB_W + x) * 3;
@@ -703,8 +842,10 @@ for (const river of riverLines) {
   const riparian = mixRgb(C.richGreen, C.lowGreen, 0.35);
   for (let i = 0; i < riparianCov.length; i++) {
     if (riparianCov[i] === 0 && waterCov[i] === 0) continue;
-    const ra = (riparianCov[i] / 255) * 0.3;
-    const wa = (waterCov[i] / 255) * 0.82;
+    // Kept faint: the satellite colour already shows the real valleys, and
+    // the hand-drawn courses only approximate them.
+    const ra = (riparianCov[i] / 255) * 0.12;
+    const wa = (waterCov[i] / 255) * 0.45;
     const o = i * 3;
     for (let c = 0; c < 3; c++) {
       const banked = lerp(albedo[o + c], riparian[c], ra);

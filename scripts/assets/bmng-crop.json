@@ -1,0 +1,12 @@
+{
+  "source": "https://eoimages.gsfc.nasa.gov/images/imagerecords/74000/74092/world.200407.3x21600x21600.{B1,C1}.png",
+  "dataset": "NASA Blue Marble: Next Generation, July 2004, true color, no shading",
+  "license": "Public domain (NASA Earth Observatory imagery)",
+  "projection": "plate carree",
+  "lonMin": -13,
+  "lonMax": 61,
+  "latMin": 23,
+  "latMax": 60,
+  "width": 8880,
+  "height": 4440
+}

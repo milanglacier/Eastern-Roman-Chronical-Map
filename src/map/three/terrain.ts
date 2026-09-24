@@ -21,7 +21,12 @@ import {
 } from 'three';
 import type { HeightField } from './heightField';
 import { GROUND_W, GROUND_H, groundToLonLat } from './geo';
-import { TERRITORY_TINT, TERRITORY_TINT_STRENGTH, TERRITORY_BORDER } from '../colors';
+import {
+  TERRITORY_TINT,
+  TERRITORY_TINT_STRENGTH,
+  TERRITORY_EDGE_STRENGTH,
+  TERRITORY_BORDER,
+} from '../colors';
 
 /** 16 quads per degree — ~1.29M tris; trivial for real GPUs (llvmpipe FPS is not a target). */
 export const SEGMENTS_X = 1152;
@@ -34,6 +39,7 @@ export interface TerrainUniforms {
   uTerritoryMix: { value: number };
   uTerritoryTint: { value: Color };
   uTerritoryStrength: { value: number };
+  uTerritoryEdgeStrength: { value: number };
   uBorderColor: { value: Color };
   uBorderIntensity: { value: number };
 }
@@ -125,6 +131,7 @@ export function buildTerrain(
     uTerritoryMix: { value: 0 },
     uTerritoryTint: { value: new Color(TERRITORY_TINT) },
     uTerritoryStrength: { value: TERRITORY_TINT_STRENGTH },
+    uTerritoryEdgeStrength: { value: TERRITORY_EDGE_STRENGTH },
     uBorderColor: { value: new Color(TERRITORY_BORDER) },
     uBorderIntensity: { value: 0.9 },
   };
@@ -154,6 +161,7 @@ export function buildTerrain(
         uniform float uTerritoryMix;
         uniform vec3 uTerritoryTint;
         uniform float uTerritoryStrength;
+        uniform float uTerritoryEdgeStrength;
         uniform vec3 uBorderColor;
         uniform float uBorderIntensity;
         uniform float uTime;
@@ -202,7 +210,10 @@ export function buildTerrain(
           1.0 - smoothstep(0.0, borderWB, abs(territoryB.r - 0.5)),
           uTerritoryMix
         );
-        diffuseColor.rgb = mix(diffuseColor.rgb, uTerritoryTint, territory.r * uTerritoryStrength);`,
+        // Light interior veil + inner frontier band (G is the two-sided
+        // frontier glow; gating by R keeps the band inside the empire).
+        float territoryTint = territory.r * (uTerritoryStrength + uTerritoryEdgeStrength * territory.g);
+        diffuseColor.rgb = mix(diffuseColor.rgb, uTerritoryTint, territoryTint);`,
       )
       .replace(
         '#include <roughnessmap_fragment>',

@@ -1,0 +1,12 @@
+# Third-party assets
+
+Every file shipped under `public/` that is derived from or copied out of a
+third-party source is listed here with its source and license.
+`tests/asset-licenses.test.ts` fails if a file in `public/models/` or
+`public/textures/` has no entry below.
+
+| Path | Source | License |
+| --- | --- | --- |
+| `terrain/albedo.jpg` (land colour) | NASA Earth Observatory, Blue Marble: Next Generation, July 2004 (<https://visibleearth.nasa.gov/images/74092>), graded and baked by `scripts/build-world-textures.mjs` | Public domain |
+| `terrain/heightmap.png`, `terrain/normal.png` | AWS Open Data Terrain Tiles (Terrarium; GMTED2010, ETOPO1, SRTM) | Public domain / open data |
+| `terrain/*` coastline conform | Natural Earth 1:50m land | Public domain |
