@@ -5,18 +5,21 @@
  */
 
 /**
- * Sky / fog — deep blue-slate sitting between the baked deep-sea (0x10263a)
- * and shelf-sea (0x1e475c) tones, so background beyond the ocean apron reads
- * as distant ocean instead of washing white at far zoom.
+ * Horizon haze: fog colour and the sky dome's horizon. A muted blue-grey
+ * air tone — light enough to read as atmosphere over the far world, dark
+ * enough that the ocean apron at max zoom-out still reads as distant sea
+ * rather than washing white.
  */
-export const SKY_COLOR = 0x263646;
+export const SKY_COLOR = 0x6a7f90;
+/** Sky dome overhead (only glimpsed at the top edge at far zoom). */
+export const SKY_ZENITH_COLOR = 0x2c4f78;
 /**
  * Grazing-angle sheen on the water. Decoupled from SKY_COLOR so darkening
  * the background doesn't dull the whole sea surface.
  */
 export const WATER_FRESNEL_TINT = 0x93aabb;
 /** Directional sun, warm late-afternoon tone. */
-export const SUN_COLOR = 0xffe0b3;
+export const SUN_COLOR = 0xffeccf;
 /** Hemisphere fill: cool sky bounce over warm earth bounce. */
 export const HEMI_SKY_COLOR = 0x91b0d0;
 export const HEMI_GROUND_COLOR = 0x54483a;

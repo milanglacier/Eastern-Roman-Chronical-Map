@@ -20,6 +20,7 @@ import {
   UnsignedByteType,
 } from 'three';
 import type { HeightField } from './heightField';
+import { CLOUD_GLSL, type CloudUniforms } from './clouds';
 import { GROUND_W, GROUND_H, groundToLonLat } from './geo';
 import {
   TERRITORY_TINT,
@@ -67,6 +68,15 @@ function blankDetailTexture(): DataTexture {
   return tex;
 }
 
+/**
+ * Minimum seabed depth below the water sheet, in world units (~170 m).
+ * Shallow seas (Azov, the northern Caspian, the Baltic shelf) sit only
+ * ~30 shaped meters (~0.001 units) under the Y=0 water plane, which even
+ * the log depth buffer can't separate at far zoom: the seabed z-fights
+ * through the water in horizontal dashes. The sheet hides the drop.
+ */
+const SEABED_MIN_DEPTH = 0.006;
+
 export function buildTerrainGeometry(hf: HeightField): BufferGeometry {
   const vertsX = SEGMENTS_X + 1;
   const vertsZ = SEGMENTS_Z + 1;
@@ -79,7 +89,8 @@ export function buildTerrainGeometry(hf: HeightField): BufferGeometry {
       const { lon, lat } = groundToLonLat(x, z);
       const o = (j * vertsX + i) * 3;
       positions[o] = x;
-      positions[o + 1] = hf.yAt(lon, lat);
+      const y = hf.yAt(lon, lat);
+      positions[o + 1] = y < 0 ? Math.min(y, -SEABED_MIN_DEPTH) : y;
       positions[o + 2] = z;
       const t = (j * vertsX + i) * 2;
       uvs[t] = x / GROUND_W;
@@ -117,7 +128,10 @@ export function buildTerrain(
     normal: Texture | null;
     detail: Texture | null;
     worldMask?: Texture | null;
+    /** Packed high-pass ground detail (R soil, G rock, B sand), tileable. */
+    detailMix?: Texture | null;
   },
+  clouds?: CloudUniforms,
 ): Terrain {
   const detailTex = textures.detail ?? blankDetailTexture();
   detailTex.wrapS = RepeatWrapping;
@@ -146,12 +160,27 @@ export function buildTerrain(
     material.normalMap = textures.normal;
     material.normalMapType = ObjectSpaceNormalMap;
   }
+  const detailMixTex = textures.detailMix ?? blankDetailTexture();
+  detailMixTex.wrapS = RepeatWrapping;
+  detailMixTex.wrapT = RepeatWrapping;
   const uDetailTex = { value: detailTex as Texture };
+  const uDetailMix = { value: detailMixTex as Texture };
   const uWorldMask = { value: worldMaskTex as Texture };
   material.onBeforeCompile = (shader) => {
     Object.assign(shader.uniforms, uniforms);
     shader.uniforms.uDetailTex = uDetailTex;
     shader.uniforms.uWorldMask = uWorldMask;
+    shader.uniforms.uDetailMix = uDetailMix;
+    if (clouds) {
+      Object.assign(shader.uniforms, clouds);
+      shader.defines = { ...shader.defines, USE_CLOUD_SHADOWS: '' };
+    }
+    shader.vertexShader = shader.vertexShader
+      .replace('#include <common>', '#include <common>\nvarying vec3 vTerrainWorld;')
+      .replace(
+        '#include <project_vertex>',
+        '#include <project_vertex>\nvTerrainWorld = (modelMatrix * vec4(transformed, 1.0)).xyz;',
+      );
     shader.fragmentShader = shader.fragmentShader
       .replace(
         '#include <common>',
@@ -166,7 +195,12 @@ export function buildTerrain(
         uniform float uBorderIntensity;
         uniform float uTime;
         uniform sampler2D uDetailTex;
-        uniform sampler2D uWorldMask;`,
+        uniform sampler2D uWorldMask;
+        uniform sampler2D uDetailMix;
+        varying vec3 vTerrainWorld;
+        #ifdef USE_CLOUD_SHADOWS
+        ${CLOUD_GLSL}
+        #endif`,
       )
       .replace(
         '#include <map_fragment>',
@@ -175,10 +209,29 @@ export function buildTerrain(
         float riverWave = 0.0;
         #ifdef USE_MAP
           vec2 territoryUv = vMapUv;
-          // High-frequency painterly grain so close zoom never reads as a
-          // blurry upscale of the baked albedo (tiling aspect-corrected).
-          float terrainDetail = texture2D(uDetailTex, vMapUv * vec2(211.0, 102.6)).b;
-          diffuseColor.rgb *= 0.93 + 0.14 * terrainDetail;
+          // Ground detail so close zoom never reads as a blurry upscale of the
+          // ~1 km satellite texels: high-pass photo luminance (soil / rock /
+          // sand) picked by slope and the albedo's own colour, at two scales
+          // (~12 km and ~64 km tiles) so neither repeat is visible. A faint
+          // floor stays at mid zoom; full strength only up close.
+          {
+            vec3 base = diffuseColor.rgb; // linear
+            float ny = 1.0;
+            #ifdef USE_NORMALMAP
+              ny = texture2D(normalMap, vMapUv).g * 2.0 - 1.0;
+            #endif
+            float rockW = smoothstep(0.97, 0.8, ny);
+            float lum = dot(base, vec3(0.3333));
+            float vegW = smoothstep(-0.02, 0.04, base.g - max(base.r, base.b) * 0.9);
+            float sandW = (1.0 - vegW) * smoothstep(0.22, 0.42, lum);
+            vec3 w = vec3(1.0 - sandW, 0.0, sandW) * (1.0 - rockW) + vec3(0.0, rockW, 0.0);
+            vec2 worldUv = vMapUv * vec2(${GROUND_W.toFixed(1)}, ${GROUND_H.toFixed(1)});
+            vec3 d1 = texture2D(uDetailMix, worldUv / 0.45).rgb - 0.5;
+            vec3 d2 = texture2D(uDetailMix, worldUv / 2.3 + 0.31).rgb - 0.5;
+            float detail = dot(mix(d1, d2, 0.4), w);
+            float detailFade = 1.0 - smoothstep(18.0, 70.0, length(vViewPosition));
+            diffuseColor.rgb *= 1.0 + detail * (0.22 + 0.6 * detailFade);
+          }
           // River channels (worldmask.G): two counter-scrolling noise reads
           // make the painted course move like water instead of a decal.
           riverM = texture2D(uWorldMask, vMapUv).g;
@@ -224,6 +277,16 @@ export function buildTerrain(
         roughnessFactor = mix(roughnessFactor, 0.62, riverM * riverM);`,
       )
       .replace(
+        '#include <lights_fragment_end>',
+        /* glsl */ `#include <lights_fragment_end>
+        #ifdef USE_CLOUD_SHADOWS
+          // Drifting cloud shadows dim the sun only; sky fill stays.
+          float cloudDim = 1.0 - uCloudShadowStrength * cloudShadow(vTerrainWorld);
+          reflectedLight.directDiffuse *= cloudDim;
+          reflectedLight.directSpecular *= cloudDim;
+        #endif`,
+      )
+      .replace(
         '#include <emissivemap_fragment>',
         /* glsl */ `#include <emissivemap_fragment>
         // Gold frontier: solid Civ-style line + a faint halo, breathing gently.
@@ -250,6 +313,7 @@ export function buildTerrain(
       uniforms.uTerritoryA.value.dispose();
       uniforms.uTerritoryB.value.dispose();
       detailTex.dispose();
+      detailMixTex.dispose();
     },
   };
 }

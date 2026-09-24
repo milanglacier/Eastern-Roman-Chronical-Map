@@ -22,6 +22,8 @@ import { createAtmosphere } from './three/atmosphere';
 import { createCameraRig } from './three/cameraRig';
 import { lonLatToGround } from './three/geo';
 import { setProjector } from './three/projection';
+import { createCloudLayer, createCloudUniforms } from './three/clouds';
+import { createPostFx } from './three/postfx';
 
 const HOME_LONLAT: [number, number] = [25, 38.5];
 const HOME_DISTANCE = 120;
@@ -49,18 +51,22 @@ export function MapCanvas() {
     let cleanup: (() => void) | null = null;
 
     (async () => {
-      const [heightField, albedo, normal, worldMask, waterNormal] = await Promise.all([
+      const [heightField, albedo, normal, worldMask, waterNormal, cloudTex, detailMix] = await Promise.all([
         loadHeightField(),
         loadWorldTexture('terrain/albedo.jpg', true),
         loadWorldTexture('terrain/normal.png', false),
         loadWorldTexture('terrain/worldmask.png', false),
         loadWorldTexture('terrain/waternormal.png', false),
+        loadWorldTexture('terrain/clouds.png', false),
+        loadWorldTexture('textures/detail/detail-mix.png', false),
       ]);
       if (disposed) {
         albedo?.dispose();
         normal?.dispose();
         worldMask?.dispose();
         waterNormal?.dispose();
+        cloudTex?.dispose();
+        detailMix?.dispose();
         return;
       }
 
@@ -68,7 +74,8 @@ export function MapCanvas() {
       try {
         // Log depth: true-scale heights are tiny next to the 288-unit world,
         // so linear depth would z-fight the water plane against coastal land.
-        renderer = new WebGLRenderer({ antialias: true, logarithmicDepthBuffer: true });
+        // MSAA happens in the post chain's render target (postfx.ts).
+        renderer = new WebGLRenderer({ antialias: false, logarithmicDepthBuffer: true });
       } catch (err) {
         console.warn('WebGL unavailable, map disabled:', err);
         return;
@@ -76,25 +83,36 @@ export function MapCanvas() {
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       renderer.outputColorSpace = SRGBColorSpace;
       renderer.toneMapping = ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 1.1;
+      renderer.toneMappingExposure = 1.2;
       renderer.shadowMap.enabled = true;
       renderer.shadowMap.type = PCFShadowMap;
       if (albedo) albedo.anisotropy = renderer.capabilities.getMaxAnisotropy();
+      if (detailMix) detailMix.anisotropy = renderer.capabilities.getMaxAnisotropy();
       host.appendChild(renderer.domElement);
 
       const scene = new Scene();
-      const terrain = buildTerrain(heightField, { albedo, normal, detail: waterNormal, worldMask });
+      const clouds = createCloudUniforms(cloudTex);
+      const terrain = buildTerrain(
+        heightField,
+        { albedo, normal, detail: waterNormal, worldMask, detailMix },
+        clouds,
+      );
       scene.add(terrain.mesh);
       const skirt = buildSkirt(heightField);
       scene.add(skirt.mesh);
-      const water = createWater({
-        waterNormal,
-        heightY: heightFieldToDataTexture(heightField),
-        worldMask,
-      });
+      const water = createWater(
+        {
+          waterNormal,
+          heightY: heightFieldToDataTexture(heightField),
+          worldMask,
+        },
+        clouds,
+      );
       scene.add(water.mesh);
-      const oceanApron = createOceanApron({ waterNormal });
+      const oceanApron = createOceanApron({ waterNormal }, clouds);
       scene.add(oceanApron.mesh);
+      const cloudLayer = createCloudLayer(clouds);
+      scene.add(cloudLayer.mesh);
       const lighting = createLighting();
       scene.add(lighting.group);
       const atmosphere = createAtmosphere(scene);
@@ -115,11 +133,13 @@ export function MapCanvas() {
       const rig = createCameraRig(renderer.domElement, () => {
         viewDirty = true;
       });
+      const postFx = createPostFx(renderer, scene, rig.camera);
 
       const resize = () => {
         const w = host.clientWidth || 1;
         const h = host.clientHeight || 1;
         renderer.setSize(w, h);
+        postFx.setSize(w, h);
         rig.resize(w, h);
       };
       const observer = new ResizeObserver(resize);
@@ -153,14 +173,16 @@ export function MapCanvas() {
         terrain.uniforms.uTime.value = timeMs / 1000;
         water.setTime(timeMs / 1000);
         oceanApron.setTime(timeMs / 1000);
+        clouds.uCloudTime.value = timeMs / 1000;
         territoryCtl.update(delta);
         if (viewDirty) {
           viewDirty = false;
           lighting.updateShadowFrustum(rig.camera, host.clientWidth, host.clientHeight);
-          atmosphere.update(rig.distance);
+          atmosphere.update(rig.distance, rig.camera.position);
+          cloudLayer.update(rig.distance);
           bumpView();
         }
-        renderer.render(scene, rig.camera);
+        postFx.render();
       });
 
       if (import.meta.env.DEV) {
@@ -181,11 +203,15 @@ export function MapCanvas() {
         skirt.dispose();
         water.dispose();
         oceanApron.dispose();
+        cloudLayer.dispose();
+        atmosphere.dispose();
+        postFx.dispose();
         lighting.dispose();
         albedo?.dispose();
         normal?.dispose();
         worldMask?.dispose();
         waterNormal?.dispose();
+        cloudTex?.dispose();
         renderer.dispose();
       };
     })();

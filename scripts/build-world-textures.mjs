@@ -7,6 +7,7 @@
  *   scripts/assets/coastline-50m.json           — Natural Earth land polygons
  *   scripts/assets/terrain-config.json          — straits/rivers/regions/corridors
  *   scripts/assets/bmng-crop.jpg(.json)         — NASA Blue Marble land colour (fetch-imagery.mjs)
+ *   scripts/assets/detail/*.jpg                 — ambientCG CC0 ground photos (detail layer)
  *
  * Writes (committed):
  *   public/terrain/heightmap.png   2880x1400 split-byte RGB (R=hi, G=lo) heights
@@ -15,6 +16,9 @@
  *   public/terrain/albedo.jpg      8192x3982 graded satellite terrain color
  *   public/terrain/worldmask.png   2880x1400 R=coast SDF, G=river mask, B=0
  *   public/terrain/waternormal.png 512x512 tileable water-wave normal map
+ *   public/terrain/clouds.png      512x512 tileable cloud density (R), soft edges
+ *   public/textures/detail/detail-mix.png 512x512 tileable high-pass luminance
+ *                                  detail: R = vegetated soil, G = rock, B = sand
  *   scripts/assets/dem-preview.png hillshade for human eyeballing (not shipped)
  */
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
@@ -712,7 +716,7 @@ const inBox = (lon, lat, [w, so, e, n]) => lon >= w && lon <= e && lat >= so && 
 /** Cinematic grade: lift the dark satellite land, warm it, ease saturation. */
 const GRADE_GAMMA = 0.72;
 const GRADE_SAT = 0.86;
-const GRADE_WARM = [1.04, 1.0, 0.93];
+const GRADE_WARM = [1.015, 1.0, 0.97];
 function gradeSatellite(rgb) {
   const lifted = rgb.map((v, c) => 255 * Math.pow(v / 255, GRADE_GAMMA) * GRADE_WARM[c]);
   const l = lifted[0] * 0.2126 + lifted[1] * 0.7152 + lifted[2] * 0.0722;
@@ -745,8 +749,10 @@ for (let y = 0; y < ALB_H; y++) {
       const depth = clamp01(-hMeters / 2600);
       rgb = mixRgb(C.shelfSea, C.deepSea, smoothstep(0.04, 0.55, depth));
       const shore = 1 - smoothstep(-6, -0.5, -Math.abs(sdf)); // ≈ near-coast band
-      const shelf = 1 - smoothstep(0, 14, -sdf);
-      rgb = mixRgb(rgb, C.shoreSea, clamp01(shelf * 0.65 + shore * 0.1));
+      // Narrow, soft shelf: a wide bright band reads as a glowing outline
+      // against the satellite land.
+      const shelf = 1 - smoothstep(0, 6, -sdf);
+      rgb = mixRgb(rgb, C.shoreSea, clamp01(shelf * 0.4 + shore * 0.08));
       rgb = rgb.map((v) => v * (0.94 + nBiome * 0.12));
     } else {
       // Land: aridity from latitude + region overrides + corridors. The
@@ -897,6 +903,135 @@ console.log('writing water normal…');
   await sharp(rgb, { raw: { width: SIZE, height: SIZE, channels: 3 } })
     .png({ compressionLevel: 9 })
     .toFile(out('waternormal.png'));
+}
+
+/* ------------------------------------------------------------------ */
+/* 8b. Tileable cloud density                                          */
+
+// Domain-warped gradient-noise fbm, tileable (every octave's period divides
+// the tile), so the runtime can scroll it forever. R = density 0..1 before
+// the runtime coverage threshold. Gradient (Perlin) noise, not the value
+// noise above: value noise's lattice shows up as streaks once thresholded.
+console.log('writing clouds…');
+/** Tileable 2D Perlin noise with the given integer period, range ~[-0.7, 0.7]. */
+function makePerlin(seedLabel, period) {
+  const rand = mulberry32(hashStringSeed(seedLabel));
+  const grads = new Float32Array(period * period * 2);
+  for (let i = 0; i < period * period; i++) {
+    const a = rand() * Math.PI * 2;
+    grads[i * 2] = Math.cos(a);
+    grads[i * 2 + 1] = Math.sin(a);
+  }
+  const fade = (t) => t * t * t * (t * (t * 6 - 15) + 10);
+  const dot = (ix, iy, dx, dy) => {
+    const k = ((((iy % period) + period) % period) * period + (((ix % period) + period) % period)) * 2;
+    return grads[k] * dx + grads[k + 1] * dy;
+  };
+  return (x, y) => {
+    const x0 = Math.floor(x);
+    const y0 = Math.floor(y);
+    const fx = x - x0;
+    const fy = y - y0;
+    const u = fade(fx);
+    const v = fade(fy);
+    const a = lerp(dot(x0, y0, fx, fy), dot(x0 + 1, y0, fx - 1, fy), u);
+    const b = lerp(dot(x0, y0 + 1, fx, fy - 1), dot(x0 + 1, y0 + 1, fx - 1, fy - 1), u);
+    return lerp(a, b, v);
+  };
+}
+{
+  const SIZE = 512;
+  const P = 5; // base lattice cells across the tile
+  const octaves = [1, 2, 4, 8, 16, 32].map((m, k) => ({
+    noise: makePerlin(`east-roman-cloud-${k}`, P * m),
+    freq: m,
+    amp: 0.52 ** k,
+  }));
+  const warpX = makePerlin('east-roman-cloud-warp-x', P * 2);
+  const warpY = makePerlin('east-roman-cloud-warp-y', P * 2);
+  const density = new Float32Array(SIZE * SIZE);
+  let lo = Infinity;
+  let hi = -Infinity;
+  for (let y = 0; y < SIZE; y++) {
+    for (let x = 0; x < SIZE; x++) {
+      const u = (x / SIZE) * P;
+      const v = (y / SIZE) * P;
+      const wu = u + warpX(u * 2, v * 2) * 0.5;
+      const wv = v + warpY(u * 2, v * 2) * 0.5;
+      let sum = 0;
+      // Warp only the broad octaves: warped high octaves stretch into streaks.
+      for (const o of octaves) {
+        const [cu, cv] = o.freq <= 2 ? [wu, wv] : [u, v];
+        sum += o.noise(cu * o.freq, cv * o.freq) * o.amp;
+      }
+      density[y * SIZE + x] = sum;
+      lo = Math.min(lo, sum);
+      hi = Math.max(hi, sum);
+    }
+  }
+  const gray = Buffer.alloc(SIZE * SIZE);
+  for (let i = 0; i < density.length; i++) gray[i] = Math.round(((density[i] - lo) / (hi - lo)) * 255);
+  await sharp(gray, { raw: { width: SIZE, height: SIZE, channels: 1 } })
+    .png({ compressionLevel: 9 })
+    .toFile(out('clouds.png'));
+}
+
+/* ------------------------------------------------------------------ */
+/* 8c. Close-zoom detail layers                                        */
+
+// Three CC0 ground photos reduced to tileable, zero-mean (128) high-pass
+// luminance, one per channel. The runtime multiplies them into the albedo
+// by slope/land colour at close zoom only; colour stays the satellite's.
+console.log('writing detail layers…');
+{
+  const SIZE = 512;
+  const sources = ['Ground037.jpg', 'Rock030.jpg', 'Ground054.jpg']; // R, G, B
+  const packed = Buffer.alloc(SIZE * SIZE * 3);
+  /** Separable box blur with wrap-around (keeps the tile seamless). */
+  const boxBlurWrap = (src, radius) => {
+    const tmp = new Float32Array(src.length);
+    const dst = new Float32Array(src.length);
+    const n = radius * 2 + 1;
+    for (let y = 0; y < SIZE; y++) {
+      for (let x = 0; x < SIZE; x++) {
+        let sum = 0;
+        for (let k = -radius; k <= radius; k++) sum += src[y * SIZE + ((x + k + SIZE) % SIZE)];
+        tmp[y * SIZE + x] = sum / n;
+      }
+    }
+    for (let y = 0; y < SIZE; y++) {
+      for (let x = 0; x < SIZE; x++) {
+        let sum = 0;
+        for (let k = -radius; k <= radius; k++) sum += tmp[((y + k + SIZE) % SIZE) * SIZE + x];
+        dst[y * SIZE + x] = sum / n;
+      }
+    }
+    return dst;
+  };
+  for (let c = 0; c < 3; c++) {
+    const gray = await sharp(join(dir, 'assets', 'detail', sources[c]))
+      .resize(SIZE, SIZE, { kernel: 'lanczos3' })
+      .greyscale()
+      .raw()
+      .toBuffer();
+    const lum = Float32Array.from(gray);
+    let low = lum;
+    for (let pass = 0; pass < 3; pass++) low = boxBlurWrap(low, 10);
+    const hp = new Float32Array(lum.length);
+    let sq = 0;
+    for (let i = 0; i < lum.length; i++) {
+      hp[i] = lum[i] - low[i];
+      sq += hp[i] * hp[i];
+    }
+    const std = Math.sqrt(sq / hp.length) || 1;
+    for (let i = 0; i < hp.length; i++) {
+      packed[i * 3 + c] = Math.round(Math.min(255, Math.max(0, 128 + (hp[i] / std) * 34)));
+    }
+  }
+  await mkdir(join(dir, '..', 'public', 'textures', 'detail'), { recursive: true });
+  await sharp(packed, { raw: { width: SIZE, height: SIZE, channels: 3 } })
+    .png({ compressionLevel: 9 })
+    .toFile(join(dir, '..', 'public', 'textures', 'detail', 'detail-mix.png'));
 }
 
 /* ------------------------------------------------------------------ */

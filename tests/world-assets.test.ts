@@ -81,8 +81,10 @@ describe('straits stay open water', () => {
     ['Gibraltar south', -5.59, 35.83],
     ['Bonifacio', 8.83, 41.6],
     ['Messina', 15.24, 38.05],
-    ['Dardanelles west', 26.13, 40.71],
-    ['Dardanelles east', 26.77, 40.71],
+    // Kumkale mouth → Çanakkale narrows (~1.2 km wide) → Gelibolu.
+    ['Dardanelles mouth', 26.2, 40.03],
+    ['Dardanelles narrows', 26.4, 40.16],
+    ['Dardanelles Gelibolu', 26.67, 40.41],
     ['Bosporus', 29.4, 41.15],
     ['Kerch', 36.39, 45.15],
     ['Oresund', 12.68, 55.8],
@@ -100,6 +102,8 @@ describe('straits stay open water', () => {
 
 describe('land anchors stay land', () => {
   const landPoints: Array<[string, number, number]> = [
+    // A misplaced pre-2026-09 Dardanelles carve cut a fake canal here.
+    ['Thrace north of Saros', 26.45, 40.71],
     ['Rome', 12.5, 41.9],
     ['Ankara', 32.85, 39.93],
     ['Antioch', 36.16, 36.2],

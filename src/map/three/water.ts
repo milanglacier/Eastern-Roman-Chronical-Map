@@ -24,6 +24,7 @@ import {
 import { GROUND_W, GROUND_H } from './geo';
 import { SUN_DIRECTION } from './lights';
 import { WATER_FRESNEL_TINT } from './palette';
+import { CLOUD_GLSL, type CloudUniforms } from './clouds';
 
 export interface Water {
   mesh: Mesh;
@@ -66,6 +67,7 @@ uniform vec3 uFoamColor;
 uniform vec3 uSunDir;
 varying vec2 vUv;
 varying vec3 vWorldPos;
+${CLOUD_GLSL}
 
 void main() {
   #include <logdepthbuf_fragment>
@@ -81,24 +83,28 @@ void main() {
 
   float bedY = texture2D(uHeightY, vUv).r; // world-unit Y of the seabed
   float depth = max(0.0, -bedY);
-  float depthT = smoothstep(0.0, 0.28, depth); // ~3100 m at full tint
+  // ~3100 m at full tint; the square root pulls the bright shallow tone into
+  // a thin coastal fringe instead of a wide glowing band over the shelf.
+  float depthT = sqrt(smoothstep(0.0, 0.28, depth));
 
   vec3 viewDir = normalize(cameraPosition - vWorldPos);
   vec3 col = mix(uShallowColor, uDeepColor, depthT);
   float fresnel = pow(1.0 - max(dot(viewDir, n), 0.0), 3.0);
   col = mix(col, uSkyColor, fresnel * 0.5);
   vec3 halfDir = normalize(viewDir + uSunDir);
-  col += vec3(1.0, 0.93, 0.78) * pow(max(dot(n, halfDir), 0.0), 90.0) * 0.5;
+  float cloudDim = 1.0 - cloudShadow(vWorldPos);
+  col *= 1.0 - 0.3 * (1.0 - cloudDim);
+  col += vec3(1.0, 0.93, 0.78) * pow(max(dot(n, halfDir), 0.0), 90.0) * 0.5 * cloudDim;
 
   // Shore foam: a thin, noise-broken animated lick just seaward of the coast.
   float maskR = texture2D(uWorldMask, vUv).r;
   float sdfPx = (maskR * 255.0 - 128.0) / 6.0; // signed px from coast (+land)
-  float foamBand = 1.0 - smoothstep(0.2, 1.5, abs(sdfPx + 0.8));
+  float foamBand = 1.0 - smoothstep(0.1, 0.8, abs(sdfPx + 0.5));
   float foamWave = 0.55 + 0.45 * sin(uTime * 1.1 - sdfPx * 2.3);
   float foamNoise = texture2D(uWaterNormal, vUv * vec2(235.9, 114.7) + uTime * vec2(0.020, 0.013)).b;
   float foam = foamBand * foamWave * smoothstep(0.5, 0.85, foamNoise);
 
-  col = mix(col, uFoamColor, clamp(foam, 0.0, 1.0) * 0.55);
+  col = mix(col, uFoamColor, clamp(foam, 0.0, 1.0) * 0.4);
   float alpha = mix(0.45, 0.8, depthT);
   alpha = max(alpha, foam * 0.6);
   // The coarse mesh can dip below Y=0 between low coastal land pixels
@@ -151,6 +157,7 @@ uniform vec3 uSkyColor;
 uniform vec3 uSunDir;
 varying vec2 vUv;
 varying vec3 vWorldPos;
+${CLOUD_GLSL}
 
 void main() {
   #include <logdepthbuf_fragment>
@@ -174,7 +181,9 @@ void main() {
   float fresnel = pow(1.0 - max(dot(viewDir, n), 0.0), 3.0);
   col = mix(col, uSkyColor, fresnel * 0.5);
   vec3 halfDir = normalize(viewDir + uSunDir);
-  col += vec3(1.0, 0.93, 0.78) * pow(max(dot(n, halfDir), 0.0), 90.0) * 0.175;
+  float cloudDim = 1.0 - cloudShadow(vWorldPos);
+  col *= 1.0 - 0.3 * (1.0 - cloudDim);
+  col += vec3(1.0, 0.93, 0.78) * pow(max(dot(n, halfDir), 0.0), 90.0) * 0.175 * cloudDim;
 
   gl_FragColor = vec4(col, 1.0);
   #include <tonemapping_fragment>
@@ -191,7 +200,10 @@ void main() {
  * texels of those textures are land along the south and east edges and would
  * bleed wrong tints out here), no shadows.
  */
-export function createOceanApron(textures: { waterNormal: Texture | null }): Water {
+export function createOceanApron(
+  textures: { waterNormal: Texture | null },
+  clouds: CloudUniforms,
+): Water {
   const inner = [
     [0, 0],
     [GROUND_W, 0],
@@ -230,6 +242,7 @@ export function createOceanApron(textures: { waterNormal: Texture | null }): Wat
     },
   ]);
   uniforms.uWaterNormal = { value: textures.waterNormal };
+  Object.assign(uniforms, clouds); // shared by reference: one time/wind
 
   const material = new ShaderMaterial({
     vertexShader: APRON_VERT,
@@ -254,11 +267,14 @@ export function createOceanApron(textures: { waterNormal: Texture | null }): Wat
   };
 }
 
-export function createWater(textures: {
-  waterNormal: Texture | null;
-  heightY: DataTexture;
-  worldMask: Texture | null;
-}): Water {
+export function createWater(
+  textures: {
+    waterNormal: Texture | null;
+    heightY: DataTexture;
+    worldMask: Texture | null;
+  },
+  clouds: CloudUniforms,
+): Water {
   if (textures.waterNormal) {
     textures.waterNormal.wrapS = RepeatWrapping;
     textures.waterNormal.wrapT = RepeatWrapping;
@@ -278,6 +294,7 @@ export function createWater(textures: {
   uniforms.uWaterNormal = { value: textures.waterNormal };
   uniforms.uHeightY = { value: textures.heightY };
   uniforms.uWorldMask = { value: textures.worldMask };
+  Object.assign(uniforms, clouds); // shared by reference: one time/wind
 
   const material = new ShaderMaterial({
     vertexShader: VERT,

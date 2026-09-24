@@ -47,7 +47,7 @@ export function createLighting(): Lighting {
   group.add(sun);
   group.add(sun.target);
 
-  const hemi = new HemisphereLight(HEMI_SKY_COLOR, HEMI_GROUND_COLOR, 0.85);
+  const hemi = new HemisphereLight(HEMI_SKY_COLOR, HEMI_GROUND_COLOR, 1.0);
   group.add(hemi);
 
   // Scratch vectors (no per-frame allocation).
