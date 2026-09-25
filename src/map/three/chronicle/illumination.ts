@@ -18,7 +18,7 @@ export const PALETTE = {
   goldHi: '#f7e09a',
   porphyry: '#7d3b50',
   water: '#7fb3b1',
-  vermilion: '#5e2590', // imperial purple: name ribbons, roundel petals
+  imperial: '#5e2590', // imperial purple: name ribbons, roundel petals
   paper: '#efe3c8',
   green: '#8a9a5c',
   sky: '#b8c9cf',

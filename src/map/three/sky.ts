@@ -1,9 +1,10 @@
 /**
- * Painted sky dome: era-mood gradient, sun or moon glow and disc, drifting
- * brushed cloud bands and (at night) stars. It follows the camera and draws
- * first without depth, so it is only ever "behind" the world. Below the
- * horizon it resolves to the haze colour, which is also the fog colour, so
- * the curved world melts into the sky with no seam.
+ * Sky dome. It follows the camera and draws first without depth, so it is
+ * only ever "behind" the world; below the horizon it resolves to the haze
+ * colour (= the fog colour), so the curved world melts into the sky.
+ *  - chronicle: the era's natural sky as a watercolour — soft gradient,
+ *    painted clouds with pooled edges, a gold-rimmed sun;
+ *  - clockwork: the dark vault of the hall around the astrolabe.
  */
 import { BackSide, Color, Mesh, ShaderMaterial, SphereGeometry, Vector3 } from 'three';
 import type { Mood } from '../../lib/mood';
@@ -53,7 +54,19 @@ float fbm(vec2 p) {
 void main() {
   vec3 d = normalize(vDir);
   float h = d.y;
-  #ifdef CHRONICLE
+  #ifdef CLOCKWORK
+    // The dark vault of the hall: warm glow around the astrolabe sun,
+    // faint engraved meridians and parallels on the dome.
+    vec3 vault = mix(uHaze, uZenith, smoothstep(-0.15, 0.7, h));
+    float cosS = max(dot(d, normalize(uKeyDir)), 0.0);
+    vault += uGlow * (pow(cosS, 4.0) * 0.18 + pow(cosS, 30.0) * 0.35);
+    float lonA = atan(d.z, d.x);
+    float latA = asin(clamp(h, -1.0, 1.0));
+    float mer = smoothstep(0.992, 1.0, cos(lonA * 24.0));
+    float par = smoothstep(0.992, 1.0, cos(latA * 36.0));
+    vault += uGlow * 0.035 * (mer + par) * smoothstep(0.0, 0.3, h);
+    gl_FragColor = vec4(vault, 1.0);
+  #else
     // Natural sky of the era (the moods), drawn as watercolour: soft
     // gradient, white cloud washes with a greyer pooled edge, a warm
     // horizon glow and a gold-rimmed sun.
@@ -79,59 +92,7 @@ void main() {
     skyC = mix(skyC, vec3(0.2, 0.14, 0.08), sunRim * 0.7);
     skyC = mix(skyC, uHaze, 1.0 - smoothstep(-0.04, 0.02, h));
     gl_FragColor = vec4(skyC, 1.0);
-    return;
   #endif
-
-  #ifdef CLOCKWORK
-    // The dark vault of the hall: warm glow around the astrolabe sun,
-    // faint engraved meridians and parallels on the dome.
-    vec3 vault = mix(uHaze, uZenith, smoothstep(-0.15, 0.7, h));
-    float cosS = max(dot(d, normalize(uKeyDir)), 0.0);
-    vault += uGlow * (pow(cosS, 4.0) * 0.18 + pow(cosS, 30.0) * 0.35);
-    float lonA = atan(d.z, d.x);
-    float latA = asin(clamp(h, -1.0, 1.0));
-    float mer = smoothstep(0.992, 1.0, cos(lonA * 24.0));
-    float par = smoothstep(0.992, 1.0, cos(latA * 36.0));
-    vault += uGlow * 0.035 * (mer + par) * smoothstep(0.0, 0.3, h);
-    gl_FragColor = vec4(vault, 1.0);
-    return;
-  #endif
-  float up = clamp(h, 0.0, 1.0);
-  vec3 col = mix(uHorizon, uZenith, pow(up, 0.38));
-  // Haze band hugging the horizon; below the horizon, pure haze (= fog).
-  col = mix(col, uHaze, exp(-up * 16.0) * 0.75);
-  col = mix(col, uHaze, 1.0 - smoothstep(-0.04, 0.02, h));
-
-  float cosA = max(dot(d, normalize(uKeyDir)), 0.0);
-  float glow = pow(cosA, 6.0) * 0.35 + pow(cosA, 48.0) * 0.6;
-  col += uGlow * glow * (1.0 - 0.45 * uNight);
-
-  // Painted cloud bands: fbm on a cloud "ceiling", stretched along the
-  // horizon so they read as brushed strata, lit from the key side.
-  if (h > -0.02) {
-    vec2 p = d.xz / (h + 0.18);
-    float n = fbm(p * vec2(0.7, 2.2) + vec2(uTime * 0.004, 0.0));
-    float cover = uClouds;
-    float lo = 0.66 - cover * 0.28;
-    // Banks sit low on the horizon, where a cinematic frame actually sees sky.
-    float c = smoothstep(lo, lo + 0.14, n) * smoothstep(-0.005, 0.025, h) * (1.0 - smoothstep(0.35, 0.7, h));
-    vec3 lit = mix(uHorizon * 1.08, uGlow * 1.2, pow(cosA, 2.5) * 0.9);
-    vec3 shade = mix(uZenith, uHaze, 0.55) * 0.92;
-    vec3 cloudCol = mix(shade, lit, smoothstep(0.35, 0.85, n));
-    col = mix(col, cloudCol, c * 0.85);
-  }
-
-  // Disc: sun by day, moon by night (bloom picks up the sun).
-  float disc = smoothstep(0.99955, 0.99975, cosA);
-  col = mix(col, uGlow * mix(7.0, 1.6, uNight), disc);
-
-  if (uNight > 0.01 && h > 0.0) {
-    vec2 sp = d.xz / (h + 0.3) * 260.0;
-    float star = step(0.9965, hash(floor(sp))) * smoothstep(0.0, 0.25, h);
-    float twinkle = 0.6 + 0.4 * sin(uTime * 2.0 + hash(floor(sp) + 3.1) * 40.0);
-    col += vec3(0.85, 0.9, 1.0) * star * twinkle * uNight * 0.9;
-  }
-  gl_FragColor = vec4(col, 1.0);
 }
 `;
 
@@ -145,9 +106,8 @@ export interface Sky {
   dispose(): void;
 }
 
-export function createSky(style: 'painted' | 'clockwork' | 'chronicle' = 'painted'): Sky {
+export function createSky(style: 'clockwork' | 'chronicle'): Sky {
   const hall = style === 'clockwork';
-  const chronicle = style === 'chronicle';
   // A touch of warm paper in the haze, so the distance reads as drawn;
   // the sky itself leans to a clear watercolour blue.
   const paper = new Color(0xefe3c8);
@@ -171,7 +131,7 @@ export function createSky(style: 'painted' | 'clockwork' | 'chronicle' = 'painte
     depthWrite: false,
     depthTest: false,
     fog: false,
-    defines: hall ? { CLOCKWORK: '' } : chronicle ? { CHRONICLE: '' } : {},
+    defines: hall ? { CLOCKWORK: '' } : {},
   });
   const geometry = new SphereGeometry(1, 48, 24);
   const mesh = new Mesh(geometry, material);
@@ -180,28 +140,25 @@ export function createSky(style: 'painted' | 'clockwork' | 'chronicle' = 'painte
   return {
     mesh,
     setMood(mood) {
-      if (chronicle) {
-        // The era's natural sky, lightly on paper.
-        // Night keeps its own sky; by day the blue leads, tinted by the era.
-        const day = 1 - mood.night;
-        uniforms.uHaze.value.setRGB(...mood.hazeColor).lerp(paleBlue, 0.6 * day).lerp(paper, 0.1);
-        uniforms.uZenith.value.setRGB(...mood.skyZenith).lerp(blue, 0.55 * day);
-        uniforms.uGlow.value.setRGB(...mood.skyGlow);
-        uniforms.uHorizon.value.setRGB(...mood.skyHorizon).lerp(paleBlue, 0.7 * day);
-        uniforms.uKeyDir.value.set(...mood.keyDir);
-        uniforms.uClouds.value = mood.clouds;
-        uniforms.uNight.value = mood.night;
-        return;
-      }
-      // The hall is a dark room lit by the era's colour, not an open sky.
-      const k = hall ? 0.1 : 1;
-      uniforms.uZenith.value.setRGB(...mood.skyZenith).multiplyScalar(k * 0.6);
-      uniforms.uHorizon.value.setRGB(...mood.skyHorizon).multiplyScalar(k);
-      uniforms.uGlow.value.setRGB(...mood.skyGlow).multiplyScalar(hall ? 0.5 : 1);
-      uniforms.uHaze.value.setRGB(...mood.hazeColor).multiplyScalar(hall ? 0.16 : 1);
-      if (!hall) uniforms.uKeyDir.value.set(...mood.keyDir);
       uniforms.uClouds.value = mood.clouds;
       uniforms.uNight.value = mood.night;
+      if (hall) {
+        // A dark room lit by the era's colour; the key is the astrolabe
+        // (set via setKeyDir).
+        uniforms.uZenith.value.setRGB(...mood.skyZenith).multiplyScalar(0.06);
+        uniforms.uHorizon.value.setRGB(...mood.skyHorizon).multiplyScalar(0.1);
+        uniforms.uGlow.value.setRGB(...mood.skyGlow).multiplyScalar(0.5);
+        uniforms.uHaze.value.setRGB(...mood.hazeColor).multiplyScalar(0.16);
+        return;
+      }
+      // The era's natural sky, lightly on paper. Night keeps its own sky;
+      // by day the blue leads, tinted by the era.
+      const day = 1 - mood.night;
+      uniforms.uHaze.value.setRGB(...mood.hazeColor).lerp(paleBlue, 0.6 * day).lerp(paper, 0.1);
+      uniforms.uZenith.value.setRGB(...mood.skyZenith).lerp(blue, 0.55 * day);
+      uniforms.uGlow.value.setRGB(...mood.skyGlow);
+      uniforms.uHorizon.value.setRGB(...mood.skyHorizon).lerp(paleBlue, 0.7 * day);
+      uniforms.uKeyDir.value.set(...mood.keyDir);
     },
     setKeyDir(dir) {
       uniforms.uKeyDir.value.copy(dir);

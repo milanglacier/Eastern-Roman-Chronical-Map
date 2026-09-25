@@ -1,13 +1,11 @@
 /**
- * The painted render pipeline (no EffectComposer — every pass is explicit so
+ * The render pipeline (no EffectComposer — every pass is explicit so
  * resolutions and variants are under control):
  *
  *   scene ──► sceneRT (HDR, MSAA, depth texture)
- *              ├─► tensor (½) ─► anisotropic Kuwahara (paint RT)   [high]
- *              │                  isotropic Kuwahara              [medium]
  *              ├─► bloom prefilter ─► dual-Kawase mip chain
- *              └─► composite: paint + DOF + ink + bloom + tonemap +
- *                  grade + paper + vignette + letterbox ─► canvas
+ *              └─► composite: DOF + ink + bloom + tonemap + grade +
+ *                  paper + vignette + letterbox ─► canvas
  *
  * Materials render linear HDR into sceneRT (three disables tone mapping for
  * render targets); the composite owns tone mapping and sRGB encoding.
@@ -31,7 +29,6 @@ import {
 } from 'three';
 import { FullScreenQuad } from './fullscreenQuad';
 import type { Mood } from '../../../lib/mood';
-import { paintScaleFor } from '../../../lib/postfxMath';
 import type { QualitySettings } from './quality';
 import {
   BLOOM_DOWN_FRAG,
@@ -39,14 +36,10 @@ import {
   BLOOM_UP_FRAG,
   COMPOSITE_FRAG,
   FULLSCREEN_VERT,
-  KUWAHARA_FRAG,
-  TENSOR_FRAG,
 } from './shaders';
 
 /** Art-direction knobs the host animates (transitions, cinematics). */
 export interface PipelineParams {
-  /** 0..1 blend of the paint filter over the sharp render. */
-  paintMix: number;
   /** Tilt-shift strength (per unit of log-depth distance from focus). */
   dof: number;
   /** View-space distance of the focus plane (the camera target). */
@@ -68,7 +61,7 @@ export interface Pipeline {
   readonly settings: QualitySettings;
   setSize(width: number, height: number, pixelRatio: number): void;
   setMood(mood: Mood): void;
-  setQuality(settings: QualitySettings, paintEnabled: boolean): void;
+  setQuality(settings: QualitySettings): void;
   render(scene: Scene, camera: Camera & { far: number }): void;
   dispose(): void;
 }
@@ -96,19 +89,13 @@ function shader(fragmentShader: string, uniforms: Record<string, { value: unknow
   });
 }
 
-export function createPipeline(
-  renderer: WebGLRenderer,
-  initial: QualitySettings,
-  initialPaintEnabled = true,
-): Pipeline {
+export function createPipeline(renderer: WebGLRenderer, initial: QualitySettings): Pipeline {
   let settings = initial;
-  let paintEnabled = initialPaintEnabled && initial.paint !== 'none';
   let width = 1;
   let height = 1;
   let pixelRatio = 1;
 
   const params: PipelineParams = {
-    paintMix: 1,
     dof: 0.55,
     focus: 50,
     ink: 0.55,
@@ -121,28 +108,10 @@ export function createPipeline(
   };
 
   let sceneRT: WebGLRenderTarget | null = null;
-  let tensorRT: WebGLRenderTarget | null = null;
-  let paintRT: WebGLRenderTarget | null = null;
   let bloomMips: WebGLRenderTarget[] = [];
 
   const quad = new FullScreenQuad();
 
-  const tensorMat = shader(TENSOR_FRAG, { tColor: { value: null }, uStep: { value: new Vector2() } });
-  let kuwaharaMat = makeKuwahara();
-  function makeKuwahara(): ShaderMaterial {
-    return shader(
-      KUWAHARA_FRAG,
-      {
-        tColor: { value: null },
-        tTensor: { value: null },
-        uStep: { value: new Vector2() },
-        uRadius: { value: settings.paintRadius || 3 },
-        uHardness: { value: 8 },
-        uSharpness: { value: 8 },
-      },
-      settings.paint === 'anisotropic' ? { ANISOTROPIC: '' } : {},
-    );
-  }
   const prefilterMat = shader(BLOOM_PREFILTER_FRAG, {
     tColor: { value: null },
     uTexel: { value: new Vector2() },
@@ -155,12 +124,10 @@ export function createPipeline(
 
   const compositeUniforms = {
     tScene: { value: null as unknown },
-    tPaint: { value: null as unknown },
     tDepth: { value: null as unknown },
     tBloom: { value: null as unknown },
     uTexel: { value: new Vector2() },
     uFar: { value: 1500 },
-    uPaintMix: { value: 1 },
     uFocus: { value: 50 },
     uDof: { value: 0.5 },
     uDofMaxPx: { value: 7 },
@@ -182,7 +149,6 @@ export function createPipeline(
   let compositeMat = makeComposite();
   function makeComposite(): ShaderMaterial {
     const defines: Record<string, string> = {};
-    if (paintEnabled) defines.USE_PAINT = '';
     if (settings.dof) defines.USE_DOF = '';
     return shader(COMPOSITE_FRAG, compositeUniforms as Record<string, { value: unknown }>, defines);
   }
@@ -190,10 +156,8 @@ export function createPipeline(
   function disposeTargets(): void {
     sceneRT?.depthTexture?.dispose();
     sceneRT?.dispose();
-    tensorRT?.dispose();
-    paintRT?.dispose();
     for (const m of bloomMips) m.dispose();
-    sceneRT = tensorRT = paintRT = null;
+    sceneRT = null;
     bloomMips = [];
   }
 
@@ -208,13 +172,6 @@ export function createPipeline(
       depthBuffer: true,
     });
     sceneRT.depthTexture = new DepthTexture(w, h, UnsignedIntType);
-    const scale = paintEnabled ? paintScaleFor(pixelRatio, settings.tier) : 0;
-    if (scale > 0) {
-      const pw = Math.max(1, Math.round(w * scale));
-      const ph = Math.max(1, Math.round(h * scale));
-      paintRT = rt(pw, ph);
-      if (settings.paint === 'anisotropic') tensorRT = rt(pw, ph);
-    }
     let bw = Math.max(1, w >> 1);
     let bh = Math.max(1, h >> 1);
     for (let i = 0; i < settings.bloomLevels; i++) {
@@ -251,11 +208,8 @@ export function createPipeline(
       u.uSplit.value = mood.split;
       u.uBloom.value = mood.bloom;
     },
-    setQuality(next, nextPaintEnabled) {
+    setQuality(next) {
       settings = next;
-      paintEnabled = nextPaintEnabled && next.paint !== 'none';
-      kuwaharaMat.dispose();
-      kuwaharaMat = makeKuwahara();
       compositeMat.dispose();
       compositeMat = makeComposite();
       buildTargets();
@@ -266,21 +220,6 @@ export function createPipeline(
       renderer.setRenderTarget(src);
       renderer.clear();
       renderer.render(scene, camera);
-
-      // Paint.
-      if (paintRT) {
-        const step = new Vector2(1 / paintRT.width, 1 / paintRT.height);
-        if (tensorRT) {
-          tensorMat.uniforms.tColor.value = src.texture;
-          tensorMat.uniforms.uStep.value.copy(step);
-          pass(tensorMat, tensorRT);
-        }
-        kuwaharaMat.uniforms.tColor.value = src.texture;
-        kuwaharaMat.uniforms.tTensor.value = tensorRT?.texture ?? null;
-        kuwaharaMat.uniforms.uStep.value.copy(step);
-        kuwaharaMat.uniforms.uRadius.value = settings.paintRadius;
-        pass(kuwaharaMat, paintRT);
-      }
 
       // Bloom.
       if (bloomMips.length) {
@@ -304,12 +243,10 @@ export function createPipeline(
 
       const u = compositeUniforms;
       u.tScene.value = src.texture;
-      u.tPaint.value = paintRT?.texture ?? src.texture;
       u.tDepth.value = src.depthTexture;
       u.tBloom.value = bloomMips[0]?.texture ?? null;
       u.uTexel.value.set(1 / src.width, 1 / src.height);
       u.uFar.value = camera.far;
-      u.uPaintMix.value = params.paintMix;
       u.uFocus.value = params.focus;
       u.uDof.value = params.dof;
       u.uDofMaxPx.value = 6 * pixelRatio;
@@ -327,7 +264,7 @@ export function createPipeline(
     dispose() {
       disposeTargets();
       quad.dispose();
-      for (const m of [tensorMat, kuwaharaMat, prefilterMat, downMat, upMat, compositeMat]) m.dispose();
+      for (const m of [prefilterMat, downMat, upMat, compositeMat]) m.dispose();
     },
   };
 }

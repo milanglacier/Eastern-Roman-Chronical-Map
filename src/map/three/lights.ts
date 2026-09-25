@@ -30,17 +30,18 @@ export interface Lighting {
 
 /**
  * three.js lights are physical: diffuse = albedo · E / π. Mood intensities
- * are authored so ~1 means "the painted albedo at face value", so they are
- * scaled here (flat ground under a mid-height sun + sky fill ≈ albedo).
+ * are authored so ~1 means "the albedo at face value" (flat ground under a
+ * mid-height sun + sky fill ≈ albedo); each style then scales them:
+ *  - paper (chronicle): parchment is already bright — gentle light, so the
+ *    washes keep their colour;
+ *  - hall (clockwork): the key (astrolabe) dominates, the room fill is faint.
  */
 const KEY_SCALE = Math.PI * 0.45;
 const FILL_SCALE = Math.PI * 0.9;
 
-export function createLighting(shadowMapSize = 2048, style: 'painted' | 'hall' | 'paper' = 'painted'): Lighting {
-  // A dark hall: the key (astrolabe) dominates, the room fill is faint.
-  // Paper: parchment is already bright — gentle light, so washes keep colour.
-  const keyScale = KEY_SCALE * (style === 'hall' ? 1.3 : style === 'paper' ? 0.6 : 1);
-  const fillScale = FILL_SCALE * (style === 'hall' ? 0.32 : style === 'paper' ? 0.58 : 1);
+export function createLighting(shadowMapSize: number, style: 'paper' | 'hall'): Lighting {
+  const keyScale = KEY_SCALE * (style === 'hall' ? 1.3 : 0.6);
+  const fillScale = FILL_SCALE * (style === 'hall' ? 0.32 : 0.58);
   const group = new Group();
 
   const key = new DirectionalLight(0xffffff, 2.4);

@@ -34,7 +34,9 @@ The timeline scrubs or plays through eleven centuries (space toggles, arrows ste
 Clicking an event opens its account.
 
 URL options: `?quality=high|medium|low`, `?intro=0` (skip the opening flight), and
-`?theme=painted|clockwork` for the earlier looks.
+`?theme=clockwork` for the earlier Game-of-Thrones-style clockwork look. (A painted-
+diorama look was also tried; the author did not like its art style, and it was
+removed. See `docs/art-direction.md`.)
 
 ## How it works
 

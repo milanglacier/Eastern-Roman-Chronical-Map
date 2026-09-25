@@ -1,13 +1,15 @@
 /**
  * Living chronicle map terrain: the world drawn as an illuminated
- * manuscript in natural colours; imperial purple-and-gold is reserved for
- * the empire itself (territory wash, frontier rule) and the UI. Parchment ground; watercolour washes whose pigment comes
- * from the painted albedo (lighter, softer, granulated, pooled along the
- * coasts); ink work drawn OVER the lit wash (ink is not lit) — contour
- * lines and hachures, short strokes running down every slope, denser on
- * steep and shaded ground, at a stroke spacing that stays a few screen px
- * at any distance; gold-leaf rivers; the empire's frontier as a vermilion
- * rubric with a gilt rule and a faint purple wash.
+ * manuscript in natural colours.
+ *  - Parchment ground under watercolour washes whose pigment comes from the
+ *    baked albedo (softened, granulated, pooled along the coasts).
+ *  - Ink drawn OVER the lit wash (ink is not lit): contours, and hachures —
+ *    short strokes down every slope, denser on steep and shaded ground, at a
+ *    stroke spacing that stays a few screen px at any distance — plus the
+ *    coastline.
+ *  - Watercolour-blue rivers.
+ *  - The empire, in the imperial colours reserved for it: a purple glaze,
+ *    and a purple frontier rule edged in gold leaf.
  */
 import { Color, Mesh, MeshStandardMaterial, RepeatWrapping, Texture, Vector2 } from 'three';
 import type { HeightField } from '../heightField';
@@ -18,29 +20,25 @@ import { blankTerritoryTexture, buildTerrainGeometry, createTerrainUniforms, typ
 export const PARCHMENT = 0xecdcb4;
 export const SEPIA_INK = 0x3a2a1e;
 /** Frontier rule in imperial purple, with a gold edge (GOLD_LEAF). */
-export const VERMILION = 0x5e2590;
+export const IMPERIAL_PURPLE = 0x5e2590;
 export const GOLD_LEAF = 0xd4a93c;
 
 export function buildChronicleTerrain(
   hf: HeightField,
-  textures: { albedo: Texture | null; worldMask?: Texture | null; brush?: Texture | null },
+  textures: { albedo: Texture | null; worldMask?: Texture | null; granulation?: Texture | null },
   surfaceY: (meters: number, lon: number, lat: number) => number,
 ): Terrain {
   const uniforms = createTerrainUniforms();
-  // The empire: an imperial-purple glaze over the natural land.
-  uniforms.uTerritoryTint.value = new Color(0x8b5cc4);
-  uniforms.uTerritoryStrength.value = 0.62;
-  uniforms.uBorderColor.value = new Color(GOLD_LEAF);
-  if (textures.brush) {
-    textures.brush.wrapS = RepeatWrapping;
-    textures.brush.wrapT = RepeatWrapping;
+  if (textures.granulation) {
+    textures.granulation.wrapS = RepeatWrapping;
+    textures.granulation.wrapT = RepeatWrapping;
   }
   const extra = {
     uWorldMask: { value: (textures.worldMask ?? blankTerritoryTexture()) as Texture },
-    uBrushTex: { value: (textures.brush ?? blankTerritoryTexture()) as Texture },
+    uGranulation: { value: (textures.granulation ?? blankTerritoryTexture()) as Texture },
     uPaper: { value: new Color(PARCHMENT) },
     uInk: { value: new Color(SEPIA_INK) },
-    uVermilion: { value: new Color(VERMILION) },
+    uImperialPurple: { value: new Color(IMPERIAL_PURPLE) },
     uGold: { value: new Color(GOLD_LEAF) },
     uWorldSize: { value: new Vector2(GROUND_W, GROUND_H) },
     uContourStep: { value: 0.16 },
@@ -78,10 +76,10 @@ export function buildChronicleTerrain(
         uniform float uNight;
         uniform float uTime;
         uniform sampler2D uWorldMask;
-        uniform sampler2D uBrushTex;
+        uniform sampler2D uGranulation;
         uniform vec3 uPaper;
         uniform vec3 uInk;
-        uniform vec3 uVermilion;
+        uniform vec3 uImperialPurple;
         uniform vec3 uGold;
         uniform vec2 uWorldSize;
         uniform float uContourStep;
@@ -113,11 +111,11 @@ export function buildChronicleTerrain(
         /* glsl */ `#include <map_fragment>
         vec2 chUv = vCwPos.xz / uWorldSize;
         vec3 alb = diffuseColor.rgb;
-        // Watercolour pigment from the painted albedo: softer, lighter.
+        // Watercolour pigment from the baked albedo: softer, lighter.
         float lumA = dot(alb, vec3(0.2126, 0.7152, 0.0722));
         vec3 pigment = mix(vec3(lumA), alb, 0.95);
         pigment = mix(pigment, uPaper, 0.1);
-        float gran = texture2D(uBrushTex, vCwPos.xz * 0.7).g;
+        float gran = texture2D(uGranulation, vCwPos.xz * 0.7).r;
         float blot = chNoise(vCwPos.xz * 0.55) * 0.6 + chNoise(vCwPos.xz * 2.1) * 0.4;
         float washAmt = clamp(0.8 * (0.75 + 0.4 * blot) * (0.85 + 0.3 * gran), 0.0, 1.0);
         vec3 col = mix(uPaper, pigment, washAmt);
@@ -131,7 +129,6 @@ export function buildChronicleTerrain(
         diffuseColor.rgb = col;
 
         float riverMask = smoothstep(0.3, 0.55, wm.g) * landM; // watercolour rivers
-        float goldMask = 0.0;
         vec2 territoryA = texture2D(uTerritoryA, chUv).rg;
         vec2 territoryB = texture2D(uTerritoryB, chUv).rg;
         vec2 territory = mix(territoryA, territoryB, uTerritoryMix);
@@ -143,8 +140,8 @@ export function buildChronicleTerrain(
         float gilt = mix(1.0 - smoothstep(0.8, 1.5, abs(pa - 3.8)), 1.0 - smoothstep(0.8, 1.5, abs(pb - 3.8)), uTerritoryMix) * inland;
         diffuseColor.rgb = mix(diffuseColor.rgb, vec3(0.28, 0.5, 0.58), riverMask * 0.85);
         diffuseColor.rgb *= mix(vec3(1.0), uTerritoryTint, clamp(territory.r * uTerritoryStrength, 0.0, 1.0));
-        diffuseColor.rgb = mix(diffuseColor.rgb, uVermilion, rubric * 0.9 * uBorderIntensity);
-        goldMask = max(goldMask, gilt * uBorderIntensity);
+        diffuseColor.rgb = mix(diffuseColor.rgb, uImperialPurple, rubric * 0.9 * uBorderIntensity);
+        float goldMask = gilt * uBorderIntensity; // gold leaf: metallic, burnished
         diffuseColor.rgb = mix(diffuseColor.rgb, uGold, goldMask);`,
       )
       .replace(

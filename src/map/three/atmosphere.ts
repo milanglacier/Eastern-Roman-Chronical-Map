@@ -27,7 +27,7 @@ export function horizonDistance(distance: number, pitch: number, radius: number)
   return Math.sqrt(2 * radius * height);
 }
 
-export function createAtmosphere(scene: Scene, style: 'painted' | 'clockwork' | 'chronicle' = 'painted'): Atmosphere {
+export function createAtmosphere(scene: Scene, style: 'clockwork' | 'chronicle'): Atmosphere {
   const hall = style === 'clockwork';
   // Chronicle: the era's haze with a little warm paper in it (matches the sky).
   const paper = style === 'chronicle' ? new Color(0xb9cddb) : null; // light blue air

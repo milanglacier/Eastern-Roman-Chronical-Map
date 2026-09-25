@@ -1,11 +1,9 @@
 import { JOURNEY_EVENT } from '../map/three/projection';
-import { activeTheme } from '../map/three/theme';
 import { useT } from '../i18n';
 
-/** Replays the guided opening flight (clockwork theme only). */
+/** Replays the guided opening flight. */
 export function JourneyButton() {
   const t = useT();
-  if (activeTheme() === 'painted') return null;
   return (
     <button
       type="button"

@@ -128,39 +128,37 @@ describe('land anchors stay land', () => {
 });
 
 describe('companion textures', () => {
-  it('normal, worldmask share heightmap dimensions; albedo shares its aspect', async () => {
+  it('worldmask shares heightmap dimensions; albedo shares its aspect', async () => {
     const hm = await loadHeightmap();
-    const normal = await sharp(join(terrainDir, 'normal.png')).metadata();
     const mask = await sharp(join(terrainDir, 'worldmask.png')).metadata();
     const albedo = await sharp(join(terrainDir, 'albedo.jpg')).metadata();
     const water = await sharp(join(terrainDir, 'waternormal.png')).metadata();
-    expect([normal.width, normal.height]).toEqual([hm.width, hm.height]);
     expect([mask.width, mask.height]).toEqual([hm.width, hm.height]);
     expect((albedo.width ?? 0) / (albedo.height ?? 1)).toBeCloseTo(hm.width / hm.height, 2);
     expect(water.width).toBe(water.height);
   });
 });
 
-describe('painted-world bake outputs', () => {
-  it('brush tile is a square power-of-two texture', async () => {
-    const brush = await sharp(join(terrainDir, 'brush.png')).metadata();
-    expect(brush.width).toBe(brush.height);
-    expect(Math.log2(brush.width ?? 0) % 1).toBe(0);
+describe('granulation tile', () => {
+  it('is a square power-of-two texture', async () => {
+    const tile = await sharp(join(terrainDir, 'granulation.png')).metadata();
+    expect(tile.width).toBe(tile.height);
+    expect(Math.log2(tile.width ?? 0) % 1).toBe(0);
   });
 
-  it('brush strokes are 180°-symmetric so the flow rotation wraps seamlessly', async () => {
-    const { data, info } = await sharp(join(terrainDir, 'brush.png')).raw().toBuffer({ resolveWithObject: true });
+  it('wraps seamlessly (opposite edges match their neighbours)', async () => {
+    const { data, info } = await sharp(join(terrainDir, 'granulation.png'))
+      .greyscale()
+      .raw()
+      .toBuffer({ resolveWithObject: true });
     const n = info.width;
-    const r = (x: number, y: number) => data[(((y + n) % n) * n + ((x + n) % n)) * info.channels];
-    for (const [x, y] of [[10, 20], [100, 333], [511, 7], [256, 256]]) {
-      expect(Math.abs(r(x, y) - r(-x, -y))).toBeLessThanOrEqual(1);
+    const g = (x: number, y: number) => data[y * n + x];
+    let edge = 0;
+    let inner = 0;
+    for (let y = 0; y < n; y += 7) {
+      edge += Math.abs(g(n - 1, y) - g(0, y));
+      inner += Math.abs(g(n - 2, y) - g(n - 1, y));
     }
-  });
-
-  it('worldmask.B carries a varied flow field over land', async () => {
-    const { data, info } = await sharp(join(terrainDir, 'worldmask.png')).raw().toBuffer({ resolveWithObject: true });
-    const seen = new Set<number>();
-    for (let i = 0; i < info.width * info.height; i += 997) seen.add(data[i * info.channels + 2] >> 4);
-    expect(seen.size).toBeGreaterThanOrEqual(12);
+    expect(edge).toBeLessThan(inner * 2 + n);
   });
 });

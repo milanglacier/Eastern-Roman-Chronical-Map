@@ -1,11 +1,14 @@
 # Painted Diorama — a cinematic journey through the Roman East (v2)
 
-> **Status: superseded (2026-09-24).** Phases 0–2 were built: the render pipeline,
-> era moods, curved-earth camera, painted bake and cinematic UI. The user rejected
-> the look at the Phase 1 art gate: "it now has the painted art style, but still as
-> a map". Parts still live in the code: the post pipeline, moods, curvature, UI
-> chrome and bake. The look itself is reachable with `?theme=painted`. Screenshots
-> are in `docs/screenshots/archive/painted-*.jpg`. It was followed by
+> **Status: failed try, code removed (2026-09-25).** Phases 0–2 were built: the
+> render pipeline, era moods, curved-earth camera, painted bake and cinematic UI.
+> The author did not like the art style and rejected it at the Phase 1 art gate:
+> "it now has the painted art style, but still as a map". The painted theme's code
+> was then deleted: its terrain material, translucent sea, sky, Kuwahara paint
+> passes, and the baked normal map and brush strokes.
+> The shared parts still live on in the chronicle map: the post pipeline, moods,
+> curvature, UI chrome, and the albedo bake as the pigment source.
+> Screenshots are in `docs/screenshots/archive/painted-*.jpg`. It was followed by
 > `clockwork-world-prototype`, then `.plans/active/chronicle-map-prototype`.
 
 ## Context

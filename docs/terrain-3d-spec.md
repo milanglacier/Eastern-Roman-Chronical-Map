@@ -2,7 +2,7 @@
 
 The map is a real-time Three.js scene. A heightmap-displaced world is bent over a
 curved horizon and flown with a free-look camera. It is lit by the era's moods,
-drawn in one of three visual themes, and finished by a custom post pipeline. The
+drawn in one of two visual themes, and finished by a custom post pipeline. The
 look is defined in `docs/art-direction.md`. This doc records the world model, the
 offline bake and the runtime modules.
 
@@ -13,18 +13,19 @@ offline bake and the runtime modules.
 | Theme | Default | Camera | Look |
 |---|---|---|---|
 | `chronicle` | ✔ | free-look drone | living chronicle map: parchment, ink, watercolour, pop-up cities |
-| `painted` | | orbit rig | painted diorama: gouache albedo and Kuwahara paint filter |
 | `clockwork` | | orbit rig | Game-of-Thrones-titles model: carved stone, brass gears, clockwork city |
 
-`worldScene.ts` assembles the scene for the active theme. The two earlier themes are
-kept for comparison; see the History section of the art-direction doc.
+`worldScene.ts` assembles the scene for the active theme. The clockwork theme is
+kept for comparison. An earlier **painted diorama** theme was a failed try; the
+author did not like its art style, and its code was removed (see the History
+section of the art-direction doc).
 
 ## World model (single source of truth)
 
 - **Ground plane.** Plate carrée at `4 world units / degree`: lon −12..60 → X 0..288
   (east +), lat 59..24 → Z 0..140 (south +), Y up. Constants and converters:
   `src/map/three/geo.ts`. `src/lib/hex.ts` stays the canonical bbox.
-- **UV space.** Every world texture (heightmap, normal, albedo, worldmask,
+- **UV space.** Every world texture (heightmap, albedo, worldmask,
   territory) shares one UV space over that rect, with **north = V 0**. All textures
   load with `flipY = false`.
 - **Heights.** Meters relative to sea level, quantized to uint16
@@ -32,13 +33,12 @@ kept for comparison; see the History section of the art-direction doc.
   (R = high byte, G = low byte), because canvas clamps true 16-bit PNGs.
   - Codec: `src/lib/heightEncoding.ts`.
   - The sidecar `heightmap.json` is zod-validated at load (`heightField.ts`).
-- **Vertical scale.** Each theme maps meters to Y differently, and one function per
-  theme feeds the mesh, the camera's ground, the marker projection and the city
-  seating:
-  - **painted:** `shapedMeters()` (`src/lib/heightShaping.ts`). Sea 2.5×; land ramps
-    from 2.8× to 7×.
-  - **chronicle / clockwork:** `sculptedY()` (`src/lib/clockworkRelief.ts`). This is a
-    further exaggeration with sharpened peaks.
+- **Vertical scale.** `shapedMeters()` (`src/lib/heightShaping.ts`) is the base
+  exaggeration, shared by the bake and the runtime: sea 2.5×; land ramps from 2.8×
+  to 7×. On top of it each theme sculpts the land with `sculptedY()`
+  (`src/lib/clockworkRelief.ts`), a further exaggeration with sharpened peaks. One
+  function per theme feeds the mesh, the camera's ground, the marker projection
+  and the city seating.
     - The coastal slab edge follows the baked coast distance field (worldmask.R,
       decoded on the CPU by `clockwork/coastField.ts`), so coasts are smooth cut
       edges instead of a pixel staircase along the mesh grid.
@@ -78,27 +78,25 @@ committed inputs: running it twice gives identical sha256, with all noise seeded
      - The Bosporus as a polyline along its real course.
    - Mops up orphaned water fragments.
    - Incises the meandered rivers by 12 m.
-2. **normal.png**: object-space normals from the shaped heights.
-3. **worldmask.png**:
+2. **worldmask.png**:
    - **R** is the signed coast distance field (128 = coast, 6 units per px),
      lightly smoothed.
    - **G** is the river mask.
-   - **B** is the brush flow angle (0..π). On land it follows the contour tangent
-     on slopes and a domain-warped swirl on flats; at sea it runs parallel to the
-     nearest coast.
-4. **albedo.jpg** (8192×3982): the painted gouache base (the chronicle theme uses it
-   as its pigment source).
+   - **B** is unused (0).
+3. **albedo.jpg** (8192×3982): a painted gouache base. The chronicle washes and the
+   clockwork regional tint take their colour from it.
    - Hand-tuned palette with soft-banded aridity; regions and corridors are
      feathered and domain-warped.
    - Painted occlusion: ridges warm, hollows cool.
    - No baked sun. The moods move the light.
    - Beach rim and inked coast.
    - Meandered rivers stroked in.
-   - Line-integral-convolution brush strokes along the flow field.
-5. **brush.png** (512²): tileable brush strokes in R, 180°-symmetric so the flow
-   rotation wraps seamlessly, plus granulation in G.
-6. **waternormal.png** (512²): tileable wave normals.
-7. `scripts/assets/dem-preview.png`: a hillshade for eyeballing (not shipped).
+   - Line-integral-convolution brush strokes along a stroke flow field. The field
+     follows the contours on slopes, swirls on flats, and runs parallel to the
+     coast at sea.
+4. **granulation.png** (512², grey): tileable watercolour pigment grain.
+5. **waternormal.png** (512²): tileable wave normals.
+6. `scripts/assets/dem-preview.png`: a hillshade for eyeballing (not shipped).
 
 ## Runtime modules (`src/map/three/`)
 
@@ -117,12 +115,12 @@ committed inputs: running it twice gives identical sha256, with all noise seeded
   - Touch: one finger looks, two fingers pinch to fly and drag to move.
   - Keys: WASD / QE and the arrows.
   - Guided journeys use `dronePathPose` (eased Catmull-Rom).
-- **`cameraRig.ts`** (painted / clockwork): the orbit rig, with free heading and
-  pitch, cinematic aim, `flyTo` and `playPath`.
+- **`cameraRig.ts`** (clockwork): the orbit rig, with free heading and pitch,
+  cinematic aim, `flyTo` and `playPath`.
 
 **Scene**
 - **`terrain.ts`**: the 1152×560-segment grid (`buildTerrainGeometry` takes a
-  meters → Y function), the painted-theme material and `buildSkirt`.
+  meters → Y function), the shared territory uniforms and `buildSkirt`.
 - **`chronicle/terrain.ts`**: the chronicle material.
   - Parchment and watercolour washes from the albedo.
   - Ink drawn after lighting: slope hachures at a constant screen spacing, contours
@@ -134,9 +132,9 @@ committed inputs: running it twice gives identical sha256, with all noise seeded
   cylindrically and dim at night. `setRise(t)` is a pure function.
 - **`clockwork/`**: the stone-and-brass material, hall and astrolabe, and the
   clockwork Constantinople (staged `setRise`).
-- **`water.ts`**: the tessellated sea sheet plus the ocean apron (tessellated so the
-  bend reads). It has painted, clockwork (lacquer) and chronicle (watercolour with
-  coastal ripples) variants.
+- **`water.ts`**: the opaque, tessellated sea sheet plus the ocean apron
+  (tessellated so the bend reads). It has chronicle (watercolour with coastal
+  ripples) and clockwork (lacquer) variants.
 - **`sky.ts`**: the sky dome, per theme.
 - **`atmosphere.ts`**: distance fog in the mood's haze colour, scaled to the camera
   distance or the drone's altitude.
@@ -150,8 +148,6 @@ committed inputs: running it twice gives identical sha256, with all noise seeded
   carries the camera heading for the compass and the DOM → scene events (north-up,
   journey).
 - **`postfx/`**: scene → HDR MSAA target.
-  - Optional structure tensor + anisotropic or generalized Kuwahara (painted theme
-    only).
   - Dual-Kawase bloom.
   - One composite pass: tilt-shift DOF, depth ink edges, neutral tone map, grade,
     paper grain, vignette, letterbox and fade.
@@ -165,7 +161,7 @@ light, sky, haze, exposure, grade, bloom and night. `src/lib/mood.ts`
 ## Regression tests
 
 - `world-assets.test.ts`: sidecar ↔ PNG; straits below sea level; land anchors
-  above; texture contracts; brush tile symmetry; the worldmask.B flow field.
+  above; texture contracts; granulation tile.
 - `worldlib.test.ts`: height codec, EDT, PRNG, height shaping.
 - `curvature.test.ts`: the bend, and the exact ray ↔ bent-ground round trip.
 - `drone.test.ts`: look clamps, axes, horizon radius, path continuity.
@@ -173,7 +169,7 @@ light, sky, haze, exposure, grade, bloom and night. `src/lib/mood.ts`
 - `clockwork-relief.test.ts`: monotone relief and the smooth slab edge.
 - `clockwork-city.test.ts`: rise staging.
 - `mood.test.ts`: keyframe coverage, interpolation, azimuth arc.
-- `postfx.test.ts`: log-depth linearization, tiers, frame probe.
+- `postfx.test.ts`: log-depth linearization, tier ordering, frame probe.
 - `territory.test.ts`, `data.test.ts` (including Rule #1) and `components.test.tsx`.
 - `hex.test.ts` stays byte-identical.
 

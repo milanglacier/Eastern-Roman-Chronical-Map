@@ -65,8 +65,7 @@ page. Test every visual decision against this question:
 - **Cities** (`chronicle/popupCity.ts`, drawn by `chronicle/illumination.ts`): layered
   cards fold up from a gilded roundel, turn to face the viewer, and dim at night.
 - **Post** (`postfx/`): tilt-shift, a light ink-edge pass, bloom, the era grade,
-  paper grain and a vignette. The Kuwahara paint filter is used only by the
-  painted theme.
+  paper grain and a vignette.
 
 ## History (why the rules exist)
 
@@ -74,8 +73,16 @@ Four looks were built and judged on 2026-09-24. Screenshots are in
 `docs/screenshots/archive/`; the plans are in `.plans/completed/`.
 
 1. **Satellite + miniature city** (v1 branch): read as realistic and game-like.
-2. **Painted diorama** (`?theme=painted`): a gouache bake with a Kuwahara filter and
-   era moods. The verdict: "painted, but still a map".
+2. **Painted diorama: a failed try, removed from the code.** It used a gouache
+   albedo with a flow-aligned brush-stroke material, a Kuwahara paint filter, and an
+   orbit camera over a curved earth. The author did not like the art style: "it
+   now has the painted art style, but still as a map". Its rendering code was
+   deleted: the terrain material, the translucent sea, the painted sky, the
+   Kuwahara passes, and the baked normal map and brush strokes. The screenshots
+   (`archive/painted-*.jpg`) and the plan are kept only as a record.
+   What survives from that round is shared infrastructure the chronicle map still
+   uses: the era moods, the post pipeline, the curved earth, the UI chrome, and
+   the albedo bake as the watercolour pigment source.
 3. **Clockwork / Game-of-Thrones titles** (`?theme=clockwork`): a carved-stone model,
    brass gears and a rising clockwork city. The verdict: "still a 2.5D god-like view",
    because the orbit camera made it read as a map.

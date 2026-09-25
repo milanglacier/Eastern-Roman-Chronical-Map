@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { logDepthToViewZ, paintScaleFor, viewZToLogDepth } from '../src/lib/postfxMath';
+import { logDepthToViewZ, viewZToLogDepth } from '../src/lib/postfxMath';
 import { QUALITY_PRESETS, createFrameProbe, nextLowerTier } from '../src/map/three/postfx/quality';
 
 describe('log depth linearization', () => {
@@ -24,12 +24,11 @@ describe('quality tiers', () => {
     expect(nextLowerTier('low')).toBeNull();
   });
 
-  it('only the low tier drops the paint filter', () => {
-    expect(QUALITY_PRESETS.low.paint).toBe('none');
-    expect(QUALITY_PRESETS.medium.paint).not.toBe('none');
-    expect(paintScaleFor(2, 'low')).toBe(0);
-    expect(paintScaleFor(2, 'high')).toBe(0.5);
-    expect(paintScaleFor(1, 'high')).toBe(0.75);
+  it('lower tiers never cost more than higher ones', () => {
+    expect(QUALITY_PRESETS.low.maxPixelRatio).toBeLessThanOrEqual(QUALITY_PRESETS.medium.maxPixelRatio);
+    expect(QUALITY_PRESETS.medium.maxPixelRatio).toBeLessThanOrEqual(QUALITY_PRESETS.high.maxPixelRatio);
+    expect(QUALITY_PRESETS.low.bloomLevels).toBeLessThanOrEqual(QUALITY_PRESETS.high.bloomLevels);
+    expect(QUALITY_PRESETS.low.dof).toBe(false);
   });
 
   it('frame probe recommends a drop only for a slow median after warm-up', () => {

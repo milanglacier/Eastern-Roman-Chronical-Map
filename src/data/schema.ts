@@ -106,7 +106,7 @@ export const MoodKeySchema = z.object({
     horizon: HexColorSchema,
     /** Glow around the sun/moon disc. */
     glow: HexColorSchema,
-    /** 0..1 painted cloud-band coverage. */
+    /** 0..1 cloud coverage. */
     clouds: z.number().min(0).max(1),
   }),
   ambient: z.object({

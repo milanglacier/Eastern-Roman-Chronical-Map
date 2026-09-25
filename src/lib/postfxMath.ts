@@ -13,10 +13,3 @@ export function logDepthToViewZ(d: number, far: number): number {
 export function viewZToLogDepth(w: number, far: number): number {
   return Math.log2(1 + w) / Math.log2(far + 1);
 }
-
-/** Paint-filter resolution scale: half-res is crisp on HiDPI, softer at 1x. */
-export function paintScaleFor(pixelRatio: number, tier: 'high' | 'medium' | 'low'): number {
-  if (tier === 'low') return 0;
-  if (tier === 'medium') return 0.5;
-  return pixelRatio >= 1.5 ? 0.5 : 0.75;
-}

@@ -1,12 +1,13 @@
 /**
- * The world view: the whole Roman East as one model with its own camera
- * rig. Two themes share it (theme.ts):
+ * The world view: the whole Roman East as one model with its own camera.
+ * Two themes share it (theme.ts):
  *
- *  - clockwork (default): the Game-of-Thrones-titles mechanical model in a
- *    dark hall — carved-stone sculpted relief, lacquered engraved sea, an
- *    astrolabe sun as the key light, the world bent into a bowl, and
- *    clockwork cities (Constantinople first) rising out of it.
- *  - painted: the v2 painted diorama (gouache bake, open sky, convex earth).
+ *  - chronicle (default): the living chronicle map — parchment, ink and
+ *    watercolour over sculpted relief on a convex curved earth, flown with
+ *    the free-look drone camera, with pop-up city illustrations.
+ *  - clockwork: the Game-of-Thrones-titles mechanical model in a dark hall
+ *    — carved stone, lacquered sea, an astrolabe sun, the world bent into a
+ *    bowl, a clockwork Constantinople; orbit camera.
  *
  * The host (MapCanvas) owns the renderer, the post pipeline and the loop,
  * and pushes era moods / years in.
@@ -19,7 +20,7 @@ import { CHRONICLE_RELIEF, clockworkY, sculptedY } from '../../lib/clockworkReli
 import type { HeightField } from './heightField';
 import { heightFieldToDataTexture } from './heightField';
 import { createTerritoryController } from './territory';
-import { buildSkirt, buildTerrain, type Terrain } from './terrain';
+import { buildSkirt, type Terrain } from './terrain';
 import { createOceanApron, createWater } from './water';
 import { createLighting } from './lights';
 import { createAtmosphere } from './atmosphere';
@@ -40,10 +41,9 @@ import { createDroneRig, dronePathPose, type DronePose, type DroneRig } from './
 export interface WorldAssets {
   heightField: HeightField;
   albedo: Texture | null;
-  normal: Texture | null;
   worldMask: Texture | null;
   waterNormal: Texture | null;
-  brush: Texture | null;
+  granulation: Texture | null;
 }
 
 export interface ScreenPoint {
@@ -81,10 +81,6 @@ export interface WorldView {
   setView(pose: Record<string, number>): void;
   dispose(): void;
 }
-
-export const HOME_LONLAT: [number, number] = [26.5, 38.2];
-export const HOME_DISTANCE = 115;
-export const HOME_PITCH = (46 * Math.PI) / 180;
 
 const DEG = Math.PI / 180;
 /** Constantinople model: centre (peninsula), world scale, rise duration. */
@@ -133,40 +129,30 @@ export function createWorldView(
   const { heightField } = assets;
   const { theme } = options;
   const clockwork = theme === 'clockwork';
-  const chronicle = theme === 'chronicle';
+  const chronicle = !clockwork;
   setCurveMode(clockwork ? 'concave' : 'convex');
   const scene = new Scene();
 
   /** Terrain surface Y, per theme — mesh, markers, rig and models all agree. */
-  const coast = clockwork || chronicle ? decodeCoastField(assets.worldMask) : null;
-  const surfaceY = (meters: number, lon: number, lat: number) =>
-    clockwork
-      ? clockworkY(meters, coast ? coast(lon, lat) : undefined)
-      : chronicle
-        ? sculptedY(meters, coast ? coast(lon, lat) : undefined, CHRONICLE_RELIEF)
-        : heightField.metersToY(meters);
+  const coast = decodeCoastField(assets.worldMask);
+  const surfaceY = (meters: number, lon: number, lat: number) => {
+    const coastPx = coast ? coast(lon, lat) : undefined;
+    return clockwork ? clockworkY(meters, coastPx) : sculptedY(meters, coastPx, CHRONICLE_RELIEF);
+  };
   const yAtLonLat = (lon: number, lat: number) => surfaceY(heightField.heightAt(lon, lat), lon, lat);
 
-  const style = clockwork ? 'clockwork' : chronicle ? 'chronicle' : 'painted';
+  const style = clockwork ? 'clockwork' : 'chronicle';
   const sky = createSky(style);
   scene.add(sky.mesh);
   const terrain: Terrain = clockwork
     ? buildClockworkTerrain(heightField, { albedo: assets.albedo, worldMask: assets.worldMask }, surfaceY)
-    : chronicle
-      ? buildChronicleTerrain(heightField, { albedo: assets.albedo, worldMask: assets.worldMask, brush: assets.brush }, surfaceY)
-      : buildTerrain(heightField, {
-        albedo: assets.albedo,
-        normal: assets.normal,
-        detail: assets.waterNormal,
-        brush: assets.brush,
-        worldMask: assets.worldMask,
-      });
+    : buildChronicleTerrain(
+        heightField,
+        { albedo: assets.albedo, worldMask: assets.worldMask, granulation: assets.granulation },
+        surfaceY,
+      );
   scene.add(terrain.mesh);
-  const skirt = clockwork
-    ? buildSkirt(heightField, surfaceY, 0x3a2c1c)
-    : chronicle
-      ? buildSkirt(heightField, surfaceY, 0xb9a57e)
-      : buildSkirt(heightField);
+  const skirt = buildSkirt(heightField, surfaceY, clockwork ? 0x3a2c1c : 0xb9a57e);
   scene.add(skirt.mesh);
   const water = createWater(
     { waterNormal: assets.waterNormal, heightY: heightFieldToDataTexture(heightField), worldMask: assets.worldMask },
@@ -175,17 +161,13 @@ export function createWorldView(
   scene.add(water.mesh);
   const apron = createOceanApron({ waterNormal: assets.waterNormal }, style);
   scene.add(apron.mesh);
-  const lighting = createLighting(options.shadowMapSize ?? 2048, clockwork ? 'hall' : chronicle ? 'paper' : 'painted');
+  const lighting = createLighting(options.shadowMapSize ?? 2048, clockwork ? 'hall' : 'paper');
   scene.add(lighting.group);
   const atmosphere = createAtmosphere(scene, style);
 
   // ---- clockwork hall + cities ----
-  const env = clockwork
-    ? createHallEnvironment(options.renderer)
-    : chronicle
-      ? createHallEnvironment(options.renderer, 'daylight')
-      : null;
-  if (env) scene.environment = env.texture;
+  const env = createHallEnvironment(options.renderer, clockwork ? 'hall' : 'daylight');
+  scene.environment = env.texture;
   const astrolabe = clockwork ? createAstrolabe(new Vector3(144, 58, 64), 6) : null;
   if (astrolabe) scene.add(astrolabe.group);
   const cwMats = clockwork ? createClockworkMaterials() : null;
@@ -243,14 +225,8 @@ export function createWorldView(
   const orbit: CameraRig | null = chronicle ? null : createCameraRig(canvas, onRigChange, { groundY });
   const drone: DroneRig | null = chronicle ? createDroneRig(canvas, onRigChange, { groundY }) : null;
   const rig: ViewRig = (drone ?? orbit)!;
-  const home = lonLatToGround(...HOME_LONLAT);
-  if (drone) {
-    drone.setDrone(droneJourney()[0]);
-  } else if (clockwork) {
-    orbit!.setPose(journeyPoses()[0]);
-  } else {
-    orbit!.centerOn(home.x, home.z, HOME_DISTANCE, 0, HOME_PITCH);
-  }
+  if (drone) drone.setDrone(droneJourney()[0]);
+  else orbit!.setPose(journeyPoses()[0]);
 
   const probe = new Vector3();
   const viewSpace = new Vector3();
@@ -366,7 +342,7 @@ export function createWorldView(
         startRise(15);
         return drone.playDronePath(droneJourney(), 26);
       }
-      if (!clockwork || !orbit) return Promise.resolve(false);
+      if (!orbit) return Promise.resolve(false);
       city?.setRise(0);
       startRise(9);
       return orbit.playPath(journeyPoses(), 24);
@@ -397,7 +373,7 @@ export function createWorldView(
       popup?.dispose();
       cwMats?.dispose();
       astrolabe?.dispose();
-      env?.dispose();
+      env.dispose();
     },
   };
   return view;

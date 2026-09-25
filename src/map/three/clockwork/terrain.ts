@@ -2,7 +2,7 @@
  * Clockwork terrain: the world as a carved stone model. Sculpted relief
  * (src/lib/clockworkRelief.ts) with a stone ramp by height, engraved
  * contour lines at every terrace, darker carved risers, a faint regional
- * tint borrowed from the painted albedo, and brass inlays for rivers and
+ * tint borrowed from the baked albedo, and brass inlays for rivers and
  * the imperial frontier. Territory is a thin lacquer glaze. Bent by the
  * curved world like everything else.
  */

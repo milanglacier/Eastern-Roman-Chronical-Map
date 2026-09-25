@@ -1,18 +1,13 @@
 /**
- * Quality tiers for the painted pipeline. Chosen once from the device (and
+ * Quality tiers for the render pipeline. Chosen once from the device (and
  * `?quality=high|medium|low` for testing), then stepped down at most twice by
- * a frame-time probe. The low tier drops the paint filter entirely — the
- * painted bake has to carry the look on phones.
+ * a frame-time probe.
  */
 export type QualityTier = 'high' | 'medium' | 'low';
 
 export interface QualitySettings {
   tier: QualityTier;
   maxPixelRatio: number;
-  /** 'anisotropic' = structure-tensor Kuwahara; 'isotropic' = circular 8-sector. */
-  paint: 'anisotropic' | 'isotropic' | 'none';
-  /** Kernel radius in paint-buffer pixels. */
-  paintRadius: number;
   msaa: number;
   bloomLevels: number;
   dof: boolean;
@@ -23,8 +18,6 @@ export const QUALITY_PRESETS: Record<QualityTier, QualitySettings> = {
   high: {
     tier: 'high',
     maxPixelRatio: 2,
-    paint: 'anisotropic',
-    paintRadius: 4,
     msaa: 4,
     bloomLevels: 5,
     dof: true,
@@ -33,8 +26,6 @@ export const QUALITY_PRESETS: Record<QualityTier, QualitySettings> = {
   medium: {
     tier: 'medium',
     maxPixelRatio: 1.5,
-    paint: 'isotropic',
-    paintRadius: 3,
     msaa: 4,
     bloomLevels: 4,
     dof: true,
@@ -43,8 +34,6 @@ export const QUALITY_PRESETS: Record<QualityTier, QualitySettings> = {
   low: {
     tier: 'low',
     maxPixelRatio: 1,
-    paint: 'none',
-    paintRadius: 0,
     msaa: 2,
     bloomLevels: 3,
     dof: false,
@@ -72,12 +61,6 @@ export function initialTier(): { tier: QualityTier; forced: boolean } {
   if (coarse && small) return { tier: 'low', forced: false };
   if (coarse || (navigator.hardwareConcurrency ?? 8) <= 4) return { tier: 'medium', forced: false };
   return { tier: 'high', forced: false };
-}
-
-/** `?paint=0` disables the paint pass for A/B comparisons. */
-export function paintDisabledByUrl(): boolean {
-  if (typeof location === 'undefined') return false;
-  return new URLSearchParams(location.search).get('paint') === '0';
 }
 
 /**

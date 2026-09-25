@@ -1,6 +1,6 @@
-/* ————— Painted-diorama chrome: the map is the page; UI floats over it on
-   soft scrims with gilt hairlines, like captions laid over a matte painting.
-   See docs/art-direction.md. ————— */
+/* ————— Cinematic chrome for the living chronicle map: the world is the page;
+   the UI floats over it on purple scrims with gilt hairlines. Purple-gold is
+   reserved for the UI and the empire — see docs/art-direction.md. ————— */
 
 :root {
   --night: #150a1f;

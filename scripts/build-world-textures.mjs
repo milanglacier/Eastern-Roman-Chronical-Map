@@ -10,11 +10,10 @@
  * Writes (committed):
  *   public/terrain/heightmap.png   2880x1400 split-byte RGB (R=hi, G=lo) heights
  *   public/terrain/heightmap.json  sidecar: bbox, encoding, exaggeration, units
- *   public/terrain/normal.png      2880x1400 object-space normals (exaggerated)
  *   public/terrain/albedo.jpg      8192x3982 painted gouache terrain colour (no baked sun)
- *   public/terrain/worldmask.png   2880x1400 R=coast SDF, G=river mask, B=brush flow angle
+ *   public/terrain/worldmask.png   2880x1400 R=coast SDF, G=river mask, B=0 (unused)
  *   public/terrain/waternormal.png 512x512 tileable water-wave normal map
- *   public/terrain/brush.png       512x512 tileable brush strokes (R) + granulation (G)
+ *   public/terrain/granulation.png 512x512 tileable watercolour granulation (grey)
  *   scripts/assets/dem-preview.png hillshade for human eyeballing (not shipped)
  */
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
@@ -449,7 +448,7 @@ console.log('writing heightmap…');
 }
 
 /* ------------------------------------------------------------------ */
-/* 4. Object-space normal map (exaggeration baked in)                  */
+/* 4. Shaped heights + normals (for the flow field and the hillshade)  */
 
 // Gradients are taken in *world units* (plate carrée, 4 units/degree on both
 // axes) so shading matches the rendered mesh, not true ground meters. The
@@ -471,25 +470,8 @@ function normalAt(x, y, boost = 1) {
   return [-gx * inv, inv, -gz * inv];
 }
 
-console.log('writing normal map…');
-{
-  const rgb = Buffer.alloc(HM_W * HM_H * 3);
-  for (let y = 0; y < HM_H; y++) {
-    for (let x = 0; x < HM_W; x++) {
-      const [nx, ny, nz] = normalAt(x, y);
-      const i = (y * HM_W + x) * 3;
-      rgb[i] = Math.round((nx * 0.5 + 0.5) * 255);
-      rgb[i + 1] = Math.round((ny * 0.5 + 0.5) * 255);
-      rgb[i + 2] = Math.round((nz * 0.5 + 0.5) * 255);
-    }
-  }
-  await sharp(rgb, { raw: { width: HM_W, height: HM_H, channels: 3 } })
-    .png({ compressionLevel: 9 })
-    .toFile(out('normal.png'));
-}
-
 /* ------------------------------------------------------------------ */
-/* 5. Coast SDF, river mask, painted flow field → worldmask.png        */
+/* 5. Coast SDF + river mask → worldmask.png; stroke flow field       */
 
 console.log('building worldmask…');
 const coastSdf = signedDistanceField(HM_W, HM_H, landMask); // +land / -water, px
@@ -536,16 +518,16 @@ function boxBlur(src, w, h, radius, passes = 3) {
 // line, ripples, foam).
 const coastSdfSmooth = boxBlur(coastSdf, HM_W, HM_H, 1, 2);
 
-// Brush flow field: strokes follow the contours (perpendicular to the
-// gradient of the broadly blurred relief) on slopes, and a slow
-// domain-warped swirl on flats. Angles are blended as doubled-angle
-// vectors because a stroke direction is only defined modulo 180°.
+// Stroke flow field for the albedo brushwork (LIC, section 7): strokes
+// follow the contours (perpendicular to the gradient of the broadly
+// blurred relief) on slopes, and a slow domain-warped swirl on flats.
+// Angles are blended as doubled-angle vectors because a stroke direction
+// is only defined modulo 180°.
 console.log('  flow field…');
 const reliefSoft = boxBlur(heightsShaped, HM_W, HM_H, 3);
 const flowNoise = makeValueNoise('east-roman-flow', 128);
 const flowX = new Float32Array(HM_W * HM_H);
 const flowY = new Float32Array(HM_W * HM_H);
-const flowAngle = new Float32Array(HM_W * HM_H); // [0, π)
 for (let y = 0; y < HM_H; y++) {
   for (let x = 0; x < HM_W; x++) {
     const i = y * HM_W + x;
@@ -569,9 +551,10 @@ for (let y = 0; y < HM_H; y++) {
     const drift = landMask[i] ? swirl : 0.12 * (swirl - Math.PI);
     const vx = wSlope * Math.cos(2 * theta) + (1 - wSlope) * Math.cos(2 * drift);
     const vy = wSlope * Math.sin(2 * theta) + (1 - wSlope) * Math.sin(2 * drift);
+    // Canonical half-turn [0, π): fixes the vector's sign, which the LIC
+    // walk (and so the albedo bytes) depends on.
     let ang = Math.atan2(vy, vx) / 2;
     if (ang < 0) ang += Math.PI;
-    flowAngle[i] = ang;
     flowX[i] = Math.cos(ang);
     flowY[i] = Math.sin(ang);
   }
@@ -583,8 +566,6 @@ for (let y = 0; y < HM_H; y++) {
     // R: 128 = coastline, ±6 units per px, saturating ~21 px from shore.
     rgb[i * 3] = Math.round(Math.min(255, Math.max(0, 128 + coastSdfSmooth[i] * 6)));
     rgb[i * 3 + 1] = Math.round(riverMask[i] * 255);
-    // B: brush flow angle, 0..255 ↔ 0..π (strokes are 180°-symmetric).
-    rgb[i * 3 + 2] = Math.min(255, Math.round((flowAngle[i] / Math.PI) * 256));
   }
   await sharp(rgb, { raw: { width: HM_W, height: HM_H, channels: 3 } })
     .png({ compressionLevel: 9 })
@@ -592,8 +573,8 @@ for (let y = 0; y < HM_H; y++) {
 }
 
 /* ------------------------------------------------------------------ */
-/* 6. Hillshade (preview only — the painted albedo no longer bakes a   */
-/*    directional sun; the era moods move the real-time key light)     */
+/* 6. Hillshade (preview only — the albedo bakes no directional sun;   */
+/*    the era moods move the real-time key light)                      */
 
 console.log('building hillshade…');
 const SUN = (() => {
@@ -611,7 +592,8 @@ for (let y = 0; y < HM_H; y++) {
 }
 
 /* ------------------------------------------------------------------ */
-/* 7. Painted albedo (docs/art-direction.md)                           */
+/* 7. Albedo: the painted pigment base (chronicle washes, clockwork   */
+/*    regional tint read their colour from it)                         */
 
 console.log('painting albedo…');
 
@@ -890,63 +872,25 @@ await sharp(albedo, { raw: { width: ALB_W, height: ALB_H, channels: 3 } })
   .toFile(out('albedo.jpg'));
 
 /* ------------------------------------------------------------------ */
-/* 7b. Brush tile: R = strokes along +x (180°-symmetric so the runtime */
-/*     flow rotation wraps seamlessly), G = pigment granulation        */
+/* 7b. Granulation tile: tileable watercolour pigment grain            */
 
-console.log('writing brush tile…');
+console.log('writing granulation tile…');
 {
   const SIZE = 512;
-  const rand = mulberry32(hashStringSeed('east-roman-brush'));
-  const strokes = new Float32Array(SIZE * SIZE).fill(0.5);
-  const wrap = (v) => ((v % SIZE) + SIZE) % SIZE;
-  for (let n = 0; n < 2600; n++) {
-    const cx = rand() * SIZE;
-    const cy = rand() * SIZE;
-    const len = 14 + rand() * 46;
-    const halfW = 1.2 + rand() * 3.2;
-    const ang = (rand() - 0.5) * 0.28;
-    const value = 0.5 + (rand() - 0.5) * 0.9;
-    const bristleF = 0.9 + rand() * 1.4;
-    const bristleP = rand() * 6.28;
-    const ca = Math.cos(ang);
-    const sa = Math.sin(ang);
-    const ext = Math.ceil(len / 2 + halfW + 1);
-    for (let oy = -ext; oy <= ext; oy++) {
-      for (let ox = -ext; ox <= ext; ox++) {
-        const u = ox * ca + oy * sa; // along the stroke
-        const v = -ox * sa + oy * ca; // across
-        const along = Math.abs(u) / (len / 2);
-        if (along > 1 || Math.abs(v) > halfW) continue;
-        const taper = 1 - smoothstep(0.6, 1, along);
-        const edge = 1 - smoothstep(halfW * 0.55, halfW, Math.abs(v));
-        const bristle = 0.75 + 0.25 * Math.sin(v * bristleF * 3.1 + bristleP);
-        const alpha = taper * edge * 0.75;
-        const i = wrap(Math.round(cy + oy)) * SIZE + wrap(Math.round(cx + ox));
-        strokes[i] = lerp(strokes[i], value * bristle + 0.5 * (1 - bristle), alpha);
-      }
-    }
-  }
   const PERIOD = 16;
   const gA = makeValueNoise('east-roman-granule-a', PERIOD);
   const gB = makeValueNoise('east-roman-granule-b', PERIOD * 4);
-  const rgb = Buffer.alloc(SIZE * SIZE * 3);
+  const grey = Buffer.alloc(SIZE * SIZE);
   for (let y = 0; y < SIZE; y++) {
     for (let x = 0; x < SIZE; x++) {
-      const i = y * SIZE + x;
-      const j = wrap(SIZE - y) * SIZE + wrap(SIZE - x); // 180° rotation
-      const sym = 0.5 * (strokes[i] + strokes[j]);
-      const r = clamp01(0.5 + (sym - 0.5) * 1.8);
       const u = (x / SIZE) * PERIOD;
       const v = (y / SIZE) * PERIOD;
-      const g = clamp01(gA(u, v) * 0.55 + gB(u * 4, v * 4) * 0.45);
-      rgb[i * 3] = Math.round(r * 255);
-      rgb[i * 3 + 1] = Math.round(g * 255);
-      rgb[i * 3 + 2] = Math.round(g * 255);
+      grey[y * SIZE + x] = Math.round(clamp01(gA(u, v) * 0.55 + gB(u * 4, v * 4) * 0.45) * 255);
     }
   }
-  await sharp(rgb, { raw: { width: SIZE, height: SIZE, channels: 3 } })
+  await sharp(grey, { raw: { width: SIZE, height: SIZE, channels: 1 } })
     .png({ compressionLevel: 9 })
-    .toFile(out('brush.png'));
+    .toFile(out('granulation.png'));
 }
 
 /* ------------------------------------------------------------------ */

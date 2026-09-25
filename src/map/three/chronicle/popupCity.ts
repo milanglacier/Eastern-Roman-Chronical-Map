@@ -266,8 +266,8 @@ function drawCrownCard(w: number, h: number, withName: boolean): HTMLCanvasEleme
       [w * 0.69, sy + h * 0.1], [w * 0.31, sy + h * 0.1],
     ];
     wash(pen, scroll, PALETTE.paper, 1);
-    wash(pen, [[w * 0.27, sy + h * 0.03], [w * 0.31, sy + h * 0.01], [w * 0.31, sy + h * 0.1], [w * 0.27, sy + h * 0.11], [w * 0.285, sy + h * 0.07]], PALETTE.vermilion, 1);
-    wash(pen, [[w * 0.73, sy + h * 0.03], [w * 0.69, sy + h * 0.01], [w * 0.69, sy + h * 0.1], [w * 0.73, sy + h * 0.11], [w * 0.715, sy + h * 0.07]], PALETTE.vermilion, 1);
+    wash(pen, [[w * 0.27, sy + h * 0.03], [w * 0.31, sy + h * 0.01], [w * 0.31, sy + h * 0.1], [w * 0.27, sy + h * 0.11], [w * 0.285, sy + h * 0.07]], PALETTE.imperial, 1);
+    wash(pen, [[w * 0.73, sy + h * 0.03], [w * 0.69, sy + h * 0.01], [w * 0.69, sy + h * 0.1], [w * 0.73, sy + h * 0.11], [w * 0.715, sy + h * 0.07]], PALETTE.imperial, 1);
     ink(pen, scroll, true, 1);
     ctx.save();
     ctx.fillStyle = INK;
@@ -304,7 +304,7 @@ function drawRoundel(size: number): HTMLCanvasElement {
     const petal: Pt[] = [[r, r], s1, tip, s2];
     if (long) gild(pen, petal);
     else {
-      wash(pen, petal, PALETTE.vermilion, 0.8);
+      wash(pen, petal, PALETTE.imperial, 0.8);
       ink(pen, petal, true, 0.7, false);
     }
   }

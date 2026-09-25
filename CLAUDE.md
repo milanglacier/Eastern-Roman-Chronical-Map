@@ -37,5 +37,5 @@ is the **Eastern Roman Empire (东罗马帝国)**, or simply **Rome / the Empire
 - `npm run dev` — dev server
 - `npm test` — vitest (data validation + unit + component tests)
 - `npm run build` — static build
-- `npm run world:build` — rebake the world textures (heightmap/normal/albedo/masks/brush)
+- `npm run world:build` — rebake the world textures (heightmap/albedo/worldmask/granulation)
 - `npm run world:fetch-dem` — re-download the DEM mosaic (only if bbox/zoom changes)

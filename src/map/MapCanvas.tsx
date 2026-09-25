@@ -13,7 +13,6 @@ import {
   createFrameProbe,
   initialTier,
   nextLowerTier,
-  paintDisabledByUrl,
   type QualityTier,
 } from './three/postfx/quality';
 
@@ -30,9 +29,9 @@ async function loadWorldTexture(url: string, srgb: boolean): Promise<Texture | n
 }
 
 /**
- * Three.js host. Owns the renderer, the painted post pipeline, the loop and
- * the era mood; the world view (worldScene.ts) owns everything in the
- * scene. React only owns the container div.
+ * Three.js host. Owns the renderer, the post pipeline, the loop and the era
+ * mood; the world view (worldScene.ts) owns everything in the scene. React
+ * only owns the container div.
  */
 export function MapCanvas() {
   const hostRef = useRef<HTMLDivElement>(null);
@@ -44,15 +43,14 @@ export function MapCanvas() {
     let cleanup: (() => void) | null = null;
 
     (async () => {
-      const [heightField, albedo, normal, worldMask, waterNormal, brush] = await Promise.all([
+      const [heightField, albedo, worldMask, waterNormal, granulation] = await Promise.all([
         loadHeightField(),
         loadWorldTexture('terrain/albedo.jpg', true),
-        loadWorldTexture('terrain/normal.png', false),
         loadWorldTexture('terrain/worldmask.png', false),
         loadWorldTexture('terrain/waternormal.png', false),
-        loadWorldTexture('terrain/brush.png', false),
+        loadWorldTexture('terrain/granulation.png', false),
       ]);
-      const textures = [albedo, normal, worldMask, waterNormal, brush];
+      const textures = [albedo, worldMask, waterNormal, granulation];
       if (disposed) {
         for (const t of textures) t?.dispose();
         return;
@@ -71,9 +69,6 @@ export function MapCanvas() {
       const theme = activeTheme();
       const tierInfo = initialTier();
       let tier: QualityTier = tierInfo.tier;
-      // Only the painted diorama uses the Kuwahara paint filter; the
-      // clockwork model and the chronicle map draw their own look.
-      const paintEnabled = theme === 'painted' && !paintDisabledByUrl();
       const pixelRatioFor = (t: QualityTier) => Math.min(window.devicePixelRatio || 1, QUALITY_PRESETS[t].maxPixelRatio);
       renderer.setPixelRatio(pixelRatioFor(tier));
       renderer.outputColorSpace = SRGBColorSpace;
@@ -81,19 +76,18 @@ export function MapCanvas() {
       renderer.shadowMap.enabled = true;
       renderer.shadowMap.type = PCFShadowMap;
       if (albedo) albedo.anisotropy = renderer.capabilities.getMaxAnisotropy();
-      if (brush) brush.anisotropy = renderer.capabilities.getMaxAnisotropy();
+      if (granulation) granulation.anisotropy = renderer.capabilities.getMaxAnisotropy();
       host.appendChild(renderer.domElement);
 
-      const pipeline = createPipeline(renderer, QUALITY_PRESETS[tier], paintEnabled);
-      if (theme === 'clockwork') {
-        Object.assign(pipeline.params, { ink: 0.22, grain: 0.035, vignette: 0.8 });
-      } else if (theme === 'chronicle') {
-        Object.assign(pipeline.params, { ink: 0.4, grain: 0.06, vignette: 0.55 });
-      }
+      const pipeline = createPipeline(renderer, QUALITY_PRESETS[tier]);
+      Object.assign(
+        pipeline.params,
+        theme === 'clockwork' ? { ink: 0.22, grain: 0.035, vignette: 0.8 } : { ink: 0.4, grain: 0.06, vignette: 0.55 },
+      );
       const bumpView = useAppStore.getState().bumpView;
       const world = createWorldView(
         renderer.domElement,
-        { heightField, albedo, normal, worldMask, waterNormal, brush },
+        { heightField, albedo, worldMask, waterNormal, granulation },
         { theme, renderer, shadowMapSize: QUALITY_PRESETS[tier].shadowMapSize },
       );
 
@@ -128,15 +122,15 @@ export function MapCanvas() {
       window.addEventListener(NORTH_UP_EVENT, onNorthUp);
       const onJourney = () => void world.playJourney();
       window.addEventListener(JOURNEY_EVENT, onJourney);
-      // Clockwork opening: fly in over the Aegean as Constantinople rises
-      // (skipped for scripted screenshots via ?intro=0).
+      // Opening: fly in over the Aegean as Constantinople rises (skipped for
+      // scripted screenshots via ?intro=0).
       const intro = new URLSearchParams(location.search).get('intro') !== '0';
-      if (theme !== 'painted' && intro) setTimeout(() => void world.playJourney(), 600);
+      if (intro) setTimeout(() => void world.playJourney(), 600);
 
       const setTier = (next: QualityTier) => {
         tier = next;
         renderer.setPixelRatio(pixelRatioFor(next));
-        pipeline.setQuality(QUALITY_PRESETS[next], paintEnabled);
+        pipeline.setQuality(QUALITY_PRESETS[next]);
         world.setShadowMapSize(QUALITY_PRESETS[next].shadowMapSize);
         resize();
       };
@@ -159,22 +153,16 @@ export function MapCanvas() {
           setCameraHeading(world.rig.pose.heading);
           bumpView();
         }
-        // Tilt-shift focus on the look-at target; stronger as the camera
-        // lowers (the clockwork model is shot like a macro miniature).
-        const pose = world.rig.pose;
+        // Tilt-shift focus on what the camera looks at; the clockwork model
+        // is shot like a macro miniature, stronger as the camera lowers.
         pipeline.params.focus = world.rig.distance;
-        pipeline.params.dof =
-          theme === 'clockwork'
-            ? 0.55 + 0.9 * (1 - Math.sin(pose.pitch))
-            : theme === 'chronicle'
-              ? 0.3
-              : 0.25 + 0.55 * (1 - Math.sin(pose.pitch));
+        pipeline.params.dof = theme === 'clockwork' ? 0.55 + 0.9 * (1 - Math.sin(world.rig.pose.pitch)) : 0.3;
         pipeline.render(world.scene, cam);
         frames++;
         if (!tierInfo.forced && probe.push(frameMs)) {
           const lower = nextLowerTier(tier);
           if (lower) {
-            console.info(`painted pipeline: stepping quality ${tier} → ${lower}`);
+            console.info(`render pipeline: stepping quality ${tier} → ${lower}`);
             setTier(lower);
           }
         }
