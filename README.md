@@ -9,8 +9,6 @@ where they happened. Fly down into Constantinople and the map gives way to the c
 itself, set like a floor mosaic, with its walls, churches and houses standing up
 from the page.
 
-![Living chronicle map: overview, imperial frontier, low flight, mountains, pop-up Constantinople by day and in 1453](docs/screenshots/chronicle-prototype.jpg)
-
 ## Constantinople
 
 On the continental map, Constantinople is a city like the others. Fly low toward it,
@@ -24,8 +22,8 @@ the timeline: walls rise and fall, and Hagia Sophia is rebuilt. Climb high, or p
 
 | The continental view | The city view |
 |---|---|
-| ![Constantinople as a marker on the continental map, AD 537](docs/screenshots/constantinople-1-continental-537.jpg) | ![The city view of Constantinople in AD 537, set as a floor mosaic](docs/screenshots/constantinople-2-city-view-537.jpg) |
-| ![Across the Golden Horn from Sykai (Galata) to the sea walls and Hagia Sophia](docs/screenshots/constantinople-3-golden-horn-537.jpg) | ![Justinian's Hagia Sophia in 537, with its great lead-covered dome, over the sea walls](docs/screenshots/constantinople-4-hagia-sophia-537.jpg) |
+| ![The continental map in AD 537: Greece, the Aegean and Asia Minor, with Constantinople as a city marker](docs/screenshots/constantinople-1-continental-537.jpg) | ![The city view of Constantinople in AD 537, set as a floor mosaic](docs/screenshots/constantinople-2-city-view-537.jpg) |
+| ![The continental map from higher up in AD 537: Italy, Greece, Asia Minor, the Levant and Egypt](docs/screenshots/constantinople-4-mediterranean-537.jpg) | ![Across the Golden Horn from Sykai (Galata) to the sea walls and Hagia Sophia](docs/screenshots/constantinople-3-golden-horn-537.jpg) |
 
 ## Running
 
