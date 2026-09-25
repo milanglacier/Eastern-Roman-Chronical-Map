@@ -56,7 +56,7 @@ export function Timeline() {
     <div className="timeline" data-testid="timeline">
       <button
         type="button"
-        className="timeline-play"
+        className="timeline-play glass"
         onClick={togglePlay}
         aria-label={isPlaying ? t('pause') : t('play')}
         data-testid="play-button"

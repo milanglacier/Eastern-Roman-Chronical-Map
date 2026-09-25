@@ -31,3 +31,16 @@ export function setProjector(next: Projector | null): void {
 export function projectLonLat(lon: number, lat: number): ProjectedPoint {
   return (projector ?? fallbackProjector)(lon, lat);
 }
+
+/** Live camera heading (radians clockwise from north) for the compass. */
+let cameraHeading = 0;
+export function setCameraHeading(heading: number): void {
+  cameraHeading = heading;
+}
+export function getCameraHeading(): number {
+  return cameraHeading;
+}
+
+/** DOM → scene commands (the scene lives outside React). */
+export const NORTH_UP_EVENT = 'ercm:north-up';
+export const JOURNEY_EVENT = 'ercm:journey';

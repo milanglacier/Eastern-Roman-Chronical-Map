@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useT, useLang, categoryNames } from '../i18n';
 import { EVENT_CATEGORIES } from '../data/schema';
 import { CategoryIcon } from './CategoryIcon';
-import { CATEGORY_COLORS, TERRITORY_TINT } from '../map/colors';
+import { CATEGORY_COLORS, TERRITORY_SWATCH } from '../map/colors';
 import { LEGEND_TERRAIN } from '../map/three/palette';
 
 const hex = (n: number) => `#${n.toString(16).padStart(6, '0')}`;
@@ -22,13 +22,13 @@ export function Legend() {
 
   return (
     <div className={`legend${open ? ' open' : ''}`}>
-      <button type="button" className="legend-toggle" onClick={() => setOpen(!open)}>
+      <button type="button" className="legend-toggle glass" onClick={() => setOpen(!open)}>
         {t('legend')}
       </button>
       {open && (
         <div className="legend-body">
           <div className="legend-section">
-            <span className="legend-swatch territory" style={{ background: hex(TERRITORY_TINT) }} />
+            <span className="legend-swatch territory" style={{ background: hex(TERRITORY_SWATCH) }} />
             <span>{t('territory')}</span>
           </div>
           <h3>{t('categories')}</h3>

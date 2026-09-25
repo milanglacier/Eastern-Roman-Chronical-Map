@@ -6,6 +6,9 @@ import { Header } from './ui/Header';
 import { Timeline } from './ui/Timeline';
 import { EventPanel } from './ui/EventPanel';
 import { Legend } from './ui/Legend';
+import { EraCaption } from './ui/EraCaption';
+import { Compass } from './ui/Compass';
+import { JourneyButton } from './ui/JourneyButton';
 import { useAppStore } from './state/store';
 import { YEARS_PER_SECOND } from './lib/timeline';
 import { YEAR_MAX } from './data/schema';
@@ -36,21 +39,40 @@ function useAutoplay() {
   }, [isPlaying]);
 }
 
+/** H toggles all chrome (ignored while typing). */
+function useHideUiKey() {
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.ctrlKey || e.metaKey || e.altKey || e.key.toLowerCase() !== 'h') return;
+      const el = e.target as HTMLElement | null;
+      if (el && (el.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName))) return;
+      useAppStore.getState().toggleUi();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
+}
+
 export default function App() {
   useAutoplay();
+  useHideUiKey();
   const t = useT();
+  const uiHidden = useAppStore((s) => s.uiHidden);
 
   return (
-    <div className="app">
-      <Header />
+    <div className={`app${uiHidden ? ' ui-hidden' : ''}`}>
       <main className="map-stage">
         <MapCanvas />
         <CityMarkers />
         <EventMarkers />
+        <EraCaption />
         <Legend />
+        <Compass />
+        <JourneyButton />
         <p className="drag-hint">{t('dragHint')}</p>
         <EventPanel />
       </main>
+      <Header />
       <Timeline />
     </div>
   );

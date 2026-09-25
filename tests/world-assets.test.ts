@@ -81,9 +81,10 @@ describe('straits stay open water', () => {
     ['Gibraltar south', -5.59, 35.83],
     ['Bonifacio', 8.83, 41.6],
     ['Messina', 15.24, 38.05],
-    ['Dardanelles west', 26.13, 40.71],
-    ['Dardanelles east', 26.77, 40.71],
-    ['Bosporus', 29.4, 41.15],
+    ['Dardanelles (Kilitbahir narrows)', 26.4, 40.16],
+    ['Dardanelles (Gelibolu)', 26.6, 40.34],
+    ['Bosporus (Rumeli Hisari)', 29.056, 41.095],
+    ['Bosporus (Black Sea mouth)', 29.1, 41.185],
     ['Kerch', 36.39, 45.15],
     ['Oresund', 12.68, 55.8],
     // Wide enough to survive DEM sampling without a config entry; pinned so
@@ -137,5 +138,29 @@ describe('companion textures', () => {
     expect([mask.width, mask.height]).toEqual([hm.width, hm.height]);
     expect((albedo.width ?? 0) / (albedo.height ?? 1)).toBeCloseTo(hm.width / hm.height, 2);
     expect(water.width).toBe(water.height);
+  });
+});
+
+describe('painted-world bake outputs', () => {
+  it('brush tile is a square power-of-two texture', async () => {
+    const brush = await sharp(join(terrainDir, 'brush.png')).metadata();
+    expect(brush.width).toBe(brush.height);
+    expect(Math.log2(brush.width ?? 0) % 1).toBe(0);
+  });
+
+  it('brush strokes are 180°-symmetric so the flow rotation wraps seamlessly', async () => {
+    const { data, info } = await sharp(join(terrainDir, 'brush.png')).raw().toBuffer({ resolveWithObject: true });
+    const n = info.width;
+    const r = (x: number, y: number) => data[(((y + n) % n) * n + ((x + n) % n)) * info.channels];
+    for (const [x, y] of [[10, 20], [100, 333], [511, 7], [256, 256]]) {
+      expect(Math.abs(r(x, y) - r(-x, -y))).toBeLessThanOrEqual(1);
+    }
+  });
+
+  it('worldmask.B carries a varied flow field over land', async () => {
+    const { data, info } = await sharp(join(terrainDir, 'worldmask.png')).raw().toBuffer({ resolveWithObject: true });
+    const seen = new Set<number>();
+    for (let i = 0; i < info.width * info.height; i += 997) seen.add(data[i * info.channels + 2] >> 4);
+    expect(seen.size).toBeGreaterThanOrEqual(12);
   });
 });

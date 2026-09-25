@@ -15,6 +15,8 @@ interface AppState {
    * function has no place in a persisted store).
    */
   viewVersion: number;
+  /** H key: hide all chrome and look at the painting. */
+  uiHidden: boolean;
   setYear: (year: number) => void;
   play: () => void;
   pause: () => void;
@@ -22,6 +24,7 @@ interface AppState {
   selectEvent: (id: string | null) => void;
   setLanguage: (lang: Language) => void;
   bumpView: () => void;
+  toggleUi: () => void;
 }
 
 export const clampYear = (year: number): number =>
@@ -35,6 +38,7 @@ export const useAppStore = create<AppState>()(
       language: 'en',
       selectedEventId: null,
       viewVersion: 0,
+      uiHidden: false,
       setYear: (year) => set({ year: clampYear(year) }),
       play: () =>
         set((s) => ({
@@ -49,6 +53,7 @@ export const useAppStore = create<AppState>()(
       selectEvent: (id) => set((s) => ({ selectedEventId: id, isPlaying: id === null ? s.isPlaying : false })),
       setLanguage: (language) => set({ language }),
       bumpView: () => set((s) => ({ viewVersion: (s.viewVersion + 1) % 0x7fffffff })),
+      toggleUi: () => set((s) => ({ uiHidden: !s.uiHidden })),
     }),
     {
       name: 'east-roman-map-prefs',

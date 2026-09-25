@@ -31,7 +31,7 @@ export function Header() {
       </p>
       <button
         type="button"
-        className="language-toggle"
+        className="language-toggle glass"
         onClick={() => setLanguage(lang === 'en' ? 'zh' : 'en')}
         aria-label="Switch language"
         data-testid="language-toggle"

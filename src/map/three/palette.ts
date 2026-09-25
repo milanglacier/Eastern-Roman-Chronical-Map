@@ -23,9 +23,9 @@ export const HEMI_GROUND_COLOR = 0x54483a;
 
 /** Legend swatches (match the baked albedo palette, sRGB). */
 export const LEGEND_TERRAIN = {
-  sea: 0x1e475c,
-  grass: 0x607446,
-  desert: 0xccb276,
-  mountain: 0x7a7064,
-  snow: 0xebecea,
+  sea: 0x23466a,
+  grass: 0x778b55,
+  desert: 0xd8b073,
+  mountain: 0x8e8391,
+  snow: 0xf2ecdf,
 } as const;

@@ -21,7 +21,12 @@ const dict = {
   terrainDesert: { en: 'Desert', zh: '沙漠' },
   terrainSnow: { en: 'Snowcaps', zh: '雪峰' },
   eventsInEra: { en: 'Events of this era', zh: '本时代大事记' },
-  dragHint: { en: 'Drag to pan · scroll to zoom', zh: '拖拽平移 · 滚轮缩放' },
+  dragHint: {
+    en: 'Drag to look around · right-drag to move · scroll to fly · WASD / QE · H hides the chrome',
+    zh: '拖拽环顾 · 右键拖拽移动 · 滚轮飞行 · WASD / QE · 按 H 隐藏界面',
+  },
+  northUp: { en: 'Face north', zh: '朝向正北' },
+  journey: { en: 'Begin the journey', zh: '开启旅程' },
   languageToggle: { en: '中文', zh: 'EN' },
 } as const;
 
