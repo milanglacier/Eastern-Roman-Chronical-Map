@@ -13,7 +13,6 @@ import {
   setCameraHeading,
   setProjector,
 } from './three/projection';
-import { activeTheme } from './three/theme';
 import { createPipeline } from './three/postfx/pipeline';
 import {
   QUALITY_PRESETS,
@@ -73,7 +72,6 @@ export function MapCanvas() {
         console.warn('WebGL unavailable, map disabled:', err);
         return;
       }
-      const theme = activeTheme();
       const tierInfo = initialTier();
       let tier: QualityTier = tierInfo.tier;
       const pixelRatioFor = (t: QualityTier) => Math.min(window.devicePixelRatio || 1, QUALITY_PRESETS[t].maxPixelRatio);
@@ -87,10 +85,7 @@ export function MapCanvas() {
       host.appendChild(renderer.domElement);
 
       const pipeline = createPipeline(renderer, QUALITY_PRESETS[tier]);
-      Object.assign(
-        pipeline.params,
-        theme === 'clockwork' ? { ink: 0.22, grain: 0.035, vignette: 0.8 } : { ink: 0.4, grain: 0.06, vignette: 0.55 },
-      );
+      Object.assign(pipeline.params, { ink: 0.4, grain: 0.06, vignette: 0.55 });
       const bumpView = useAppStore.getState().bumpView;
 
       // The switch between the map and a city view passes through a veil of
@@ -133,7 +128,6 @@ export function MapCanvas() {
         renderer.domElement,
         { heightField, albedo, worldMask, waterNormal, granulation },
         {
-          theme,
           renderer,
           shadowMapSize: QUALITY_PRESETS[tier].shadowMapSize,
           onModeRequest: (next) => void switchTo(next),
@@ -178,7 +172,7 @@ export function MapCanvas() {
       const onLeaveCity = () => void switchTo('world');
       window.addEventListener(ENTER_CITY_EVENT, onEnterCity);
       window.addEventListener(LEAVE_CITY_EVENT, onLeaveCity);
-      // Opening: fly in over the Aegean as Constantinople rises (skipped for
+      // Opening: fly in over the Aegean to Constantinople (skipped for
       // scripted screenshots via ?intro=0).
       const intro = new URLSearchParams(location.search).get('intro') !== '0';
       if (intro) setTimeout(() => void world.playJourney(), 600);
@@ -209,10 +203,9 @@ export function MapCanvas() {
           setCameraHeading(world.rig.pose.heading);
           bumpView();
         }
-        // Tilt-shift focus on what the camera looks at; the clockwork model
-        // is shot like a macro miniature, stronger as the camera lowers.
+        // Tilt-shift focus on what the camera looks at.
         pipeline.params.focus = world.rig.distance;
-        pipeline.params.dof = theme === 'clockwork' ? 0.55 + 0.9 * (1 - Math.sin(world.rig.pose.pitch)) : 0.3;
+        pipeline.params.dof = 0.3;
         pipeline.render(world.scene, cam);
         frames++;
         if (!tierInfo.forced && probe.push(frameMs)) {
@@ -243,7 +236,6 @@ export function MapCanvas() {
           },
           setTier,
           setYear: (y: number) => useAppStore.getState().setYear(y),
-          setPose: (p: Record<string, number>) => world.setView(p),
           setDrone: (p: Record<string, number>) => world.setView(p),
           journeyAt: (u: number) => world.journeyAt(u),
           cityView: (name: string) => {

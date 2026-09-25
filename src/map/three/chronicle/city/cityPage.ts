@@ -38,10 +38,10 @@ import {
 import type { CityPlan, CityStructure } from '../../../../data/schema';
 import { createCityFrame } from '../../../../lib/cityFrame';
 import { resolveCity, type CityState } from '../../../../lib/cityTimeline';
+import { easeOutBack } from '../../../../lib/easing';
 import { distanceToPolyline, pointInRing, type XY } from '../../../../lib/polyline';
 import { hashStringSeed } from '../../../../lib/prng';
 import { applyCurvature } from '../../curvature';
-import { easeOutBack } from '../../clockwork/constantinople';
 import { makePen } from '../illumination';
 import { applyBillboardAtlas } from './billboard';
 import {
@@ -55,8 +55,8 @@ import {
   type CardArt,
 } from './cardArt';
 import { loadPlate, offsetOutward, ringCentroid, structurePath, type Plate } from './geometry';
-import { applyMosaic, type MosaicSetting } from './mosaic';
-import { drawGround, mergeGold, regionSize, type GroundRegion, type PageCanvases, type PageStyle, type PageWalls } from './pageArt';
+import { applyMosaic } from './mosaic';
+import { drawGround, mergeGold, regionSize, type GroundRegion, type PageCanvases, type PageWalls } from './pageArt';
 import { TILE_LENGTH, drawStripTexture, stripGeometry, towerGeometry, towersAlong, type StripKind, type StripTexture } from './strips';
 
 export interface CityPage {
@@ -77,7 +77,6 @@ export interface CityPage {
 }
 
 export interface CityPageOptions {
-  setting: MosaicSetting;
   /** URL folder of the baked plate (plate.json, land.png). */
   baseUrl: string;
 }
@@ -89,11 +88,8 @@ const DETAIL_MARGIN = 1.1;
 /** Canvas pixels per page unit for pop-up cards. */
 const CARD_PPU = 2600;
 const CARD_MAX_PX = 1024;
-/**
- * Tessera size on the cards (page units): wall-mosaic fine, smaller than
- * the floor's; finer still when only the gilding is set in gold smalti.
- */
-const CARD_TESSERA = { all: 0.0036, gold: 0.0018 };
+/** Tessera size of the gold smalti on the cards' gilding (page units). */
+const CARD_TESSERA = 0.0018;
 /** Tessera size on the page floor (page units). */
 const PAGE_TESSERA = 0.0072;
 
@@ -121,24 +117,22 @@ function newCanvas(w: number, h: number): HTMLCanvasElement {
   return c;
 }
 
-/** Aux map for the mosaic shader: R = tesserae (everywhere, or only gold), G = gold. */
-function auxCanvas(gold: HTMLCanvasElement, tessellate: 'all' | 'gold'): HTMLCanvasElement {
+/** Aux map for the mosaic shader: only the gilding is set in tesserae (R = G = gold). */
+function auxCanvas(gold: HTMLCanvasElement): HTMLCanvasElement {
   const aux = newCanvas(gold.width, gold.height);
   const a = aux.getContext('2d')!;
-  a.fillStyle = tessellate === 'all' ? '#ff0000' : '#000000';
+  a.fillStyle = '#000000';
   a.fillRect(0, 0, aux.width, aux.height);
   mergeGold(aux, gold);
-  if (tessellate === 'gold') {
-    // Gold tesserae only: copy the gold mask into R as well.
-    const tint = newCanvas(aux.width, aux.height);
-    const t = tint.getContext('2d')!;
-    t.drawImage(gold, 0, 0);
-    t.globalCompositeOperation = 'source-in';
-    t.fillStyle = '#ff0000';
-    t.fillRect(0, 0, aux.width, aux.height);
-    a.globalCompositeOperation = 'lighter';
-    a.drawImage(tint, 0, 0);
-  }
+  // Copy the gold mask into R as well.
+  const tint = newCanvas(aux.width, aux.height);
+  const t = tint.getContext('2d')!;
+  t.drawImage(gold, 0, 0);
+  t.globalCompositeOperation = 'source-in';
+  t.fillStyle = '#ff0000';
+  t.fillRect(0, 0, aux.width, aux.height);
+  a.globalCompositeOperation = 'lighter';
+  a.drawImage(tint, 0, 0);
   return aux;
 }
 
@@ -156,12 +150,7 @@ interface Built {
 }
 
 export function createCityPage(plan: CityPlan, options: CityPageOptions): CityPage {
-  const { setting } = options;
   const frame = createCityFrame(plan.page.bbox, plan.page.magnification);
-  const pageStyle: PageStyle = setting === 'c' ? 'watercolour' : 'mosaic';
-  const flatCards = setting === 'b';
-  const cardTessellation: 'all' | 'gold' | null = setting === 'b' ? 'all' : setting === 'a' ? 'gold' : null;
-  const cardTessera = CARD_TESSERA[cardTessellation ?? 'all'];
 
   const group = new Group();
   group.name = `city-page-${plan.id}`;
@@ -189,7 +178,7 @@ export function createCityPage(plan: CityPlan, options: CityPageOptions): CityPa
         new MeshStandardMaterial({ map, roughness: 0.92, metalness: 0, transparent, depthWrite: !transparent }),
         { aux, size: [cw, ch], tessera: PAGE_TESSERA * region.ppu, grout: 0xcdc3ad, groutWidth: 0.11 },
       ),
-      `city-ground-${key}-${setting}`,
+      `city-ground-${key}`,
     );
     const geo = new PlaneGeometry(region.width, region.depth, segments, segments);
     geo.rotateX(-Math.PI / 2);
@@ -222,7 +211,7 @@ export function createCityPage(plan: CityPlan, options: CityPageOptions): CityPa
   let wallPaths: PageWalls[] = [];
 
   const redrawPage = () => {
-    const input = { plan, state, frame, plate, walls: wallPaths, style: pageStyle };
+    const input = { plan, state, frame, plate, walls: wallPaths };
     for (const [layer, kind] of [[outer, 'outer'], [detail, 'detail']] as const) {
       drawGround(input, layer.region, kind, layer.canvases);
       layer.map.needsUpdate = true;
@@ -235,7 +224,7 @@ export function createCityPage(plan: CityPlan, options: CityPageOptions): CityPa
   const stripTexture = (kind: StripKind) => {
     let t = stripTextures.get(kind);
     if (!t) {
-      t = drawStripTexture(kind, flatCards);
+      t = drawStripTexture(kind);
       stripTextures.set(kind, t);
     }
     return t;
@@ -250,13 +239,11 @@ export function createCityPage(plan: CityPlan, options: CityPageOptions): CityPa
   ): { material: MeshBasicMaterial; disposables: Array<{ dispose(): void }> } => {
     const material = new MeshBasicMaterial({ map, alphaTest: 0.5, alphaToCoverage: true, side: DoubleSide });
     const disposables: Array<{ dispose(): void }> = [material];
-    if (cardTessellation) {
-      const aux = new CanvasTexture(auxCanvas(gold, cardTessellation));
-      aux.colorSpace = NoColorSpace;
-      applyMosaic(material, { aux, size, tessera, grout: 0x8a7d68, groutWidth: 0.07, glint: 1.3, jitter: 0.55 });
-      disposables.push(aux);
-    }
-    applyCurvature(material, `city-card-${cardTessellation ?? 'none'}-${key}`);
+    const aux = new CanvasTexture(auxCanvas(gold));
+    aux.colorSpace = NoColorSpace;
+    applyMosaic(material, { aux, size, tessera, grout: 0x8a7d68, groutWidth: 0.07, glint: 1.3, jitter: 0.55 });
+    disposables.push(aux);
+    applyCurvature(material, `city-card-${key}`);
     applyNight(material);
     nightMaterials.add(material);
     return { material, disposables };
@@ -276,7 +263,7 @@ export function createCityPage(plan: CityPlan, options: CityPageOptions): CityPa
     h = Math.max(32, Math.round(h * s));
     const c = newCanvas(w, h);
     const gold = newCanvas(w, h);
-    const pen = makePen(c.getContext('2d')!, hashStringSeed(seedKey), Math.max(w, h) / 900, { flat: flatCards, gold: gold.getContext('2d')! });
+    const pen = makePen(c.getContext('2d')!, hashStringSeed(seedKey), Math.max(w, h) / 900, { gold: gold.getContext('2d')! });
     art.draw(pen, w, h);
     const out = { canvas: c, gold };
     cardCache.set(seedKey, out);
@@ -288,7 +275,7 @@ export function createCityPage(plan: CityPlan, options: CityPageOptions): CityPa
     const tex = new CanvasTexture(canvas);
     tex.colorSpace = SRGBColorSpace;
     tex.anisotropy = 8;
-    const { material, disposables } = texturedMaterial(tex, gold, [canvas.width, canvas.height], 'card', cardTessera * (canvas.width / art.width));
+    const { material, disposables } = texturedMaterial(tex, gold, [canvas.width, canvas.height], 'card', CARD_TESSERA * (canvas.width / art.width));
     const geo = new PlaneGeometry(art.width, art.height);
     geo.translate(0, art.height / 2, 0);
     const mesh = new Mesh(geo, material);
@@ -318,7 +305,7 @@ export function createCityPage(plan: CityPlan, options: CityPageOptions): CityPa
     const materials: Material[] = [];
     const disposables: Array<{ dispose(): void }> = [];
     const addMesh = (geo: ReturnType<typeof stripGeometry>, t: StripTexture) => {
-      const { material, disposables: d } = texturedMaterial(t.texture, t.gold, t.size, kind, cardTessera * (t.size[0] / (kind === 'tower' ? spec.towerWidth ?? 0.03 : TILE_LENGTH[kind as Exclude<StripKind, 'tower'>])));
+      const { material, disposables: d } = texturedMaterial(t.texture, t.gold, t.size, kind, CARD_TESSERA * (t.size[0] / (kind === 'tower' ? spec.towerWidth ?? 0.03 : TILE_LENGTH[kind as Exclude<StripKind, 'tower'>])));
       const mesh = new Mesh(geo, material);
       mesh.castShadow = true;
       mesh.customDepthMaterial = depthMaterial(t.texture);
@@ -414,20 +401,18 @@ export function createCityPage(plan: CityPlan, options: CityPageOptions): CityPa
   const atlasTile = 128;
   const atlasCanvas = newCanvas(atlasTile * ATLAS_GRID[0], atlasTile * ATLAS_GRID[1]);
   const atlasGold = newCanvas(atlasCanvas.width, atlasCanvas.height);
-  drawAtlas(makePen(atlasCanvas.getContext('2d')!, 1453, atlasTile / 300, { flat: flatCards, gold: atlasGold.getContext('2d')! }), atlasTile);
+  drawAtlas(makePen(atlasCanvas.getContext('2d')!, 1453, atlasTile / 300, { gold: atlasGold.getContext('2d')! }), atlasTile);
   const atlasTex = new CanvasTexture(atlasCanvas);
   atlasTex.colorSpace = SRGBColorSpace;
   atlasTex.anisotropy = 4;
   const atlasMat = new MeshBasicMaterial({ map: atlasTex, alphaTest: 0.5, alphaToCoverage: true, side: DoubleSide });
   const atlasDisposables: Array<{ dispose(): void }> = [atlasTex, atlasMat];
-  if (cardTessellation) {
-    const aux = new CanvasTexture(auxCanvas(atlasGold, cardTessellation));
-    aux.colorSpace = NoColorSpace;
-    applyMosaic(atlasMat, { aux, size: [atlasCanvas.width, atlasCanvas.height], tessera: 9, grout: 0x8a7d68, groutWidth: 0.07, jitter: 0.55 });
-    atlasDisposables.push(aux);
-  }
+  const atlasAux = new CanvasTexture(auxCanvas(atlasGold));
+  atlasAux.colorSpace = NoColorSpace;
+  applyMosaic(atlasMat, { aux: atlasAux, size: [atlasCanvas.width, atlasCanvas.height], tessera: 9, grout: 0x8a7d68, groutWidth: 0.07, jitter: 0.55 });
+  atlasDisposables.push(atlasAux);
   applyBillboardAtlas(atlasMat, ATLAS_GRID);
-  applyCurvature(atlasMat, `city-atlas-${cardTessellation ?? 'none'}`);
+  applyCurvature(atlasMat, 'city-atlas');
   nightMaterials.add(atlasMat);
   const houseGeo = new PlaneGeometry(1, 1);
   houseGeo.translate(0, 0.5, 0);

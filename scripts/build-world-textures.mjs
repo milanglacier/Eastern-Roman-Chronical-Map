@@ -592,8 +592,8 @@ for (let y = 0; y < HM_H; y++) {
 }
 
 /* ------------------------------------------------------------------ */
-/* 7. Albedo: the painted pigment base (chronicle washes, clockwork   */
-/*    regional tint read their colour from it)                         */
+/* 7. Albedo: the painted pigment base (the chronicle washes read     */
+/*    their colour from it)                                            */
 
 console.log('painting albedo…');
 

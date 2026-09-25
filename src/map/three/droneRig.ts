@@ -13,12 +13,10 @@
  * The world bends convexly around the point under the camera
  * (curvature.ts), so there is always a true horizon. Guided flights
  * interpolate drone poses; any input hands control back to the user.
- * Implements the host-facing parts of CameraRig (camera, distance, pose,
- * flyTo, …) so markers, the compass and the post pipeline keep working.
  */
 import { PerspectiveCamera, Vector3 } from 'three';
 import { GROUND_W, GROUND_H } from './geo';
-import { angleDelta, easeInOutCubic } from './cameraRig';
+import { easeInOutCubic } from '../../lib/easing';
 import { curvatureUniforms, rayHitBentGround } from './curvature';
 
 const DEG = Math.PI / 180;
@@ -37,6 +35,14 @@ export interface DronePose {
   yaw: number;
   /** Radians of view elevation: + looks up, − looks down. */
   pitch: number;
+}
+
+/** Signed shortest angular difference b - a, in (-π, π]. */
+export function angleDelta(a: number, b: number): number {
+  let d = (b - a) % (2 * Math.PI);
+  if (d > Math.PI) d -= 2 * Math.PI;
+  if (d <= -Math.PI) d += 2 * Math.PI;
+  return d;
 }
 
 export function clampDronePitch(p: number): number {

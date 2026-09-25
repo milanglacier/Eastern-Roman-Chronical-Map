@@ -14,7 +14,7 @@ page. Test every visual decision against this question:
    up at the sky, flying low among the mountains. An orbit camera around a ground
    target reads as a map whatever the styling (see *History* below).
 2. **Things stand up.** Mountains are sculpted and exaggerated
-   (`src/lib/clockworkRelief.ts`, `CHRONICLE_RELIEF`). Cities are pop-up
+   (`src/lib/relief.ts`). Cities are pop-up
    illustrations, not dots.
 3. **Natural colours in the scene.** The sky, sea and land keep their natural
    hues: blue-green watercolour sea, the era's sky, and natural earth pigments
@@ -60,7 +60,7 @@ page. Test every visual decision against this question:
   - ink hachures at a constant screen spacing, crossfaded across two levels of detail
   - sepia contours, with every fifth one bolder
   - the empire's glaze and frontier line
-- **Sea** (`water.ts`, `CHRONICLE`): an opaque watercolour wash with three inked
+- **Sea** (`water.ts`): an opaque watercolour wash with three inked
   ripples following every coast.
 - **Cities on the map** are markers, Constantinople included: nothing on the
   continental map is out of scale.
@@ -73,7 +73,10 @@ page. Test every visual decision against this question:
   the viewer, and the city folds up like a pop-up page as you arrive. All of it follows
   the year (`src/data/cities/constantinople.json`). Climbing high out of the city
   returns to the map. The mosaic is used only inside the city view, so it never sits
-  next to the watercolour world.
+  next to the watercolour world. The treatment is the one chosen at the art gate
+  (setting A): a floor-mosaic page with watercolour cards whose gilding is set in
+  gold smalti. The other two candidates (B, everything tessellated; C, a watercolour
+  page with mosaic only in the border and plaque) were removed from the code.
 - **Post** (`postfx/`): tilt-shift, a light ink-edge pass, bloom, the era grade,
   paper grain and a vignette.
 
@@ -93,8 +96,13 @@ Four looks were built and judged on 2026-09-24. Screenshots are in
    What survives from that round is shared infrastructure the chronicle map still
    uses: the era moods, the post pipeline, the curved earth, the UI chrome, and
    the albedo bake as the watercolour pigment source.
-3. **Clockwork / Game-of-Thrones titles** (`?theme=clockwork`): a carved-stone model,
-   brass gears and a rising clockwork city. The verdict: "still a 2.5D god-like view",
-   because the orbit camera made it read as a map.
+3. **Clockwork / Game-of-Thrones titles: rejected, removed from the code.** A
+   carved-stone model in a dark hall, a lacquered sea, an astrolabe sun, brass gears
+   and a rising clockwork city, seen with an orbit camera over a concave (bowl) earth.
+   The verdict: "still a 2.5D god-like view", because the orbit camera made it read
+   as a map. Its code was deleted: the stone-and-brass materials, the hall and
+   astrolabe, the clockwork Constantinople, the lacquer sea and vault sky, the
+   terraced relief, the concave bend and the orbit camera. The screenshots
+   (`archive/clockwork-*.jpg`) and the plan are kept only as a record.
 4. **Living chronicle map** (default): the free-look camera, the manuscript world
    and pop-up cities were approved.

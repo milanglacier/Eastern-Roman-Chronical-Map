@@ -51,11 +51,9 @@ npm run build      # static production build (dist/)
 The timeline scrubs or plays through eleven centuries (space toggles, arrows step).
 Clicking an event opens its account.
 
-URL options: `?quality=high|medium|low`, `?intro=0` (skip the opening flight),
-`?mosaic=b|c` (the heavier and lighter mosaic treatments the city view was chosen
-from), and `?theme=clockwork` for the earlier Game-of-Thrones-style clockwork look. (A painted-
-diorama look was also tried; the author did not like its art style, and it was
-removed. See `docs/art-direction.md`.)
+URL options: `?quality=high|medium|low` and `?intro=0` (skip the opening flight).
+(Earlier looks, a painted diorama and a Game-of-Thrones-style clockwork model, were
+tried and removed. See `docs/art-direction.md`.)
 
 ## How it works
 

@@ -17,7 +17,7 @@ export interface Atmosphere {
 }
 
 /**
- * Sight distance from the orbit camera to the bent sea-level horizon. The
+ * Sight distance from the camera to the bent sea-level horizon. The
  * camera sits D·cos(p) behind the bend centre, so its height above the
  * bent surface is D·sin(p) + (D·cos p)²/2R; horizon ≈ √(2R·height).
  */
@@ -27,10 +27,9 @@ export function horizonDistance(distance: number, pitch: number, radius: number)
   return Math.sqrt(2 * radius * height);
 }
 
-export function createAtmosphere(scene: Scene, style: 'clockwork' | 'chronicle'): Atmosphere {
-  const hall = style === 'clockwork';
-  // Chronicle: the era's haze with a little warm paper in it (matches the sky).
-  const paper = style === 'chronicle' ? new Color(0xb9cddb) : null; // light blue air
+export function createAtmosphere(scene: Scene): Atmosphere {
+  // The era's haze, leaning to a light blue air (matches the sky).
+  const air = new Color(0xb9cddb);
   const color = new Color(0x9aa6b4);
   const fog = new Fog(color, 100, 500);
   scene.fog = fog;
@@ -38,12 +37,6 @@ export function createAtmosphere(scene: Scene, style: 'clockwork' | 'chronicle')
   let density = 1;
   let view = { distance: 100, pitch: 0.8, radius: 800 };
   const apply = () => {
-    if (hall || view.radius < 0) {
-      // Inside the hall the model fades into warm darkness with distance.
-      fog.near = (view.distance * 1.4) / density;
-      fog.far = (view.distance * 5.5) / density;
-      return;
-    }
     const horizon = horizonDistance(view.distance, view.pitch, view.radius);
     fog.far = Math.min(view.distance * 4.4, horizon * 1.05) / density;
     fog.near = Math.min(view.distance * 1.0, horizon * 0.32) / density;
@@ -51,11 +44,9 @@ export function createAtmosphere(scene: Scene, style: 'clockwork' | 'chronicle')
   return {
     color,
     setMood(mood) {
-      color.setRGB(...mood.hazeColor);
-      if (hall) color.multiplyScalar(0.16);
-      if (paper) color.lerp(paper, 0.55);
+      color.setRGB(...mood.hazeColor).lerp(air, 0.55);
       fog.color.copy(color);
-      density = paper ? mood.hazeDensity * 0.7 : mood.hazeDensity;
+      density = mood.hazeDensity * 0.7;
       apply();
     },
     update(distance, pitch, radius) {

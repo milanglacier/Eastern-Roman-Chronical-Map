@@ -15,22 +15,6 @@
  */
 import { Color, type Material, type Texture } from 'three';
 
-/**
- * How far the mosaic influence goes (`?mosaic=`):
- *  - a: ink-and-watercolour cards on a floor-mosaic page — the chosen look
- *    (the default)
- *  - b: everything set in tesserae, cards included (kept for comparison)
- *  - c: watercolour page and cards; mosaic only in the border and plaque
- *    (kept for comparison)
- */
-export type MosaicSetting = 'a' | 'b' | 'c';
-
-export function activeMosaic(): MosaicSetting {
-  if (typeof location === 'undefined') return 'a';
-  const v = new URLSearchParams(location.search).get('mosaic');
-  return v === 'b' || v === 'c' ? v : 'a';
-}
-
 export interface MosaicOptions {
   /** R = set in tesserae, G = gold smalti; same layout as the map. */
   aux: Texture;

@@ -16,8 +16,6 @@ export interface Lighting {
   /** Unit vector toward the key light (shared with water/sky uniforms). */
   readonly keyDir: Vector3;
   setMood(mood: Mood): void;
-  /** Pin the key direction (the hall's astrolabe); null = follow the mood. */
-  setDirectionOverride(dir: Vector3 | null): void;
   updateShadowFrustum(
     camera: Camera,
     target: { x: number; y: number; z: number },
@@ -31,17 +29,13 @@ export interface Lighting {
 /**
  * three.js lights are physical: diffuse = albedo · E / π. Mood intensities
  * are authored so ~1 means "the albedo at face value" (flat ground under a
- * mid-height sun + sky fill ≈ albedo); each style then scales them:
- *  - paper (chronicle): parchment is already bright — gentle light, so the
- *    washes keep their colour;
- *  - hall (clockwork): the key (astrolabe) dominates, the room fill is faint.
+ * mid-height sun + sky fill ≈ albedo). Parchment is already bright, so
+ * the light is gentle and the washes keep their colour.
  */
-const KEY_SCALE = Math.PI * 0.45;
-const FILL_SCALE = Math.PI * 0.9;
+const KEY_SCALE = Math.PI * 0.45 * 0.6;
+const FILL_SCALE = Math.PI * 0.9 * 0.58;
 
-export function createLighting(shadowMapSize: number, style: 'paper' | 'hall'): Lighting {
-  const keyScale = KEY_SCALE * (style === 'hall' ? 1.3 : 0.6);
-  const fillScale = FILL_SCALE * (style === 'hall' ? 0.32 : 0.58);
+export function createLighting(shadowMapSize: number): Lighting {
   const group = new Group();
 
   const key = new DirectionalLight(0xffffff, 2.4);
@@ -62,7 +56,6 @@ export function createLighting(shadowMapSize: number, style: 'paper' | 'hall'): 
   const dir = new Vector3();
   const center = new Vector3();
   let lastFit = { cx: 0, cz: 0, radius: 0, distance: 0, target: new Vector3(), camera: null as Camera | null };
-  let override: Vector3 | null = null;
   const refit = () => {
     if (lastFit.camera) {
       updateShadowFrustum(lastFit.camera, lastFit.target, { cx: lastFit.cx, cz: lastFit.cz, radius: lastFit.radius }, lastFit.distance);
@@ -145,23 +138,14 @@ export function createLighting(shadowMapSize: number, style: 'paper' | 'hall'): 
     key,
     hemi,
     keyDir,
-    setDirectionOverride(dir) {
-      override = dir ? dir.clone().normalize() : null;
-      if (override && override.distanceToSquared(keyDir) > 1e-10) {
-        keyDir.copy(override);
-        rebasis();
-        refit();
-      }
-    },
     setMood(mood) {
       const prev = keyDir.clone();
-      if (override) keyDir.copy(override);
-      else keyDir.set(...mood.keyDir).normalize();
+      keyDir.set(...mood.keyDir).normalize();
       key.color.setRGB(...mood.keyColor);
-      key.intensity = mood.keyIntensity * keyScale;
+      key.intensity = mood.keyIntensity * KEY_SCALE;
       hemi.color.setRGB(...mood.ambientSky);
       hemi.groundColor.setRGB(...mood.ambientGround);
-      hemi.intensity = mood.ambientIntensity * fillScale;
+      hemi.intensity = mood.ambientIntensity * FILL_SCALE;
       if (prev.distanceToSquared(keyDir) > 1e-10) {
         rebasis();
         refit();

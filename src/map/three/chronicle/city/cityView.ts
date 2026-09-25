@@ -18,7 +18,6 @@ import { createDroneRig, lookVector, type DronePose, type DroneRig } from '../..
 import { createLighting } from '../../lights';
 import { createSky } from '../../sky';
 import { createCityPage, type CityPage } from './cityPage';
-import type { MosaicSetting } from './mosaic';
 
 /** Leave the city when the camera climbs above this; arrive at this height. */
 export const CITY_EXIT_ALTITUDE = 2.1;
@@ -59,16 +58,16 @@ export interface CityView {
 export function createCityView(
   canvas: HTMLElement,
   plan: CityPlan,
-  options: { setting: MosaicSetting; environment: Texture | null; shadowMapSize: number; onViewChange: () => void },
+  options: { environment: Texture | null; shadowMapSize: number; onViewChange: () => void },
 ): CityView {
   const scene = new Scene();
   scene.environment = options.environment;
-  const sky = createSky('chronicle');
+  const sky = createSky();
   scene.add(sky.mesh);
-  const lighting = createLighting(options.shadowMapSize, 'paper');
+  const lighting = createLighting(options.shadowMapSize);
   scene.add(lighting.group);
-  const atmosphere = createAtmosphere(scene, 'chronicle');
-  const page = createCityPage(plan, { setting: options.setting, baseUrl: `city/${plan.id}` });
+  const atmosphere = createAtmosphere(scene);
+  const page = createCityPage(plan, { baseUrl: `city/${plan.id}` });
   scene.add(page.group);
 
   const margin = 0.3;

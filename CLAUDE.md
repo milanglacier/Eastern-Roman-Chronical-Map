@@ -14,7 +14,7 @@ is the **Eastern Roman Empire (东罗马帝国)**, or simply **Rome / the Empire
 ## Project Shape
 
 - Vite + React + TypeScript static site. Three.js renders the world in `src/map/three/`
-  as a **living chronicle map** (default theme): a real-DEM heightmap sculpted and bent
+  as a **living chronicle map**: a real-DEM heightmap sculpted and bent
   over a curved horizon, drawn in parchment, ink and watercolour, flown with a free-look
   drone camera, with pop-up city illustrations and era moods. React renders the UI
   (timeline, event panel, header) and the DOM marker overlays (events, cities); zustand

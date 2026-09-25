@@ -423,3 +423,22 @@ image, not the windows.
 - Drawings for other eras exist only where they share a generic drawing
   (basilica, domed, cross-domed and ruin churches, gates, columns). The rest of
   step 6 is still to do.
+
+**Clean-up after the art gate (2026-09-25):**
+- **Mosaic settings B and C are removed.** Setting A is now the only treatment, so
+  `?mosaic=` and `MosaicSetting` are gone. The page is always the floor mosaic,
+  and the cards are always watercolour with their gilding set in gold smalti.
+  The watercolour page style (`pageArt.ts`), the fully tessellated cards and the
+  flat mosaic-cartoon strips went with them. The plate bake still writes the
+  hachures, which only the watercolour page drew.
+- **The clockwork theme is removed** (`?theme=clockwork` and `theme.ts`). Its code
+  went too: `clockwork/` (stone-and-brass materials, the hall and astrolabe, the
+  clockwork Constantinople), the lacquer sea, the vault sky, the hall lighting and
+  fog, the terraced relief, the concave bend and the orbit camera (`cameraRig.ts`).
+  The parts the chronicle map uses moved out of it:
+  - `coastField.ts`
+  - `environment.ts` (the daylight reflections)
+  - `src/lib/relief.ts` (`reliefY`, the chronicle relief)
+  - `src/lib/easing.ts` (`easeOutBack` for the city's fold-up)
+  - `angleDelta`, now in `droneRig.ts`
+- The phase-2 text above still describes these as they were at the time.

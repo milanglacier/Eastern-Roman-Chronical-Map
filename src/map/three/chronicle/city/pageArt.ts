@@ -1,12 +1,8 @@
 /**
  * The city view's ground: a plan of the city and its waters, drawn on
- * canvases in one of two manners:
- *
- *  - mosaic: the cartoon for a floor mosaic after the Madaba map: cream
- *    limestone land, blue water with rows of zigzag waves, black outline
- *    rows, white marble roads, lettered in Greek capitals;
- *  - watercolour: the chronicle map's parchment, washes, sepia hachures and
- *    inked chart ripples, lettered in Latin capitals.
+ * canvases as the cartoon for a floor mosaic after the Madaba map: cream
+ * limestone land, blue water with rows of zigzag waves, black outline
+ * rows, white marble roads, lettered in Greek capitals.
  *
  * The ground is drawn at two resolutions. The detail layer is the plan of
  * the city (roads, harbours, walls, lettering, the title plaque) and fades
@@ -22,59 +18,15 @@ import type { CityPlan } from '../../../../data/schema';
 import type { CityFrame } from '../../../../lib/cityFrame';
 import type { CityState } from '../../../../lib/cityTimeline';
 import type { XY } from '../../../../lib/polyline';
-import { INK, PALETTE, makePen, markGold, wash, ink, type Pen, type Pt } from '../illumination';
+import { PALETTE, makePen, markGold, type Pen, type Pt } from '../illumination';
 import { offsetOutward, pointInRing, ringCentroid, type Plate } from './geometry';
 
-export type PageStyle = 'watercolour' | 'mosaic';
-
-interface Palette {
-  sea: string;
-  seaDeep: string;
-  ripple: string;
-  land: string;
-  landPool: string;
-  hill: string;
-  urban: string;
-  road: string;
-  roadEdge: string;
-  plaza: string;
-  coast: string;
-  wall: string;
-  cistern: string;
-  burnt: string;
-  waterLetter: string;
-  placeLetter: string;
-  fields: string[];
-  rows: string;
-}
-
-const WATERCOLOUR: Palette = {
-  sea: '#8fbcb8',
-  seaDeep: '#6a9fa8',
-  ripple: '#2f4f5e',
-  land: '#ecdcb4',
-  landPool: '#d6bd8c',
-  hill: '#7a5a3a',
-  urban: '#dcb48f',
-  road: '#f4e8cc',
-  roadEdge: '#6b5236',
-  plaza: '#efe2c2',
-  coast: INK,
-  wall: '#5a4632',
-  cistern: '#86b8b6',
-  burnt: '#4a3222',
-  waterLetter: '#2f4f5e',
-  placeLetter: '#8c2f23',
-  fields: ['#c7c38a', '#b3bb80', '#d6c28f', '#a6b37e'],
-  rows: '#6f7a45',
-};
-
-const MOSAIC: Palette = {
+/** Stone and glass colours of the floor mosaic. */
+const PAL = {
   sea: '#7ea9b8',
   seaDeep: '#4b7d93',
   ripple: '#34647c',
   land: '#e8dcc2',
-  landPool: '#d9c6a0',
   hill: '#c9ad82',
   urban: '#d9a98c',
   road: '#f6f1e6',
@@ -110,7 +62,6 @@ export interface GroundInput {
   frame: CityFrame;
   plate: Plate | null;
   walls: PageWalls[];
-  style: PageStyle;
 }
 
 /** A rectangle of the page (page units, top-left corner) drawn at `ppu` pixels per unit. */
@@ -146,15 +97,14 @@ function hash01(i: number, j: number, salt: number): number {
 }
 
 export function drawGround(input: GroundInput, region: GroundRegion, layer: 'detail' | 'outer', target?: PageCanvases): PageCanvases {
-  const { plan, state, frame, plate, walls, style } = input;
+  const { plan, state, frame, plate, walls } = input;
   const detail = layer === 'detail';
-  const pal = style === 'mosaic' ? MOSAIC : WATERCOLOUR;
   const [W, H] = regionSize(region);
   const canvas = target?.canvas ?? newCanvas(W, H);
   const aux = target?.aux ?? newCanvas(W, H);
   const ctx = canvas.getContext('2d')!;
   const gold = newCanvas(W, H);
-  const pen = makePen(ctx, 537, region.ppu / 420, { flat: style === 'mosaic', gold: gold.getContext('2d')! });
+  const pen = makePen(ctx, 537, region.ppu / 420, { flat: true, gold: gold.getContext('2d')! });
 
   const X = (x: number) => (x - region.x0) * region.ppu;
   const Z = (z: number) => (z - region.z0) * region.ppu;
@@ -210,62 +160,43 @@ export function drawGround(input: GroundInput, region: GroundRegion, layer: 'det
   ctx.clearRect(0, 0, W, H);
 
   /* ---- sea ---- */
-  ctx.fillStyle = pal.sea;
+  ctx.fillStyle = PAL.sea;
   ctx.fillRect(0, 0, W, H);
-  if (style === 'mosaic') {
-    // Rows of zigzag waves, as on the Madaba map.
-    ctx.strokeStyle = pal.seaDeep;
-    ctx.lineWidth = px(0.0065);
-    ctx.lineJoin = 'miter';
-    const k0 = Math.floor(region.z0 / WAVE_ROW) - 1;
-    const k1 = Math.ceil((region.z0 + region.depth) / WAVE_ROW) + 1;
-    const j0 = Math.floor(region.x0 / WAVE_TOOTH) - 2;
-    const j1 = Math.ceil((region.x0 + region.width) / WAVE_TOOTH) + 2;
-    for (let k = k0; k <= k1; k++) {
-      const z = (k + 0.5) * WAVE_ROW;
-      ctx.beginPath();
-      for (let j = j0; j <= j1; j++) {
-        const x = (j + (k & 1)) * WAVE_TOOTH;
-        const zz = z + (j & 1 ? -WAVE_TOOTH * 0.35 : WAVE_TOOTH * 0.35);
-        if (j === j0) ctx.moveTo(X(x), Z(zz));
-        else ctx.lineTo(X(x), Z(zz));
-      }
-      ctx.stroke();
+  // Rows of zigzag waves, as on the Madaba map.
+  ctx.strokeStyle = PAL.seaDeep;
+  ctx.lineWidth = px(0.0065);
+  ctx.lineJoin = 'miter';
+  const k0 = Math.floor(region.z0 / WAVE_ROW) - 1;
+  const k1 = Math.ceil((region.z0 + region.depth) / WAVE_ROW) + 1;
+  const j0 = Math.floor(region.x0 / WAVE_TOOTH) - 2;
+  const j1 = Math.ceil((region.x0 + region.width) / WAVE_TOOTH) + 2;
+  for (let k = k0; k <= k1; k++) {
+    const z = (k + 0.5) * WAVE_ROW;
+    ctx.beginPath();
+    for (let j = j0; j <= j1; j++) {
+      const x = (j + (k & 1)) * WAVE_TOOTH;
+      const zz = z + (j & 1 ? -WAVE_TOOTH * 0.35 : WAVE_TOOTH * 0.35);
+      if (j === j0) ctx.moveTo(X(x), Z(zz));
+      else ctx.lineTo(X(x), Z(zz));
     }
-  } else {
-    // Soft wet-in-wet blooms on a fixed lattice.
-    const step = 0.4;
-    for (let j = Math.floor(region.z0 / step) - 1; j * step < region.z0 + region.depth + step; j++) {
-      for (let i = Math.floor(region.x0 / step) - 1; i * step < region.x0 + region.width + step; i++) {
-        const x = (i + hash01(i, j, 11)) * step;
-        const z = (j + hash01(i, j, 12)) * step;
-        const r = px(0.08 + hash01(i, j, 13) * 0.25);
-        const g = ctx.createRadialGradient(X(x), Z(z), 0, X(x), Z(z), r);
-        g.addColorStop(0, 'rgba(60, 110, 125, 0.10)');
-        g.addColorStop(1, 'rgba(60, 110, 125, 0)');
-        ctx.fillStyle = g;
-        ctx.fillRect(X(x) - r, Z(z) - r, r * 2, r * 2);
-      }
-    }
+    ctx.stroke();
   }
 
   /* ---- ripples along the coast (drawn wide, the land covers the inner half) ---- */
   if (plate) {
     const coasts = plate.coast.map((line) => line.map(P));
-    const rings = style === 'mosaic' ? [0.022, 0.044] : [0.018, 0.036, 0.058];
+    const rings = [0.022, 0.044];
     ctx.lineJoin = 'round';
     ctx.lineCap = 'round';
     for (let i = rings.length - 1; i >= 0; i--) {
       const d = px(rings[i]) * 2;
-      const lw = px(style === 'mosaic' ? 0.006 : 0.0025);
+      const lw = px(0.006);
       for (const line of coasts) {
-        ctx.globalAlpha = style === 'mosaic' ? 1 : 0.55 - i * 0.12;
-        ctx.strokeStyle = pal.ripple;
+        ctx.strokeStyle = PAL.ripple;
         ctx.lineWidth = d + lw;
         path(ctx, line);
         ctx.stroke();
-        ctx.globalAlpha = 1;
-        ctx.strokeStyle = pal.sea;
+        ctx.strokeStyle = PAL.sea;
         ctx.lineWidth = d - lw;
         path(ctx, line);
         ctx.stroke();
@@ -276,62 +207,23 @@ export function drawGround(input: GroundInput, region: GroundRegion, layer: 'det
   /* ---- land ---- */
   if (plate) {
     onLand((c) => {
-      c.fillStyle = pal.land;
+      c.fillStyle = PAL.land;
       c.fillRect(0, 0, W, H);
-      if (style === 'watercolour') {
-        // Pigment granulation and pooled edges.
-        const step = 0.3;
-        for (let j = Math.floor(region.z0 / step) - 1; j * step < region.z0 + region.depth + step; j++) {
-          for (let i = Math.floor(region.x0 / step) - 1; i * step < region.x0 + region.width + step; i++) {
-            const x = (i + hash01(i, j, 21)) * step;
-            const z = (j + hash01(i, j, 22)) * step;
-            const r = px(0.05 + hash01(i, j, 23) * 0.18);
-            const g = c.createRadialGradient(X(x), Z(z), 0, X(x), Z(z), r);
-            g.addColorStop(0, 'rgba(170, 140, 90, 0.10)');
-            g.addColorStop(1, 'rgba(170, 140, 90, 0)');
-            c.fillStyle = g;
-            c.fillRect(X(x) - r, Z(z) - r, r * 2, r * 2);
-          }
-        }
-        c.strokeStyle = pal.landPool;
-        c.lineWidth = px(0.02);
-        c.globalAlpha = 0.7;
-        for (const line of plate.coast) {
-          path(c, line.map(P));
-          c.stroke();
-        }
-        c.globalAlpha = 1;
-      }
       if (!detail) return;
       /* hills */
       for (const { level, lines } of plate.data.contours) {
-        c.strokeStyle = pal.hill;
-        c.globalAlpha = style === 'mosaic' ? 0.55 + Math.min(0.4, level / 400) : 0.22;
-        c.lineWidth = px(style === 'mosaic' ? 0.009 : 0.0022);
+        c.strokeStyle = PAL.hill;
+        c.globalAlpha = 0.55 + Math.min(0.4, level / 400);
+        c.lineWidth = px(0.009);
         for (const line of lines) {
           path(c, line.map(L));
           c.stroke();
         }
       }
       c.globalAlpha = 1;
-      if (style === 'watercolour') {
-        c.strokeStyle = INK;
-        c.lineCap = 'round';
-        for (const [lon0, lat0, lon1, lat1, steep] of plate.data.hachures) {
-          c.globalAlpha = 0.18 + steep * 0.35;
-          c.lineWidth = px(0.0018 + steep * 0.0018);
-          const a = L([lon0, lat0]);
-          const b = L([lon1, lat1]);
-          c.beginPath();
-          c.moveTo(a[0], a[1]);
-          c.lineTo(b[0], b[1]);
-          c.stroke();
-        }
-        c.globalAlpha = 1;
-      }
     });
   } else {
-    ctx.fillStyle = pal.land;
+    ctx.fillStyle = PAL.land;
     ctx.fillRect(0, 0, W, H);
   }
 
@@ -359,15 +251,15 @@ export function drawGround(input: GroundInput, region: GroundRegion, layer: 'det
           const sa = Math.sin(a);
           const corner = (dx: number, dy: number): Pt => [cx + dx * ca - dy * sa, cy + dx * sa + dy * ca];
           const parcel = [corner(-hw, -hh), corner(hw, -hh), corner(hw, hh), corner(-hw, hh)];
-          c.fillStyle = pal.fields[Math.floor(hash01(i, j, 37) * pal.fields.length)];
-          c.globalAlpha = style === 'mosaic' ? 0.7 : 0.4;
+          c.fillStyle = PAL.fields[Math.floor(hash01(i, j, 37) * PAL.fields.length)];
+          c.globalAlpha = 0.7;
           path(c, parcel, true);
           c.fill();
           if (r < 0.14) {
             // Vine or olive rows.
-            c.strokeStyle = pal.rows;
-            c.globalAlpha = style === 'mosaic' ? 0.9 : 0.45;
-            c.lineWidth = px(style === 'mosaic' ? 0.005 : 0.0025);
+            c.strokeStyle = PAL.rows;
+            c.globalAlpha = 0.9;
+            c.lineWidth = px(0.005);
             for (let k = -2; k <= 2; k++) {
               const o = (k / 2.5) * hh;
               const p0 = corner(-hw * 0.85, o);
@@ -387,24 +279,19 @@ export function drawGround(input: GroundInput, region: GroundRegion, layer: 'det
   /* ---- built-up areas and burnt districts ---- */
   if (plate) {
     onLand((c) => {
-      const layerPen = { ...pen, ctx: c };
       for (const area of state.urbanAreas) {
         const ring = area.ring.map(L);
-        if (style === 'mosaic') {
-          c.fillStyle = pal.urban;
-          c.globalAlpha = 0.55 + 0.4 * Math.min(1, area.weight * state.density);
-          path(c, ring, true);
-          c.fill();
-          c.globalAlpha = 1;
-        } else {
-          wash(layerPen, ring, pal.urban, 0.35 + 0.35 * Math.min(1, area.weight * state.density));
-        }
+        c.fillStyle = PAL.urban;
+        c.globalAlpha = 0.55 + 0.4 * Math.min(1, area.weight * state.density);
+        path(c, ring, true);
+        c.fill();
+        c.globalAlpha = 1;
       }
       if (!detail) return;
       for (const f of state.features) {
         if (f.kind !== 'burnt' || !f.ring) continue;
         c.globalAlpha = 0.45;
-        c.fillStyle = pal.burnt;
+        c.fillStyle = PAL.burnt;
         path(c, f.ring.map(L), true);
         c.fill();
         c.globalAlpha = 1;
@@ -416,19 +303,18 @@ export function drawGround(input: GroundInput, region: GroundRegion, layer: 'det
 
   /* ---- coast line ---- */
   if (plate) {
-    ctx.strokeStyle = pal.coast;
+    ctx.strokeStyle = PAL.coast;
     ctx.lineJoin = 'round';
-    ctx.lineWidth = px(style === 'mosaic' ? 0.0075 : 0.0042);
+    ctx.lineWidth = px(0.0075);
     for (const line of plate.coast) {
       path(ctx, line.map(P));
       ctx.stroke();
     }
   }
 
-  let plaque: Pt[] | null = null;
   if (detail) {
     drawLettering();
-    plaque = drawPlaque(ctx, pen, L(plan.page.plaque), px(1.15), px(0.25), plan.inscription);
+    drawPlaque(ctx, pen, L(plan.page.plaque), px(1.15), px(0.25), plan.inscription);
   }
   ctx.restore();
 
@@ -457,20 +343,11 @@ export function drawGround(input: GroundInput, region: GroundRegion, layer: 'det
     ctx.restore();
   }
 
-  /* ---- auxiliary: R = tesserae, G = gold ---- */
+  /* ---- auxiliary: R = tesserae (the whole floor), G = gold ---- */
   const a = aux.getContext('2d')!;
   a.save();
-  a.fillStyle = '#000000';
-  a.fillRect(0, 0, W, H);
   a.fillStyle = '#ff0000';
-  if (style === 'mosaic') {
-    a.fillRect(0, 0, W, H);
-  } else if (plaque) {
-    a.beginPath();
-    plaque.forEach(([x, y], i) => (i ? a.lineTo(x, y) : a.moveTo(x, y)));
-    a.closePath();
-    a.fill();
-  }
+  a.fillRect(0, 0, W, H);
   a.restore();
   mergeGold(aux, gold);
   return { canvas, aux };
@@ -499,12 +376,12 @@ export function drawGround(input: GroundInput, region: GroundRegion, layer: 'det
       const pts = f.path.map(L);
       ctx.lineJoin = 'round';
       ctx.lineCap = 'round';
-      ctx.strokeStyle = pal.roadEdge;
-      ctx.lineWidth = px(style === 'mosaic' ? 0.02 : 0.014);
+      ctx.strokeStyle = PAL.roadEdge;
+      ctx.lineWidth = px(0.02);
       path(ctx, pts);
       ctx.stroke();
-      ctx.strokeStyle = pal.road;
-      ctx.lineWidth = px(style === 'mosaic' ? 0.011 : 0.009);
+      ctx.strokeStyle = PAL.road;
+      ctx.lineWidth = px(0.011);
       path(ctx, pts);
       ctx.stroke();
     }
@@ -512,37 +389,28 @@ export function drawGround(input: GroundInput, region: GroundRegion, layer: 'det
       if (f.kind !== 'plaza') continue;
       const s = featureShape(f, 2.2);
       if (!s) continue;
-      if (style === 'mosaic') {
-        ctx.fillStyle = pal.plaza;
-        path(ctx, s, true);
-        ctx.fill();
-        ctx.strokeStyle = pal.roadEdge;
-        ctx.lineWidth = px(0.006);
-        ctx.stroke();
-      } else {
-        wash(pen, s, pal.plaza, 0.9);
-        ink(pen, s, true, 0.7, false);
-      }
+      ctx.fillStyle = PAL.plaza;
+      path(ctx, s, true);
+      ctx.fill();
+      ctx.strokeStyle = PAL.roadEdge;
+      ctx.lineWidth = px(0.006);
+      ctx.stroke();
     }
     for (const f of state.features) {
       if (f.kind !== 'harbour' && f.kind !== 'cistern') continue;
       const s = featureShape(f, f.kind === 'cistern' ? 1.8 : 1);
       if (!s) continue;
-      ctx.fillStyle = f.kind === 'cistern' ? pal.cistern : pal.sea;
+      ctx.fillStyle = f.kind === 'cistern' ? PAL.cistern : PAL.sea;
       path(ctx, s, true);
       ctx.fill();
       if (f.kind === 'cistern') {
-        ctx.strokeStyle = style === 'mosaic' ? pal.roadEdge : '#b8a27c';
+        ctx.strokeStyle = PAL.roadEdge;
         ctx.lineWidth = px(0.007);
         ctx.stroke();
       }
-      if (style === 'mosaic') {
-        ctx.strokeStyle = pal.coast;
-        ctx.lineWidth = px(0.0045);
-        ctx.stroke();
-      } else {
-        ink(pen, s, true, 0.9, false);
-      }
+      ctx.strokeStyle = PAL.coast;
+      ctx.lineWidth = px(0.0045);
+      ctx.stroke();
     }
 
     const cityRing = state.urbanAreas.find((ar) => ar.id.startsWith('city'))?.ring;
@@ -558,16 +426,16 @@ export function drawGround(input: GroundInput, region: GroundRegion, layer: 'det
       const pts = wall.path.map(P);
       if (wall.kind === 'land-wall' && (wall.variant === 'triple' || wall.variant === 'breached')) {
         const moat = offsetOutward(wall.path, 0.05, centre).map(P);
-        ctx.strokeStyle = pal.coast;
+        ctx.strokeStyle = PAL.coast;
         ctx.lineWidth = px(0.026);
         path(ctx, moat);
         ctx.stroke();
-        ctx.strokeStyle = pal.sea;
+        ctx.strokeStyle = PAL.sea;
         ctx.lineWidth = px(0.018);
         path(ctx, moat);
         ctx.stroke();
       }
-      ctx.strokeStyle = pal.wall;
+      ctx.strokeStyle = PAL.wall;
       ctx.globalAlpha = wall.variant === 'ruin' ? 0.4 : 0.85;
       ctx.lineWidth = px(wall.kind === 'land-wall' ? 0.014 : 0.01);
       path(ctx, pts);
@@ -585,17 +453,11 @@ export function drawGround(input: GroundInput, region: GroundRegion, layer: 'det
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       (ctx as CanvasRenderingContext2D & { letterSpacing: string }).letterSpacing = `${spacing}em`;
-      if (style === 'watercolour') {
-        ctx.fillStyle = 'rgba(236, 220, 180, 0.55)';
-        ctx.fillText(text, 1, 1);
-      }
-      if (style === 'mosaic') {
-        // Letters set in stone need strokes at least two tesserae wide.
-        ctx.strokeStyle = color;
-        ctx.lineJoin = 'round';
-        ctx.lineWidth = size * 0.1;
-        ctx.strokeText(text, 0, 0);
-      }
+      // Letters set in stone need strokes at least two tesserae wide.
+      ctx.strokeStyle = color;
+      ctx.lineJoin = 'round';
+      ctx.lineWidth = size * 0.1;
+      ctx.strokeText(text, 0, 0);
       ctx.fillStyle = color;
       ctx.fillText(text, 0, 0);
       ctx.restore();
@@ -603,9 +465,9 @@ export function drawGround(input: GroundInput, region: GroundRegion, layer: 'det
     for (const label of state.labels) {
       const p = frame.toPage(...label.position);
       if (!inView(p.x, p.z)) continue;
-      const text = style === 'mosaic' ? label.inscription.greek : label.inscription.latin;
+      const text = label.inscription.greek;
       const size = px(label.size === 'sea' ? 0.06 : label.size === 'strait' ? 0.04 : 0.034);
-      const color = label.size === 'place' ? pal.placeLetter : pal.waterLetter;
+      const color = label.size === 'place' ? PAL.placeLetter : PAL.waterLetter;
       letter(text, L(label.position), label.angle, size, color, label.size === 'sea' ? 0.5 : 0.3);
     }
   }

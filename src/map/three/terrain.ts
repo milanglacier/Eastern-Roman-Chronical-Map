@@ -1,9 +1,8 @@
 /**
- * Terrain building blocks shared by the themes: the CPU-displaced grid over
- * the world rect (each theme passes its own meters → Y relief), the
- * territory/frontier uniforms fed by territory.ts, and the diorama skirt.
- * The materials live with their themes (chronicle/terrain.ts,
- * clockwork/terrain.ts).
+ * Terrain building blocks: the CPU-displaced grid over the world rect (the
+ * caller passes the meters → Y relief), the territory/frontier uniforms fed
+ * by territory.ts, and the diorama skirt. The material lives in
+ * chronicle/terrain.ts.
  */
 import {
   BufferAttribute,

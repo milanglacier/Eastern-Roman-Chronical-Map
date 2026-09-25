@@ -37,12 +37,12 @@ function drawWall(pen: Pen, w: number, h: number, stone: string, bands: number):
   ctx.fillStyle = stone;
   for (let i = 0; i < merlons; i++) ctx.fillRect(i * m + m * 0.2, h * 0.04, m * 0.6, top);
   ctx.strokeStyle = INK;
-  ctx.lineWidth = pen.u * (pen.flat ? 2.2 : 1.2);
+  ctx.lineWidth = pen.u * 1.2;
   for (let i = 0; i < merlons; i++) ctx.strokeRect(i * m + m * 0.2, h * 0.04, m * 0.6, top);
   ctx.fillStyle = stone;
   ctx.fillRect(0, top, w, h - top);
   // Courses of ashlar.
-  ctx.globalAlpha = pen.flat ? 0.6 : 0.3;
+  ctx.globalAlpha = 0.3;
   ctx.lineWidth = pen.u * 0.7;
   for (let y = top + h * 0.07; y < h; y += h * 0.07) {
     ctx.beginPath();
@@ -55,13 +55,13 @@ function drawWall(pen: Pen, w: number, h: number, stone: string, bands: number):
   ctx.fillStyle = BRICK;
   for (let i = 1; i <= bands; i++) {
     const y = top + ((h - top) * i) / (bands + 1);
-    ctx.globalAlpha = pen.flat ? 1 : 0.7;
+    ctx.globalAlpha = 0.7;
     ctx.fillRect(0, y - h * 0.025, w, h * 0.05);
   }
   ctx.globalAlpha = 1;
   // Wall walk and plinth.
   ctx.strokeStyle = INK;
-  ctx.lineWidth = pen.u * (pen.flat ? 2.4 : 1.4);
+  ctx.lineWidth = pen.u * 1.4;
   ctx.beginPath();
   ctx.moveTo(0, top);
   ctx.lineTo(w, top);
@@ -85,11 +85,11 @@ function drawTower(pen: Pen, w: number, h: number, stone: string): void {
   ctx.closePath();
   ctx.fill();
   ctx.strokeStyle = INK;
-  ctx.lineWidth = pen.u * (pen.flat ? 2.4 : 1.3);
+  ctx.lineWidth = pen.u * 1.3;
   ctx.stroke();
   ctx.fillStyle = BRICK;
   for (const f of [0.35, 0.58, 0.8]) {
-    ctx.globalAlpha = pen.flat ? 1 : 0.7;
+    ctx.globalAlpha = 0.7;
     ctx.fillRect(0, h * f, w, h * 0.035);
   }
   ctx.globalAlpha = 1;
@@ -110,7 +110,7 @@ function drawAqueduct(pen: Pen, w: number, h: number): void {
   ctx.fillStyle = stone;
   ctx.fillRect(0, h * 0.06, w, h * 0.94);
   ctx.fillStyle = BRICK;
-  ctx.globalAlpha = pen.flat ? 1 : 0.7;
+  ctx.globalAlpha = 0.7;
   ctx.fillRect(0, h * 0.5, w, h * 0.04);
   ctx.fillRect(0, h * 0.1, w, h * 0.03);
   ctx.globalAlpha = 1;
@@ -134,7 +134,7 @@ function drawAqueduct(pen: Pen, w: number, h: number): void {
   }
   ctx.restore();
   ctx.strokeStyle = INK;
-  ctx.lineWidth = pen.u * (pen.flat ? 2.2 : 1.1);
+  ctx.lineWidth = pen.u * 1.1;
   for (let i = 0; i < 2; i++) {
     cut(w * (0.09 + i * 0.5), h * 0.58, w * 0.32, h * 1.01);
     ctx.stroke();
@@ -156,7 +156,7 @@ function drawColonnade(pen: Pen, w: number, h: number): void {
   ctx.fillRect(0, h * 0.04, w, h * 0.2);
   ctx.fillRect(0, h * 0.9, w, h * 0.1);
   ctx.strokeStyle = INK;
-  ctx.lineWidth = pen.u * (pen.flat ? 2.2 : 1.1);
+  ctx.lineWidth = pen.u * 1.1;
   ctx.strokeRect(-2, h * 0.04, w + 4, h * 0.2);
   for (let i = 0; i < 3; i++) {
     const cx = w * (0.16 + i * 0.333);
@@ -175,11 +175,11 @@ export interface StripTexture {
   size: [number, number];
 }
 
-export function drawStripTexture(kind: StripKind, flat: boolean): StripTexture {
+export function drawStripTexture(kind: StripKind): StripTexture {
   const [w, h] = kind === 'tower' ? [192, 320] : kind === 'colonnade' ? [256, 160] : kind === 'aqueduct' ? [512, 256] : [512, 256];
   const c = canvas(w, h);
   const gold = canvas(w, h);
-  const pen = makePen(c.getContext('2d')!, kind.length * 31, Math.max(w, h) / 420, { flat });
+  const pen = makePen(c.getContext('2d')!, kind.length * 31, Math.max(w, h) / 420);
   if (kind === 'land-wall') drawWall(pen, w, h, '#dcc49a', 3);
   else if (kind === 'sea-wall') drawWall(pen, w, h, '#d6c29e', 2);
   else if (kind === 'tower') drawTower(pen, w, h, '#d9c197');

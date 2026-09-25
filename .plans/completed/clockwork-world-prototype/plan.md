@@ -1,11 +1,15 @@
 # Clockwork world: prototype (Game-of-Thrones-titles direction)
 
-> **Status: superseded (2026-09-24).** Built as specified (`?theme=clockwork`;
-> screenshots in `docs/screenshots/archive/clockwork-*.jpg`). The user rejected it:
+> **Status: rejected, code removed (2026-09-25).** Built as specified (screenshots
+> in `docs/screenshots/archive/clockwork-*.jpg`). The user rejected it:
 > "I want a free angle of rotation that can go up and down, left and right, not a
 > fixed angle; your current version is still a 2.5D god-like view." The orbit
 > camera around a ground target is what made it read as a map. It was followed by
-> `.plans/active/chronicle-map-prototype`.
+> `.plans/active/chronicle-map-prototype`. The clockwork theme (`?theme=clockwork`)
+> was then deleted: the stone-and-brass materials, the hall and astrolabe, the
+> clockwork Constantinople, the lacquer sea, the vault sky, the terraced relief,
+> the concave bend and the orbit camera. The coast distance field decoder and the
+> daylight reflection environment survive in the chronicle map.
 
 ## Why
 

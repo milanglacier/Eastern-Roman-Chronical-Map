@@ -1,11 +1,11 @@
 /**
  * CPU copy of the baked coast distance field (worldmask.R: 128 = coast,
  * ±6 per heightmap px, + = land), bilinearly sampled by lon/lat. The
- * clockwork relief uses it so the carved slab edge follows a smooth
+ * relief (lib/relief.ts) uses it so the coast edge follows a smooth
  * contour instead of the mesh grid.
  */
 import type { Texture } from 'three';
-import { LON_MIN, LON_MAX, LAT_MIN, LAT_MAX } from '../../../lib/hex';
+import { LON_MIN, LON_MAX, LAT_MIN, LAT_MAX } from '../../lib/hex';
 
 export type CoastField = (lon: number, lat: number) => number;
 

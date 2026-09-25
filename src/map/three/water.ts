@@ -1,12 +1,9 @@
 /**
  * Animated sea surface: one opaque, tessellated sheet at Y=0 over the world
- * rect plus an open-ocean apron around it, bent by the curved earth. Two
- * looks share the wave/depth/fresnel set-up:
- *  - chronicle: a watercolour wash, pale at the shores and deepening
- *    offshore, with inked chart ripples following every coast (from the
- *    baked coast distance field, worldmask.R);
- *  - clockwork: dark polished lacquer with carved wave lines and a warm
- *    sheen from the hall light.
+ * rect plus an open-ocean apron around it, bent by the curved earth: a
+ * watercolour wash, pale at the shores and deepening offshore, with inked
+ * chart ripples following every coast (from the baked coast distance
+ * field, worldmask.R).
  * Land is above Y=0 and simply depth-tests the water away.
  */
 import {
@@ -38,23 +35,15 @@ export interface Water {
   dispose(): void;
 }
 
-/** Clockwork sea: dark lacquer (see clockwork/terrain.ts for the land). */
-const LACQUER_DEEP = 0x121c22;
-const LACQUER_SHALLOW = 0x263e42;
-/** Chronicle sea: watercolour washes (see docs/art-direction.md). */
+/** Watercolour washes (see docs/art-direction.md). */
 const WASH_SHALLOW = 0x7fb3b1;
 const WASH_DEEP = 0x2d5f7e;
 const WASH_RIPPLE = 0x2f4f5e;
 
-export type SeaStyle = 'clockwork' | 'chronicle';
-
-function applyMood(uniforms: Record<string, { value: unknown }>, mood: Mood, style: SeaStyle): void {
+function applyMood(uniforms: Record<string, { value: unknown }>, mood: Mood): void {
   (uniforms.uSunDir.value as Vector3).set(...mood.keyDir);
-  // The chronicle sea catches the era's sky; in the clockwork hall it
-  // mirrors the dark lamplit room.
-  const sky = uniforms.uSkyColor.value as Color;
-  if (style === 'clockwork') sky.setRGB(...mood.hazeColor).multiplyScalar(0.35);
-  else sky.setRGB(...mood.skyHorizon);
+  // The sea catches the era's sky.
+  (uniforms.uSkyColor.value as Color).setRGB(...mood.skyHorizon);
   (uniforms.uGlintColor.value as Color).setRGB(...mood.keyColor);
   uniforms.uGlintStrength.value = 0.35 + mood.keyIntensity * 0.12;
   // The sea shader is unlit: dim it with the night.
@@ -92,9 +81,6 @@ uniform float uTime;
 uniform vec3 uDeepColor;
 uniform vec3 uShallowColor;
 uniform vec3 uSkyColor;
-uniform vec3 uSunDir;
-uniform vec3 uGlintColor;
-uniform float uGlintStrength;
 uniform vec3 uRippleColor;
 uniform float uLight;
 varying vec2 vUv;
@@ -128,45 +114,23 @@ void main() {
   float depth = max(0.0, -bedY);
   vec3 viewDir = normalize(cameraPosition - vWorldPos);
   float fresnel = pow(1.0 - max(dot(viewDir, n), 0.0), 3.0);
-  vec3 halfDir = normalize(viewDir + uSunDir);
   float sdfPx = (texture2D(uWorldMask, vUv).r * 255.0 - 128.0) / 6.0; // signed px from coast (+land)
   vec3 col;
 
-  #ifdef CLOCKWORK
-    // Lacquered, engraved sea: dark polished surface, carved wave lines
-    // (contours of a slow noise field offshore, rings along the coasts),
-    // a broad warm sheen from the hall light. Opaque, like the model.
-    vec2 wp = vWorldPos.xz;
-    float swell = wNoise(wp * 0.35 + vec2(uTime * 0.01, 0.0)) * 0.6 + wNoise(wp * 0.9 - vec2(0.0, uTime * 0.015)) * 0.4;
-    float band = fract(swell * 7.0);
-    float groove = 1.0 - smoothstep(0.0, 0.07, min(band, 1.0 - band));
-    float ringCoord = -sdfPx * 0.5 + uTime * 0.04;
-    float ringF = fract(ringCoord);
-    float ring = (1.0 - smoothstep(0.0, 0.08, min(ringF, 1.0 - ringF))) * (1.0 - smoothstep(-1.0, -0.2, sdfPx)) * smoothstep(-9.0, -3.0, sdfPx);
-    vec3 lac = mix(uShallowColor, uDeepColor, smoothstep(0.0, 0.35, depth)) * uLight;
-    float carve = max(groove * 0.8, ring);
-    lac *= 1.0 - 0.35 * carve;
-    lac += uGlintColor * carve * 0.05 * uLight;
-    float sheen = pow(max(dot(n, halfDir), 0.0), 24.0);
-    lac += uGlintColor * (sheen * 0.12 + pow(max(dot(n, halfDir), 0.0), 220.0) * 1.0) * uGlintStrength;
-    lac = mix(lac, uSkyColor * 0.6, fresnel * 0.35);
-    col = lac;
-  #else
-    // Watercolour sea on parchment: a pale wash at the shores deepening
-    // offshore, granulated and blotched, with three inked chart ripples
-    // following every coast (the portolan-chart device).
-    vec2 wpc = vWorldPos.xz;
-    float blotW = wNoise(wpc * 0.45) * 0.6 + wNoise(wpc * 1.7 + 3.1) * 0.4;
-    vec3 washW = mix(uShallowColor, uDeepColor, smoothstep(0.0, 0.5, depth + (blotW - 0.5) * 0.14));
-    washW *= 0.93 + 0.12 * blotW;
-    float rc = -sdfPx * 0.6 - 0.35;
-    float rfw = fwidth(rc) * 1.4 + 1e-4;
-    float rd = min(fract(rc), 1.0 - fract(rc));
-    float rippleC = (1.0 - smoothstep(rfw * 0.5, rfw * 1.5, rd)) * step(0.0, rc) * (1.0 - smoothstep(2.2, 3.2, rc));
-    washW = mix(washW, uRippleColor, rippleC * 0.6);
-    washW = mix(washW, uSkyColor, fresnel * 0.25);
-    col = washW * uLight;
-  #endif
+  // Watercolour sea on parchment: a pale wash at the shores deepening
+  // offshore, granulated and blotched, with three inked chart ripples
+  // following every coast (the portolan-chart device).
+  vec2 wpc = vWorldPos.xz;
+  float blotW = wNoise(wpc * 0.45) * 0.6 + wNoise(wpc * 1.7 + 3.1) * 0.4;
+  vec3 washW = mix(uShallowColor, uDeepColor, smoothstep(0.0, 0.5, depth + (blotW - 0.5) * 0.14));
+  washW *= 0.93 + 0.12 * blotW;
+  float rc = -sdfPx * 0.6 - 0.35;
+  float rfw = fwidth(rc) * 1.4 + 1e-4;
+  float rd = min(fract(rc), 1.0 - fract(rc));
+  float rippleC = (1.0 - smoothstep(rfw * 0.5, rfw * 1.5, rd)) * step(0.0, rc) * (1.0 - smoothstep(2.2, 3.2, rc));
+  washW = mix(washW, uRippleColor, rippleC * 0.6);
+  washW = mix(washW, uSkyColor, fresnel * 0.25);
+  col = washW * uLight;
 
   gl_FragColor = vec4(col, 1.0);
   #include <tonemapping_fragment>
@@ -307,7 +271,6 @@ function apronGeometry(): BufferGeometry {
 
 export function createOceanApron(
   textures: { waterNormal: Texture | null },
-  style: SeaStyle,
 ): Water {
   const geometry = apronGeometry();
 
@@ -315,7 +278,7 @@ export function createOceanApron(
     UniformsLib.fog,
     {
       uTime: { value: 0 },
-      uDeepColor: { value: new Color(style === 'clockwork' ? LACQUER_DEEP : WASH_DEEP) },
+      uDeepColor: { value: new Color(WASH_DEEP) },
       uSkyColor: { value: new Color(WATER_FRESNEL_TINT) },
       uSunDir: { value: new Vector3(0, 1, 0) },
       uGlintColor: { value: new Color(1, 0.93, 0.78) },
@@ -346,7 +309,7 @@ export function createOceanApron(
       uniforms.uTime.value = t;
     },
     setMood(mood) {
-      applyMood(uniforms, mood, style);
+      applyMood(uniforms, mood);
     },
     dispose() {
       geometry.dispose();
@@ -361,9 +324,7 @@ export function createWater(
     heightY: DataTexture;
     worldMask: Texture | null;
   },
-  style: SeaStyle,
 ): Water {
-  const clockwork = style === 'clockwork';
   if (textures.waterNormal) {
     textures.waterNormal.wrapS = RepeatWrapping;
     textures.waterNormal.wrapT = RepeatWrapping;
@@ -372,8 +333,8 @@ export function createWater(
     UniformsLib.fog,
     {
       uTime: { value: 0 },
-      uDeepColor: { value: new Color(clockwork ? LACQUER_DEEP : WASH_DEEP) },
-      uShallowColor: { value: new Color(clockwork ? LACQUER_SHALLOW : WASH_SHALLOW) },
+      uDeepColor: { value: new Color(WASH_DEEP) },
+      uShallowColor: { value: new Color(WASH_SHALLOW) },
       uSkyColor: { value: new Color(WATER_FRESNEL_TINT) },
       uRippleColor: { value: new Color(WASH_RIPPLE) },
       uSunDir: { value: new Vector3(0, 1, 0) },
@@ -394,7 +355,6 @@ export function createWater(
     fragmentShader: FRAG,
     uniforms,
     fog: true,
-    defines: clockwork ? { CLOCKWORK: '' } : {},
   });
 
   // 2-unit segments: the curved-earth bend is per vertex (see apronGeometry).
@@ -412,7 +372,7 @@ export function createWater(
       uniforms.uTime.value = t;
     },
     setMood(mood) {
-      applyMood(uniforms, mood, style);
+      applyMood(uniforms, mood);
     },
     dispose() {
       geometry.dispose();

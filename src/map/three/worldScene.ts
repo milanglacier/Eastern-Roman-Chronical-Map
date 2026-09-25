@@ -1,16 +1,10 @@
 /**
- * The world view: the whole Roman East as one model with its own camera.
- * Two themes share it (theme.ts):
- *
- *  - chronicle (default): the living chronicle map — parchment, ink and
- *    watercolour over sculpted relief on a convex curved earth, flown with
- *    the free-look drone camera. Flying down close to Constantinople enters
- *    its city view (chronicle/city/cityView.ts), a scene of its own;
- *    climbing high above it returns to the map. `scene` and `rig` always
- *    name the view on screen.
- *  - clockwork: the Game-of-Thrones-titles mechanical model in a dark hall
- *    — carved stone, lacquered sea, an astrolabe sun, the world bent into a
- *    bowl, a clockwork Constantinople; orbit camera.
+ * The world view: the whole Roman East as the living chronicle map —
+ * parchment, ink and watercolour over sculpted relief on a convex curved
+ * earth, flown with the free-look drone camera. Flying down close to
+ * Constantinople enters its city view (chronicle/city/cityView.ts), a
+ * scene of its own; climbing high above it returns to the map. `scene` and
+ * `rig` always name the view on screen.
  *
  * The host (MapCanvas) owns the renderer, the post pipeline and the loop,
  * and pushes era moods / years in.
@@ -19,27 +13,21 @@ import { Scene, Texture, Vector3, WebGLRenderer } from 'three';
 import { cities, cityPlans, snapshots } from '../../data';
 import { snapshotForYear } from '../../lib/timeline';
 import type { Mood } from '../../lib/mood';
-import { CHRONICLE_RELIEF, clockworkY, sculptedY } from '../../lib/clockworkRelief';
+import { reliefY } from '../../lib/relief';
 import type { HeightField } from './heightField';
 import { heightFieldToDataTexture } from './heightField';
 import { createTerritoryController } from './territory';
-import { buildSkirt, type Terrain } from './terrain';
+import { buildSkirt } from './terrain';
 import { createOceanApron, createWater } from './water';
 import { createLighting } from './lights';
 import { createAtmosphere } from './atmosphere';
 import { createSky } from './sky';
-import { createCameraRig, pathPose, type CameraPose, type CameraRig } from './cameraRig';
 import { groundToLonLat, lonLatToGround } from './geo';
-import { bendY, curvatureUniforms, occludedByHorizon, setCurveMode } from './curvature';
-import type { Theme } from './theme';
-import { buildClockworkTerrain } from './clockwork/terrain';
-import { decodeCoastField } from './clockwork/coastField';
-import { createClockworkMaterials } from './clockwork/materials';
-import { createAstrolabe, createHallEnvironment } from './clockwork/hall';
-import { buildConstantinople, type ClockworkCity } from './clockwork/constantinople';
+import { bendY, curvatureUniforms, occludedByHorizon } from './curvature';
+import { decodeCoastField } from './coastField';
+import { createDaylightEnvironment } from './environment';
 import { buildChronicleTerrain } from './chronicle/terrain';
 import { CITY_EXIT_ALTITUDE, createCityView, type CityView } from './chronicle/city/cityView';
-import { activeMosaic } from './chronicle/city/mosaic';
 import { createDroneRig, dronePathPose, lookVector, type DronePose, type DroneRig } from './droneRig';
 
 export interface WorldAssets {
@@ -56,11 +44,8 @@ export interface ScreenPoint {
   visible: boolean;
 }
 
-/** What the host needs from either camera (orbit rig or free-look drone). */
-export type ViewRig = Pick<CameraRig, 'camera' | 'distance' | 'enabled' | 'update' | 'resize' | 'dispose'> & {
-  readonly pose: { x: number; z: number; distance: number; heading: number; pitch: number };
-  flyTo(pose: { heading?: number }, seconds?: number): Promise<boolean>;
-};
+/** What the host needs from the camera on screen (the map's drone or the city's). */
+export type ViewRig = Pick<DroneRig, 'camera' | 'distance' | 'pose' | 'enabled' | 'flyTo' | 'update' | 'resize' | 'dispose'>;
 
 export type ViewMode = 'world' | 'city';
 
@@ -72,7 +57,6 @@ export interface WorldView {
   /** Swap between the map and the city view, placing the camera to continue the flight. */
   setMode(mode: ViewMode): void;
   resize(width: number, height: number): void;
-  theme: Theme;
   setMood(mood: Mood): void;
   setYear(year: number): void;
   /** Per frame: animations + flights. */
@@ -82,13 +66,13 @@ export interface WorldView {
   setShadowMapSize(size: number): void;
   /** Lon/lat → CSS px in a viewport of the given size (bent + horizon-occluded). */
   project(lon: number, lat: number, width: number, height: number): ScreenPoint;
-  /** Clockwork only: the opening flight to Constantinople as it rises. */
+  /** The opening flight to Constantinople. */
   playJourney(): Promise<boolean>;
   /** Screenshot/debug: pin the journey camera at progress u (0..1). */
   journeyAt(u: number): void;
   /** Screenshot/debug: set the city rise directly (0..1). */
   setCityRise(t: number): void;
-  /** Screenshot/debug: place the camera (orbit pose or drone pose, per theme). */
+  /** Screenshot/debug: place the camera (a drone pose). */
   setView(pose: Record<string, number>): void;
   /** Screenshot/debug: enter the city view at a named view (cityView.ts CITY_VIEWS). */
   setCityView(name: string): boolean;
@@ -96,14 +80,14 @@ export interface WorldView {
 }
 
 const DEG = Math.PI / 180;
-/** Constantinople model: centre (peninsula), world scale, rise duration. */
+/** Fallback centre of Constantinople (the peninsula). */
 const CITY_LONLAT: [number, number] = [28.955, 41.018];
-const CITY_SCALE = 2.5;
-const CITY_RISE_SECONDS = 7.5;
+/** Seconds for the city to fold up on arrival. */
+const CITY_RISE_SECONDS = 2.6;
 /**
- * Chronicle: enter the city view below this altitude when looking at the
- * city (world units), and arrive back on the map a little above it, so the
- * switch cannot flip back and forth.
+ * Enter the city view below this altitude when looking at the city (world
+ * units), and arrive back on the map a little above it, so the switch
+ * cannot flip back and forth.
  */
 export const CITY_ENTER_ALTITUDE = 1.5;
 const CITY_ENTER_REACH = 0.8;
@@ -114,7 +98,7 @@ const SWITCH_COOLDOWN = 1.5;
 const FLIGHT_SECONDS = 19;
 
 /**
- * Chronicle opening: high over the Aegean → dive over the Dardanelles → skim
+ * The opening flight: high over the Aegean → dive over the Dardanelles → skim
  * the Marmara → low toward Constantinople, close enough to enter its city view.
  */
 function droneJourney(): DronePose[] {
@@ -132,28 +116,10 @@ function droneJourney(): DronePose[] {
   ];
 }
 
-/** The opening flight: Aegean → low over the Dardanelles → Marmara → orbit the city. */
-function journeyPoses(): CameraPose[] {
-  const g = (lon: number, lat: number) => lonLatToGround(lon, lat);
-  const aegean = g(25.3, 37.2);
-  const dard = g(26.4, 40.05);
-  const marmara = g(27.9, 40.72);
-  const city = g(...CITY_LONLAT);
-  return [
-    { x: aegean.x, z: aegean.z, distance: 62, heading: 25 * DEG, pitch: 40 * DEG },
-    { x: dard.x, z: dard.z, distance: 16, heading: 50 * DEG, pitch: 17 * DEG },
-    { x: marmara.x, z: marmara.z, distance: 12, heading: 68 * DEG, pitch: 15 * DEG },
-    { x: city.x - 1.5, z: city.z + 0.8, distance: 11, heading: 85 * DEG, pitch: 19 * DEG },
-    { x: city.x, z: city.z, distance: 10.5, heading: 140 * DEG, pitch: 24 * DEG },
-    { x: city.x, z: city.z, distance: 12, heading: 205 * DEG, pitch: 28 * DEG },
-  ];
-}
-
 export function createWorldView(
   canvas: HTMLElement,
   assets: WorldAssets,
   options: {
-    theme: Theme;
     renderer: WebGLRenderer;
     shadowMapSize?: number;
     onViewChange?: () => void;
@@ -162,86 +128,48 @@ export function createWorldView(
   },
 ): WorldView {
   const { heightField } = assets;
-  const { theme } = options;
-  const clockwork = theme === 'clockwork';
-  const chronicle = !clockwork;
-  setCurveMode(clockwork ? 'concave' : 'convex');
   const scene = new Scene();
 
-  // Chronicle: Constantinople has a city view of its own.
-  const cityPlan = chronicle ? cityPlans.get('constantinople') ?? null : null;
+  // Constantinople has a city view of its own.
+  const cityPlan = cityPlans.get('constantinople') ?? null;
   const cityAt = (() => {
     const c = cities.find((x) => x.id === 'constantinople');
     return c ? lonLatToGround(c.lonlat[0], c.lonlat[1]) : lonLatToGround(...CITY_LONLAT);
   })();
 
-  /** Terrain surface Y, per theme — mesh, markers, rig and models all agree. */
+  /** Terrain surface Y — mesh, markers and rig all agree. */
   const coast = decodeCoastField(assets.worldMask);
-  const surfaceY = (meters: number, lon: number, lat: number) => {
-    const coastPx = coast ? coast(lon, lat) : undefined;
-    return clockwork ? clockworkY(meters, coastPx) : sculptedY(meters, coastPx, CHRONICLE_RELIEF);
-  };
+  const surfaceY = (meters: number, lon: number, lat: number) => reliefY(meters, coast ? coast(lon, lat) : undefined);
   const yAtLonLat = (lon: number, lat: number) => surfaceY(heightField.heightAt(lon, lat), lon, lat);
 
-  const style = clockwork ? 'clockwork' : 'chronicle';
-  const sky = createSky(style);
+  const sky = createSky();
   scene.add(sky.mesh);
-  const terrain: Terrain = clockwork
-    ? buildClockworkTerrain(heightField, { albedo: assets.albedo, worldMask: assets.worldMask }, surfaceY)
-    : buildChronicleTerrain(
-        heightField,
-        { albedo: assets.albedo, worldMask: assets.worldMask, granulation: assets.granulation },
-        surfaceY,
-      );
-  scene.add(terrain.mesh);
-  const skirt = buildSkirt(heightField, surfaceY, clockwork ? 0x3a2c1c : 0xb9a57e);
-  scene.add(skirt.mesh);
-  const water = createWater(
-    { waterNormal: assets.waterNormal, heightY: heightFieldToDataTexture(heightField), worldMask: assets.worldMask },
-    style,
+  const terrain = buildChronicleTerrain(
+    heightField,
+    { albedo: assets.albedo, worldMask: assets.worldMask, granulation: assets.granulation },
+    surfaceY,
   );
+  scene.add(terrain.mesh);
+  const skirt = buildSkirt(heightField, surfaceY, 0xb9a57e);
+  scene.add(skirt.mesh);
+  const water = createWater({
+    waterNormal: assets.waterNormal,
+    heightY: heightFieldToDataTexture(heightField),
+    worldMask: assets.worldMask,
+  });
   scene.add(water.mesh);
-  const apron = createOceanApron({ waterNormal: assets.waterNormal }, style);
+  const apron = createOceanApron({ waterNormal: assets.waterNormal });
   scene.add(apron.mesh);
-  const lighting = createLighting(options.shadowMapSize ?? 2048, clockwork ? 'hall' : 'paper');
+  const lighting = createLighting(options.shadowMapSize ?? 2048);
   scene.add(lighting.group);
-  const atmosphere = createAtmosphere(scene, style);
+  const atmosphere = createAtmosphere(scene);
 
-  // ---- clockwork hall + cities ----
-  const env = createHallEnvironment(options.renderer, clockwork ? 'hall' : 'daylight');
+  const env = createDaylightEnvironment(options.renderer);
   scene.environment = env.texture;
-  const astrolabe = clockwork ? createAstrolabe(new Vector3(144, 58, 64), 6) : null;
-  if (astrolabe) scene.add(astrolabe.group);
-  const cwMats = clockwork ? createClockworkMaterials() : null;
-  let city: ClockworkCity | null = null;
-  if (cwMats) {
-    city = buildConstantinople(cwMats);
-    const c = lonLatToGround(...CITY_LONLAT);
-    // Seat the plate on the ground around the peninsula itself (upper
-    // quartile of the inner footprint) — the highest ground under the whole
-    // gear ring would include Mount Olympus of Bithynia and turn the
-    // pedestal into a tower.
-    const hs: number[] = [];
-    const r = 0.6 * CITY_SCALE;
-    for (let dz = -r; dz <= r; dz += r / 8) {
-      for (let dx = -r; dx <= r; dx += r / 8) {
-        if (dx * dx + dz * dz > r * r) continue;
-        const { lon, lat } = groundToLonLat(c.x + dx, c.z + dz);
-        hs.push(yAtLonLat(lon, lat));
-      }
-    }
-    hs.sort((a, b) => a - b);
-    const seat = Math.max(0.12, hs[Math.floor(hs.length * 0.75)]);
-    city.group.position.set(c.x, seat + 0.04, c.z);
-    city.group.scale.setScalar(CITY_SCALE);
-    city.group.updateMatrixWorld(true);
-    scene.add(city.group);
-  }
   let viewDirty = true;
   let cityView: CityView | null = null;
   if (cityPlan) {
     cityView = createCityView(canvas, cityPlan, {
-      setting: activeMosaic(),
       environment: env.texture,
       shadowMapSize: options.shadowMapSize ?? 2048,
       onViewChange: () => {
@@ -253,12 +181,12 @@ export function createWorldView(
   let mode: ViewMode = 'world';
   let sinceSwitch = SWITCH_COOLDOWN;
   let switchAsked = false;
-  /** Rising landmark of whichever theme is active. */
-  const riser: { rise: number; setRise(t: number): void } | null = city ?? cityView?.page ?? null;
+  /** The city page, folding up as the city view is entered. */
+  const riser = cityView?.page ?? null;
   let riseClock: { from: number; to: number; t: number; seconds: number } | null = null;
   const startRise = (delay = 0) => {
     if (!riser) return;
-    riseClock = { from: riser.rise, to: 1, t: -delay, seconds: chronicle ? 2.6 : CITY_RISE_SECONDS };
+    riseClock = { from: riser.rise, to: 1, t: -delay, seconds: CITY_RISE_SECONDS };
   };
 
   const territoryCtl = createTerritoryController(terrain.uniforms, heightField);
@@ -272,63 +200,39 @@ export function createWorldView(
     viewDirty = true;
     options.onViewChange?.();
   };
-  const orbit: CameraRig | null = chronicle ? null : createCameraRig(canvas, onRigChange, { groundY });
-  const drone: DroneRig | null = chronicle ? createDroneRig(canvas, onRigChange, { groundY }) : null;
-  const mapRig: ViewRig = (drone ?? orbit)!;
-  const activeRig = (): ViewRig => (mode === 'city' && cityView ? cityView.rig : mapRig);
-  const rig = mapRig;
-  if (drone) drone.setDrone(droneJourney()[0]);
-  else orbit!.setPose(journeyPoses()[0]);
+  const drone = createDroneRig(canvas, onRigChange, { groundY });
+  const activeRig = (): DroneRig => (mode === 'city' && cityView ? cityView.rig : drone);
+  drone.setDrone(droneJourney()[0]);
 
   const probe = new Vector3();
   const viewSpace = new Vector3();
-  const keyDir = new Vector3();
 
   function refreshView(): void {
-    const pose = rig.pose;
+    const pose = drone.pose;
     // Shadows/fog are fitted around what the camera looks at.
-    const look = rig.camera.getWorldDirection(new Vector3());
-    const reach = drone ? Math.min(rig.distance, drone.altitude * 6 + 4) : 0;
+    const look = drone.camera.getWorldDirection(new Vector3());
+    const reach = Math.min(drone.distance, drone.altitude * 6 + 4);
     const tx = pose.x + look.x * reach;
     const tz = pose.z + look.z * reach;
     const target = { x: tx, y: groundY(tx, tz), z: tz };
-    if (astrolabe) {
-      // The hall is lit by the astrolabe: light comes from it toward the view.
-      keyDir.set(astrolabe.center.x - target.x, astrolabe.center.y - target.y, astrolabe.center.z - target.z).normalize();
-      lighting.setDirectionOverride(keyDir);
-      sky.setKeyDir(keyDir);
-      if (lastMood) applySeaMood(lastMood);
-    }
     lighting.updateShadowFrustum(
-      rig.camera,
+      drone.camera,
       target,
       {
         cx: curvatureUniforms.uCurveCenter.value.x,
         cz: curvatureUniforms.uCurveCenter.value.y,
         radius: curvatureUniforms.uCurveRadius.value,
       },
-      rig.distance,
+      drone.distance,
     );
-    if (drone) {
-      // Haze scales with altitude for the free-look camera.
-      atmosphere.update(Math.max(6, drone.altitude * 3.2 + 4), Math.max(0.15, pose.pitch), curvatureUniforms.uCurveRadius.value);
-    } else {
-      atmosphere.update(rig.distance, pose.pitch, curvatureUniforms.uCurveRadius.value);
-    }
+    // Haze scales with altitude for the free-look camera.
+    atmosphere.update(Math.max(6, drone.altitude * 3.2 + 4), Math.max(0.15, pose.pitch), curvatureUniforms.uCurveRadius.value);
   }
 
-  let lastMood: Mood | null = null;
-  /** The clockwork sea glints toward the astrolabe, not the era sun. */
-  function applySeaMood(mood: Mood): void {
-    const m = clockwork ? { ...mood, keyDir: [keyDir.x, keyDir.y, keyDir.z] as [number, number, number] } : mood;
-    water.setMood(m);
-    apron.setMood(m);
-  }
-
-  /** Chronicle: ask to enter the city when flying low toward it, or to leave when climbing out. */
+  /** Ask to enter the city when flying low toward it, or to leave when climbing out. */
   function checkSwitch(deltaSeconds: number): void {
     sinceSwitch += deltaSeconds;
-    if (!cityView || !drone || switchAsked || sinceSwitch < SWITCH_COOLDOWN) return;
+    if (!cityView || switchAsked || sinceSwitch < SWITCH_COOLDOWN) return;
     if (mode === 'world') {
       if (drone.flying || drone.altitude > CITY_ENTER_ALTITUDE) return;
       const d = drone.drone;
@@ -354,10 +258,9 @@ export function createWorldView(
     get mode() {
       return mode;
     },
-    theme,
     setMode(next) {
       switchAsked = false;
-      if (next === mode || !cityView || !drone) return;
+      if (next === mode || !cityView) return;
       sinceSwitch = 0;
       if (next === 'city') {
         // Continue the dive: look at the same place, from the city's height.
@@ -396,16 +299,15 @@ export function createWorldView(
       options.onViewChange?.();
     },
     resize(width, height) {
-      mapRig.resize(width, height);
+      drone.resize(width, height);
       cityView?.rig.resize(width, height);
     },
     setMood(mood) {
-      lastMood = mood;
       sky.setMood(mood);
       lighting.setMood(mood);
       atmosphere.setMood(mood);
-      applySeaMood(mood);
-      astrolabe?.setNight(mood.night);
+      water.setMood(mood);
+      apron.setMood(mood);
       cityView?.setMood(mood);
       terrain.uniforms.uNight.value = mood.night;
     },
@@ -433,14 +335,12 @@ export function createWorldView(
         }
         return;
       }
-      rig.update(deltaSeconds);
+      drone.update(deltaSeconds);
       terrain.uniforms.uTime.value = timeSeconds;
       water.setTime(timeSeconds);
       apron.setTime(timeSeconds);
       territoryCtl.update(deltaSeconds);
-      sky.update(rig.camera.position, rig.camera.far, timeSeconds);
-      astrolabe?.update(timeSeconds);
-      city?.update(timeSeconds);
+      sky.update(drone.camera.position, drone.camera.far, timeSeconds);
       if (viewDirty) {
         viewDirty = false;
         refreshView();
@@ -458,7 +358,7 @@ export function createWorldView(
       if (mode === 'city' && cityView) return cityView.project(lon, lat, width, height);
       const g = lonLatToGround(lon, lat);
       const y = bendY(g.x, yAtLonLat(lon, lat), g.z);
-      const cam = rig.camera;
+      const cam = drone.camera;
       viewSpace.set(g.x, y, g.z).applyMatrix4(cam.matrixWorldInverse);
       if (viewSpace.z > -cam.near) return { x: 0, y: 0, visible: false };
       const c = curvatureUniforms.uCurveCenter.value;
@@ -473,31 +373,20 @@ export function createWorldView(
       };
     },
     playJourney() {
-      if (drone) {
-        // The flight ends low over the Marmara, close enough to enter the city.
-        view.setMode('world');
-        return drone.playDronePath(droneJourney(), FLIGHT_SECONDS);
-      }
-      if (!orbit) return Promise.resolve(false);
-      city?.setRise(0);
-      startRise(9);
-      return orbit.playPath(journeyPoses(), FLIGHT_SECONDS);
+      // The flight ends low over the Marmara, close enough to enter the city.
+      view.setMode('world');
+      return drone.playDronePath(droneJourney(), FLIGHT_SECONDS);
     },
     journeyAt(u) {
-      const k = Math.min(1, Math.max(0, u));
-      if (drone) {
-        view.setMode('world');
-        drone.setDrone(dronePathPose(droneJourney(), k));
-      } else orbit?.setPose(pathPose(journeyPoses(), k));
+      view.setMode('world');
+      drone.setDrone(dronePathPose(droneJourney(), Math.min(1, Math.max(0, u))));
     },
     setCityRise(t) {
       riseClock = null;
       riser?.setRise(t);
     },
     setView(p) {
-      const r = activeRig();
-      if (r === drone || (cityView && r === cityView.rig)) (r as DroneRig).setDrone(p as Partial<DronePose>);
-      else orbit?.setPose(p as Partial<CameraPose>);
+      activeRig().setDrone(p as Partial<DronePose>);
     },
     setCityView(name) {
       if (!cityView) return false;
@@ -507,7 +396,7 @@ export function createWorldView(
       return cityView.setView(name);
     },
     dispose() {
-      rig.dispose();
+      drone.dispose();
       territoryCtl.dispose();
       terrain.dispose();
       skirt.dispose();
@@ -515,10 +404,7 @@ export function createWorldView(
       apron.dispose();
       lighting.dispose();
       sky.dispose();
-      city?.dispose();
       cityView?.dispose();
-      cwMats?.dispose();
-      astrolabe?.dispose();
       env.dispose();
     },
   };

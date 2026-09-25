@@ -14,28 +14,7 @@
 import type { Material, WebGLProgramParametersWithUniforms } from 'three';
 import { Vector2 } from 'three';
 
-export const CURVE_RADIUS_MIN = 150;
-export const CURVE_RADIUS_MAX = 900;
-
-/**
- * Bend direction: `convex` = a planet (the world falls away below a
- * horizon); `concave` = the inside of a sphere (the world rises like a
- * bowl, as in the Game-of-Thrones titles).
- */
-export type CurveMode = 'convex' | 'concave';
-let curveMode: CurveMode = 'convex';
-export function setCurveMode(mode: CurveMode): void {
-  curveMode = mode;
-}
-
-/**
- * Signed radius (world units) for a camera distance: tighter up close.
- * Negative = concave.
- */
-export function curveRadiusForDistance(distance: number, mode: CurveMode = curveMode): number {
-  const r = Math.min(CURVE_RADIUS_MAX, Math.max(CURVE_RADIUS_MIN, distance * 8));
-  return mode === 'concave' ? -r : r;
-}
+const CURVE_RADIUS_MAX = 900;
 
 /** Shared uniforms — the active camera rig writes them every view change. */
 export const curvatureUniforms = {
@@ -128,7 +107,7 @@ export function rayHitBentGround(
   const s = Math.sqrt(disc);
   const r0 = (-b - s) / (2 * a);
   const r1 = (-b + s) / (2 * a);
-  // Nearest positive root (a < 0 for the concave bowl flips the order).
+  // Nearest positive root.
   const lo = Math.min(r0, r1);
   const hi = Math.max(r0, r1);
   if (lo > 1e-6) return lo;

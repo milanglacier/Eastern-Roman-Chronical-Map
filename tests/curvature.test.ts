@@ -1,9 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
-  CURVE_RADIUS_MAX,
-  CURVE_RADIUS_MIN,
   bendDrop,
-  curveRadiusForDistance,
   occludedByHorizon,
   rayHitBentGround,
 } from '../src/map/three/curvature';
@@ -18,12 +15,6 @@ describe('curved earth', () => {
   it('drops quadratically: d²/2R', () => {
     expect(bendDrop(30, 0, 0, 0, 450)).toBeCloseTo(1, 12);
     expect(bendDrop(60, 0, 0, 0, 450)).toBeCloseTo(4, 12);
-  });
-
-  it('clamps the radius to the configured range', () => {
-    expect(curveRadiusForDistance(1)).toBe(CURVE_RADIUS_MIN);
-    expect(curveRadiusForDistance(1e5)).toBe(CURVE_RADIUS_MAX);
-    expect(curveRadiusForDistance(50)).toBe(400);
   });
 
   it('ray-casts onto the bent surface exactly (round trip)', () => {
