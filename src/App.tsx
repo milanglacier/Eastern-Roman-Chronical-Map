@@ -9,6 +9,7 @@ import { Legend } from './ui/Legend';
 import { EraCaption } from './ui/EraCaption';
 import { Compass } from './ui/Compass';
 import { JourneyButton } from './ui/JourneyButton';
+import { CityViewButton } from './ui/CityViewButton';
 import { useAppStore } from './state/store';
 import { YEARS_PER_SECOND } from './lib/timeline';
 import { YEAR_MAX } from './data/schema';
@@ -69,6 +70,7 @@ export default function App() {
         <Legend />
         <Compass />
         <JourneyButton />
+        <CityViewButton />
         <p className="drag-hint">{t('dragHint')}</p>
         <EventPanel />
       </main>

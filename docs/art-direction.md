@@ -62,8 +62,18 @@ page. Test every visual decision against this question:
   - the empire's glaze and frontier line
 - **Sea** (`water.ts`, `CHRONICLE`): an opaque watercolour wash with three inked
   ripples following every coast.
-- **Cities** (`chronicle/popupCity.ts`, drawn by `chronicle/illumination.ts`): layered
-  cards fold up from a gilded roundel, turn to face the viewer, and dim at night.
+- **Cities on the map** are markers, Constantinople included: nothing on the
+  continental map is out of scale.
+- **The city view** (`chronicle/city/`, drawn with `chronicle/illumination.ts`): flying
+  down close to Constantinople (or clicking its marker) passes through a veil of
+  painted cloud into a scene of its own. The plan of the city and its waters is set as
+  a floor mosaic, after the Madaba map, out to a hazy horizon, with a gilded title
+  plaque lying in the Marmara. Walls stand up as paper strips along their true paths.
+  Landmarks, ships and houses are pop-up cards on their true sites that turn to face
+  the viewer, and the city folds up like a pop-up page as you arrive. All of it follows
+  the year (`src/data/cities/constantinople.json`). Climbing high out of the city
+  returns to the map. The mosaic is used only inside the city view, so it never sits
+  next to the watercolour world.
 - **Post** (`postfx/`): tilt-shift, a light ink-edge pass, bloom, the era grade,
   paper grain and a vignette.
 

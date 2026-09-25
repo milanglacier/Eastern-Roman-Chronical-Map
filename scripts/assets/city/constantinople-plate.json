@@ -1,0 +1,16 @@
+{
+  "$comment": "Bake config for Constantinople's city view (scripts/build-city-plate.mjs). bbox = [west, south, east, north] in degrees: the detailed plan, from the Theodosian walls to Chalcedon and from the Marmara to the upper Golden Horn. outerBbox: the outer ground (land mask and coast), the whole DEM crop. metresPerPixel sets the working grid. seaFixes are rings (lon/lat) forced to sea: modern fills that did not exist before 1453. landFixes are forced to land. Heights are metres; the DEM is the z13 Terrarium mosaic beside this file.",
+  "bbox": [28.895, 40.962, 29.055, 41.07],
+  "outerBbox": [28.8, 40.95, 29.14, 41.13],
+  "metresPerPixel": 20,
+  "landThresholdM": 0.8,
+  "smoothPx": 1,
+  "minIslandPx": 40,
+  "minLakePx": 60,
+  "simplifyM": 10,
+  "contourIntervalM": 20,
+  "contourMaxM": 240,
+  "hachure": { "spacingM": 70, "minSlope": 0.05, "lengthM": [22, 70] },
+  "seaFixes": [],
+  "landFixes": []
+}

@@ -5,6 +5,9 @@ import { Timeline } from '../src/ui/Timeline';
 import { EventPanel } from '../src/ui/EventPanel';
 import { EventMarkers } from '../src/map/EventMarkers';
 import { Header } from '../src/ui/Header';
+import { CityViewButton } from '../src/ui/CityViewButton';
+import { CityMarkers } from '../src/map/CityMarkers';
+import { ENTER_CITY_EVENT, LEAVE_CITY_EVENT } from '../src/map/three/projection';
 import { useAppStore } from '../src/state/store';
 import { events, snapshots } from '../src/data';
 import { eventsForYear } from '../src/lib/timeline';
@@ -17,6 +20,7 @@ beforeEach(() => {
     selectedEventId: null,
     language: 'zh',
     viewVersion: 0,
+    cityView: null,
   });
 });
 
@@ -112,5 +116,40 @@ describe('Header', () => {
     expect(useAppStore.getState().language).toBe('zh');
     await userEvent.click(screen.getByTestId('language-toggle'));
     expect(useAppStore.getState().language).toBe('en');
+  });
+});
+
+describe('City view controls', () => {
+  it('lets the Constantinople marker enter its city view', async () => {
+    const entered: string[] = [];
+    const onEnter = (e: Event) => entered.push((e as CustomEvent<string>).detail);
+    window.addEventListener(ENTER_CITY_EVENT, onEnter);
+    render(<CityMarkers />);
+    const marker = document.querySelector('[data-city-id="constantinople"]') as HTMLElement;
+    expect(marker.tagName).toBe('BUTTON');
+    expect(document.querySelector('[data-city-id="thessalonica"]')?.tagName).toBe('DIV');
+    await userEvent.click(marker);
+    window.removeEventListener(ENTER_CITY_EVENT, onEnter);
+    expect(entered).toEqual(['constantinople']);
+  });
+
+  it('hides the map markers inside a city view', () => {
+    useAppStore.setState({ cityView: 'constantinople' });
+    render(<CityMarkers />);
+    expect(document.querySelector('[data-city-id]')).toBeNull();
+  });
+
+  it('shows the way back to the map only inside a city view', async () => {
+    const { rerender } = render(<CityViewButton />);
+    expect(screen.queryByTestId('city-view-button')).toBeNull();
+    act(() => useAppStore.setState({ cityView: 'constantinople' }));
+    rerender(<CityViewButton />);
+    let left = 0;
+    const onLeave = () => left++;
+    window.addEventListener(LEAVE_CITY_EVENT, onLeave);
+    await userEvent.click(screen.getByTestId('city-view-button'));
+    window.removeEventListener(LEAVE_CITY_EVENT, onLeave);
+    expect(left).toBe(1);
+    expect(screen.getByTestId('city-view-button').textContent).toContain('返回全图');
   });
 });

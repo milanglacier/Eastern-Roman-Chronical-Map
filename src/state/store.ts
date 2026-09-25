@@ -17,6 +17,8 @@ interface AppState {
   viewVersion: number;
   /** H key: hide all chrome and look at the painting. */
   uiHidden: boolean;
+  /** Id of the city whose city view is on screen, or null on the map. */
+  cityView: string | null;
   setYear: (year: number) => void;
   play: () => void;
   pause: () => void;
@@ -25,6 +27,7 @@ interface AppState {
   setLanguage: (lang: Language) => void;
   bumpView: () => void;
   toggleUi: () => void;
+  setCityView: (id: string | null) => void;
 }
 
 export const clampYear = (year: number): number =>
@@ -39,6 +42,7 @@ export const useAppStore = create<AppState>()(
       selectedEventId: null,
       viewVersion: 0,
       uiHidden: false,
+      cityView: null,
       setYear: (year) => set({ year: clampYear(year) }),
       play: () =>
         set((s) => ({
@@ -54,6 +58,7 @@ export const useAppStore = create<AppState>()(
       setLanguage: (language) => set({ language }),
       bumpView: () => set((s) => ({ viewVersion: (s.viewVersion + 1) % 0x7fffffff })),
       toggleUi: () => set((s) => ({ uiHidden: !s.uiHidden })),
+      setCityView: (cityView) => set({ cityView }),
     }),
     {
       name: 'east-roman-map-prefs',

@@ -3,7 +3,11 @@
  * with a slight hand wobble, watercolour washes (a thin fill, a second
  * offset fill for granulation, pigment pooled at the edge), hatching for
  * shade, and gold leaf with bright burnished strokes. Used to draw the
- * pop-up city cards and roundels of the chronicle map — no image assets.
+ * pop-up city cards and pages of the chronicle map — no image assets.
+ *
+ * A pen can also draw the flatter cartoon a mosaicist works from (`flat`:
+ * opaque fills, heavier outlines), and can record every gilded area into a
+ * second canvas (`gold`), which the mosaic shader sets in gold smalti.
  */
 import { mulberry32 } from '../../../lib/prng';
 
@@ -31,10 +35,19 @@ export interface Pen {
   rand: () => number;
   /** Stroke width unit (px) — scales all linework with the canvas. */
   u: number;
+  /** Mosaic cartoon: opaque flat fills and heavier outlines. */
+  flat?: boolean;
+  /** Receives every gilded area in white (the mosaic gold mask). */
+  gold?: CanvasRenderingContext2D;
 }
 
-export function makePen(ctx: CanvasRenderingContext2D, seed: number, unit: number): Pen {
-  return { ctx, rand: mulberry32(seed), u: unit };
+export function makePen(
+  ctx: CanvasRenderingContext2D,
+  seed: number,
+  unit: number,
+  options: { flat?: boolean; gold?: CanvasRenderingContext2D } = {},
+): Pen {
+  return { ctx, rand: mulberry32(seed), u: unit, ...options };
 }
 
 /** Wobbly polyline path (hand-drawn): subdivide and jitter perpendicular. */
@@ -69,10 +82,10 @@ export function ink(pen: Pen, pts: Pt[], closed = true, width = 1, double = true
   ctx.lineJoin = 'round';
   ctx.lineCap = 'round';
   ctx.strokeStyle = INK;
-  ctx.lineWidth = width * u;
+  ctx.lineWidth = width * u * (pen.flat ? 1.8 : 1);
   tracePath(pen, pts, closed);
   ctx.stroke();
-  if (double) {
+  if (double && !pen.flat) {
     ctx.globalAlpha = 0.35;
     ctx.lineWidth = width * u * 0.6;
     tracePath(pen, pts, closed, 1.1);
@@ -86,6 +99,13 @@ export function wash(pen: Pen, pts: Pt[], color: string, strength = 0.85): void 
   const { ctx, rand, u } = pen;
   ctx.save();
   ctx.fillStyle = color;
+  if (pen.flat) {
+    ctx.globalAlpha = Math.min(1, strength * 1.2);
+    tracePath(pen, pts, true, 0.8);
+    ctx.fill();
+    ctx.restore();
+    return;
+  }
   ctx.globalAlpha = 0.75 * strength;
   tracePath(pen, pts, true, 1.4);
   ctx.fill();
@@ -137,6 +157,7 @@ export function hatch(pen: Pen, pts: Pt[], spacing = 5, angle = -0.9, alpha = 0.
 export function gild(pen: Pen, pts: Pt[], outline = true): void {
   const { ctx, rand, u } = pen;
   wash(pen, pts, PALETTE.gold, 1);
+  if (pen.gold) markGold(pen, pts);
   const xs = pts.map((p) => p[0]);
   const ys = pts.map((p) => p[1]);
   const x0 = Math.min(...xs);
@@ -159,6 +180,19 @@ export function gild(pen: Pen, pts: Pt[], outline = true): void {
   }
   ctx.restore();
   if (outline) ink(pen, pts, true, 0.9, false);
+}
+
+/** Record a polygon in the pen's gold mask (no-op without one). */
+export function markGold(pen: Pen, pts: Pt[]): void {
+  const g = pen.gold;
+  if (!g) return;
+  g.save();
+  g.fillStyle = '#ffffff';
+  g.beginPath();
+  pts.forEach(([x, y], i) => (i ? g.lineTo(x, y) : g.moveTo(x, y)));
+  g.closePath();
+  g.fill();
+  g.restore();
 }
 
 export const rect = (x: number, y: number, w: number, h: number): Pt[] => [

@@ -4,8 +4,15 @@ import { moods } from '../data';
 import { sampleMood, type Mood } from '../lib/mood';
 import { useAppStore } from '../state/store';
 import { loadHeightField } from './three/heightField';
-import { createWorldView } from './three/worldScene';
-import { JOURNEY_EVENT, NORTH_UP_EVENT, setCameraHeading, setProjector } from './three/projection';
+import { createWorldView, type ViewMode } from './three/worldScene';
+import {
+  ENTER_CITY_EVENT,
+  JOURNEY_EVENT,
+  LEAVE_CITY_EVENT,
+  NORTH_UP_EVENT,
+  setCameraHeading,
+  setProjector,
+} from './three/projection';
 import { activeTheme } from './three/theme';
 import { createPipeline } from './three/postfx/pipeline';
 import {
@@ -85,10 +92,52 @@ export function MapCanvas() {
         theme === 'clockwork' ? { ink: 0.22, grain: 0.035, vignette: 0.8 } : { ink: 0.4, grain: 0.06, vignette: 0.55 },
       );
       const bumpView = useAppStore.getState().bumpView;
+
+      // The switch between the map and a city view passes through a veil of
+      // painted cloud: it thickens while zooming in (or out), the scenes swap
+      // behind it, and it thins while the zoom carries on.
+      const veil = document.createElement('div');
+      veil.className = 'city-veil';
+      veil.setAttribute('aria-hidden', 'true');
+      host.appendChild(veil);
+      let switching = false;
+      const switchTo = async (next: ViewMode) => {
+        if (switching || world.mode === next) return;
+        switching = true;
+        const inward = next === 'city';
+        const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+        const [s0, s1, s2] = inward ? [1, 1.18, 1.42] : [1.42, 1.18, 1];
+        try {
+          await veil.animate(
+            [
+              { opacity: 0, transform: `scale(${s0})` },
+              { opacity: 1, transform: `scale(${s1})` },
+            ],
+            { duration: reduce ? 120 : 480, easing: 'cubic-bezier(0.5, 0, 0.9, 0.6)', fill: 'forwards' },
+          ).finished;
+          world.setMode(next);
+          useAppStore.getState().setCityView(inward ? 'constantinople' : null);
+          await veil.animate(
+            [
+              { opacity: 1, transform: `scale(${s1})` },
+              { opacity: 0, transform: `scale(${s2})` },
+            ],
+            { duration: reduce ? 160 : 900, easing: 'cubic-bezier(0.2, 0.5, 0.4, 1)', fill: 'forwards' },
+          ).finished;
+        } finally {
+          switching = false;
+        }
+      };
+
       const world = createWorldView(
         renderer.domElement,
         { heightField, albedo, worldMask, waterNormal, granulation },
-        { theme, renderer, shadowMapSize: QUALITY_PRESETS[tier].shadowMapSize },
+        {
+          theme,
+          renderer,
+          shadowMapSize: QUALITY_PRESETS[tier].shadowMapSize,
+          onModeRequest: (next) => void switchTo(next),
+        },
       );
 
       // Era mood + territory follow the year.
@@ -111,7 +160,7 @@ export function MapCanvas() {
         const h = host.clientHeight || 1;
         renderer.setSize(w, h);
         pipeline.setSize(w, h, renderer.getPixelRatio());
-        world.rig.resize(w, h);
+        world.resize(w, h);
       };
       const observer = new ResizeObserver(resize);
       observer.observe(host);
@@ -120,8 +169,15 @@ export function MapCanvas() {
       setProjector((lon, lat) => world.project(lon, lat, host.clientWidth || 1, host.clientHeight || 1));
       const onNorthUp = () => void world.rig.flyTo({ heading: 0 }, 0.9);
       window.addEventListener(NORTH_UP_EVENT, onNorthUp);
-      const onJourney = () => void world.playJourney();
+      const onJourney = async () => {
+        if (world.mode === 'city') await switchTo('world');
+        void world.playJourney();
+      };
       window.addEventListener(JOURNEY_EVENT, onJourney);
+      const onEnterCity = () => void switchTo('city');
+      const onLeaveCity = () => void switchTo('world');
+      window.addEventListener(ENTER_CITY_EVENT, onEnterCity);
+      window.addEventListener(LEAVE_CITY_EVENT, onLeaveCity);
       // Opening: fly in over the Aegean as Constantinople rises (skipped for
       // scripted screenshots via ?intro=0).
       const intro = new URLSearchParams(location.search).get('intro') !== '0';
@@ -190,6 +246,12 @@ export function MapCanvas() {
           setPose: (p: Record<string, number>) => world.setView(p),
           setDrone: (p: Record<string, number>) => world.setView(p),
           journeyAt: (u: number) => world.journeyAt(u),
+          cityView: (name: string) => {
+            const ok = world.setCityView(name);
+            if (ok) useAppStore.getState().setCityView('constantinople');
+            return ok;
+          },
+          mode: () => world.mode,
           cityRise: (t: number) => world.setCityRise(t),
           playJourney: () => world.playJourney(),
           freezeTime: (t: number | null) => {
@@ -202,6 +264,10 @@ export function MapCanvas() {
         setProjector(null);
         window.removeEventListener(NORTH_UP_EVENT, onNorthUp);
         window.removeEventListener(JOURNEY_EVENT, onJourney);
+        window.removeEventListener(ENTER_CITY_EVENT, onEnterCity);
+        window.removeEventListener(LEAVE_CITY_EVENT, onLeaveCity);
+        veil.remove();
+        useAppStore.getState().setCityView(null);
         unsubscribe();
         observer.disconnect();
         renderer.setAnimationLoop(null);

@@ -44,3 +44,6 @@ export function getCameraHeading(): number {
 /** DOM → scene commands (the scene lives outside React). */
 export const NORTH_UP_EVENT = 'ercm:north-up';
 export const JOURNEY_EVENT = 'ercm:journey';
+/** Enter a city's city view (CustomEvent detail: the city id), or leave it for the map. */
+export const ENTER_CITY_EVENT = 'ercm:enter-city';
+export const LEAVE_CITY_EVENT = 'ercm:leave-city';

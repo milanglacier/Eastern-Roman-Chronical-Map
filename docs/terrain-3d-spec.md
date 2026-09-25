@@ -127,9 +127,26 @@ committed inputs: running it twice gives identical sha256, with all noise seeded
     and the coast.
   - Watercolour rivers.
   - The empire's purple glaze and its purple/gold frontier line.
-- **`chronicle/popupCity.ts` + `chronicle/illumination.ts`**: canvas-drawn pop-up
-  city cards (pen, wash, hatch, gild). They fold up from a roundel, billboard
-  cylindrically and dim at night. `setRise(t)` is a pure function.
+- **`chronicle/city/` + `chronicle/illumination.ts`**: Constantinople's city view.
+  - `cityView.ts` is a second scene with its own sky, light, haze and drone
+    (bounded over the plan, ceiling `CITY_EXIT_ALTITUDE`). `worldScene.ts` exposes
+    the scene and rig on screen (`scene`, `rig`, `mode`), asks the host to switch
+    when the drone flies low toward the city or climbs out of it, and places the
+    camera on the other side to continue the flight (`setMode`). `MapCanvas` veils
+    the switch with a cloud overlay.
+  - `cityPage.ts` builds the city model: two ground layers (the detailed plan, fading
+    at its edges, over a coarse outer ground 26 units wide), strips, cards and
+    houses.
+  - `pageArt.ts` draws both ground layers from the baked plate
+    (`public/city/<id>/plate.json` + `land.png`, from `npm run city:build`); past the
+    baked land mask the coasts run straight on under the haze.
+  - `strips.ts` builds walls, the aqueduct and colonnades as paper strips with
+    tower boxes; `cardArt.ts` draws the landmark, ship and house cards.
+  - `mosaic.ts` sets drawings in tesserae (Voronoi cells, grout, gold smalti that
+    glint with the camera, faded out below a few pixels per tessera).
+  - The plan's frame (`src/lib/cityFrame.ts`) keeps true proportions at
+    `magnification` × the world scale; `src/lib/cityTimeline.ts` resolves the year.
+  - `setRise(t)` is a pure function.
 - **`clockwork/`**: the stone-and-brass material, hall and astrolabe, and the
   clockwork Constantinople (staged `setRise`).
 - **`water.ts`**: the opaque, tessellated sea sheet plus the ocean apron

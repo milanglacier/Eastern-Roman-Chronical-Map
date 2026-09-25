@@ -26,7 +26,9 @@ const dict = {
     zh: '拖拽环顾 · 右键拖拽移动 · 滚轮飞行 · WASD / QE · 按 H 隐藏界面',
   },
   northUp: { en: 'Face north', zh: '朝向正北' },
-  journey: { en: 'Begin the journey', zh: '开启旅程' },
+  flyToCity: { en: 'Fly to Constantinople', zh: '飞往君士坦丁堡' },
+  enterCity: { en: 'Enter the city', zh: '进入城市' },
+  backToMap: { en: 'Back to the map', zh: '返回全图' },
   languageToggle: { en: '中文', zh: 'EN' },
 } as const;
 

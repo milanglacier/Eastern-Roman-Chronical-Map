@@ -5,6 +5,7 @@ import era2 from './events/era2.json';
 import era3 from './events/era3.json';
 import era4 from './events/era4.json';
 import moodsJson from './moods.json';
+import constantinopleJson from './cities/constantinople.json';
 import {
   SnapshotsFileSchema,
   CitiesFileSchema,
@@ -16,6 +17,8 @@ import {
   TerritorySchema,
   MoodsFileSchema,
   type MoodKey,
+  CityPlanSchema,
+  type CityPlan,
 } from './schema';
 
 export const snapshots: Snapshot[] = SnapshotsFileSchema.parse(snapshotsJson).sort(
@@ -43,3 +46,8 @@ export const territories: Map<number, Territory> = new Map(
 
 /** Era mood keyframes, sorted by year (see src/lib/mood.ts). */
 export const moods: MoodKey[] = MoodsFileSchema.parse(moodsJson).sort((a, b) => a.year - b.year);
+
+/** City pages (magnified pop-up insets), keyed by city id. */
+export const cityPlans: Map<string, CityPlan> = new Map(
+  [CityPlanSchema.parse(constantinopleJson)].map((plan) => [plan.id, plan]),
+);

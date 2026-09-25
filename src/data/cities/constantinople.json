@@ -1,0 +1,1175 @@
+{
+  "id": "constantinople",
+  "name": {
+    "en": "Constantinople",
+    "zh": "君士坦丁堡"
+  },
+  "inscription": {
+    "greek": "ΚΩΝΣΤΑΝΤΙΝΟΥΠΟΛΙΣ",
+    "latin": "CONSTANTINOPOLIS"
+  },
+  "page": {
+    "bbox": [28.895, 40.962, 29.055, 41.07],
+    "magnification": 10,
+    "plaque": [28.93, 40.974]
+  },
+  "urbanAreas": [
+    {
+      "id": "city-constantine",
+      "from": 330,
+      "to": 412,
+      "ring": [[28.9372, 40.9992], [28.9388, 41.008], [28.941, 41.016], [28.9468, 41.0232], [28.9532, 41.0298], [28.95862, 41.029], [28.96724, 41.02322], [28.97633, 41.01857], [28.98399, 41.01909], [28.98995, 41.01717], [28.99224, 41.012], [28.98859, 41.00565], [28.98277, 41.00233], [28.97304, 41.00097], [28.9607, 40.99984], [28.94781, 40.99926], [28.93899, 40.99774], [28.9372, 40.9992]],
+      "weight": 1
+    },
+    {
+      "id": "city-theodosius",
+      "from": 413,
+      "ring": [[28.924, 40.9925], [28.9232, 40.9946], [28.9186, 41], [28.9174, 41.0074], [28.9186, 41.0163], [28.9217, 41.0212], [28.9337, 41.03], [28.938, 41.0343], [28.9412, 41.0385], [28.9436, 41.0414], [28.94564, 41.03953], [28.94933, 41.03488], [28.95677, 41.0294], [28.96724, 41.02322], [28.97633, 41.01857], [28.98399, 41.01909], [28.98995, 41.01717], [28.99224, 41.012], [28.98859, 41.00565], [28.98277, 41.00233], [28.97304, 41.00097], [28.9607, 40.99984], [28.94781, 40.99926], [28.93694, 40.99679], [28.9277, 40.99349], [28.924, 40.9925]],
+      "weight": 1
+    },
+    {
+      "id": "sykai",
+      "from": 330,
+      "ring": [[28.9693, 41.0232], [28.9722, 41.0262], [28.976, 41.0282], [28.9812, 41.027], [28.985, 41.025], [28.9832, 41.0226], [28.976, 41.0218], [28.9693, 41.0232]],
+      "weight": 0.7
+    },
+    {
+      "id": "chrysopolis",
+      "from": 330,
+      "ring": [[29.02574, 41.0255], [29.02426, 41.02825], [29.02039, 41.02994], [29.01561, 41.02994], [29.01174, 41.02825], [29.01026, 41.0255], [29.01174, 41.02275], [29.01561, 41.02106], [29.02039, 41.02106], [29.02426, 41.02275], [29.02574, 41.0255]],
+      "weight": 0.45
+    },
+    {
+      "id": "chalcedon",
+      "from": 330,
+      "ring": [[29.03593, 40.9905], [29.03422, 40.99377], [29.02976, 40.9958], [29.02424, 40.9958], [29.01978, 40.99377], [29.01807, 40.9905], [29.01978, 40.98723], [29.02424, 40.9852], [29.02976, 40.9852], [29.03422, 40.98723], [29.03593, 40.9905]],
+      "weight": 0.55
+    }
+  ],
+  "density": [
+    { "year": 330, "value": 0.3 },
+    { "year": 400, "value": 0.5 },
+    { "year": 450, "value": 0.6 },
+    { "year": 540, "value": 0.82 },
+    { "year": 545, "value": 0.66 },
+    { "year": 620, "value": 0.5 },
+    { "year": 720, "value": 0.3 },
+    { "year": 850, "value": 0.42 },
+    { "year": 1000, "value": 0.58 },
+    { "year": 1150, "value": 0.68 },
+    { "year": 1203, "value": 0.66 },
+    { "year": 1205, "value": 0.45 },
+    { "year": 1261, "value": 0.33 },
+    { "year": 1350, "value": 0.26 },
+    { "year": 1453, "value": 0.2 }
+  ],
+  "population": [
+    { "year": 330, "value": 40000 },
+    { "year": 400, "value": 200000 },
+    { "year": 540, "value": 500000 },
+    { "year": 545, "value": 300000 },
+    { "year": 720, "value": 50000 },
+    { "year": 900, "value": 150000 },
+    { "year": 1150, "value": 350000 },
+    { "year": 1205, "value": 150000 },
+    { "year": 1350, "value": 70000 },
+    { "year": 1453, "value": 50000 }
+  ],
+  "captions": [
+    {
+      "from": 330,
+      "text": {
+        "en": "New Rome on the Bosporus: Constantine's city rises inside his new land wall.",
+        "zh": "博斯普鲁斯海峡畔的新罗马：君士坦丁的城市在新筑的陆墙内拔地而起。"
+      }
+    },
+    {
+      "from": 413,
+      "text": {
+        "en": "The Theodosian Walls enclose a city grown far beyond Constantine's line.",
+        "zh": "狄奥多西城墙环抱着早已越出君士坦丁城界的都城。"
+      }
+    },
+    {
+      "from": 537,
+      "text": {
+        "en": "Justinian's Hagia Sophia crowns the first hill; the capital nears half a million souls.",
+        "zh": "查士丁尼的圣索菲亚大教堂高踞第一山丘；都城人口近五十万。"
+      }
+    },
+    {
+      "from": 542,
+      "text": {
+        "en": "Plague empties whole quarters; gardens and fields creep back inside the walls.",
+        "zh": "大瘟疫令整片街区人去楼空，园圃与田地重新蔓入城墙之内。"
+      }
+    },
+    {
+      "from": 717,
+      "text": {
+        "en": "A shrunken city of perhaps fifty thousand holds its walls against the great Arab siege.",
+        "zh": "人口或仅五万的萎缩之城，凭城墙顶住了阿拉伯大军的围攻。"
+      }
+    },
+    {
+      "from": 900,
+      "text": {
+        "en": "Recovery under the Macedonian emperors: the Queen of Cities fills again.",
+        "zh": "马其顿王朝治下的复兴：众城之女王重新繁盛起来。"
+      }
+    },
+    {
+      "from": 1081,
+      "text": {
+        "en": "The Komnenoi rule from Blachernae by the land walls; Italian merchants crowd the Golden Horn.",
+        "zh": "科穆宁王朝移驾陆墙边的布拉赫奈宫；意大利商人云集金角湾。"
+      }
+    },
+    {
+      "from": 1204,
+      "text": {
+        "en": "Sacked by the Fourth Crusade: fires have gutted the city's heart.",
+        "zh": "第四次十字军洗劫：大火焚毁了城市的心脏。"
+      }
+    },
+    {
+      "from": 1261,
+      "text": {
+        "en": "Rome returns to its capital — a city of villages within walls too long to man.",
+        "zh": "罗马重返故都——城墙之内是村落零落的城市，城墙长得已难以驻守。"
+      }
+    },
+    {
+      "from": 1348,
+      "text": {
+        "en": "Genoese Galata raises its tower across the Horn and outtrades the imperial city.",
+        "zh": "热那亚人的加拉塔在金角湾对岸竖起高塔，贸易盖过了帝都。"
+      }
+    },
+    {
+      "from": 1453,
+      "text": {
+        "en": "The last spring: some fifty thousand Romans behind the thousand-year walls.",
+        "zh": "最后的春天：约五万罗马人守在千年城墙之后。"
+      }
+    }
+  ],
+  "structures": [
+    {
+      "id": "constantinian-wall",
+      "kind": "land-wall",
+      "name": {
+        "en": "Wall of Constantine",
+        "zh": "君士坦丁城墙"
+      },
+      "from": 330,
+      "to": 1000,
+      "path": [[28.93627, 41.0005], [28.9388, 41.008], [28.941, 41.016], [28.9468, 41.0232], [28.95271, 41.02981]],
+      "stages": [
+        {
+          "from": 330,
+          "variant": "intact",
+          "note": {
+            "en": "Constantine's land wall of 324–330, about 1.5 km east of the later line.",
+            "zh": "君士坦丁于324至330年修筑的陆墙，位于后来城墙以东约1.5公里。"
+          }
+        },
+        {
+          "from": 600,
+          "variant": "ruin",
+          "note": {
+            "en": "Left behind by the Theodosian walls and slowly quarried away.",
+            "zh": "被狄奥多西城墙取代后逐渐被拆作石料。"
+          }
+        }
+      ]
+    },
+    {
+      "id": "theodosian-walls",
+      "kind": "land-wall",
+      "name": {
+        "en": "Theodosian Walls",
+        "zh": "狄奥多西城墙"
+      },
+      "from": 413,
+      "path": [[28.92698, 40.99058], [28.9232, 40.9946], [28.9186, 41], [28.9174, 41.0074], [28.9186, 41.0163], [28.9217, 41.0212], [28.9337, 41.03], [28.938, 41.0343], [28.9412, 41.0385], [28.94356, 41.04081]],
+      "stages": [
+        {
+          "from": 413,
+          "variant": "single",
+          "note": {
+            "en": "Theodosius II's inner land wall, finished in 413.",
+            "zh": "狄奥多西二世的内陆墙，建成于413年。"
+          }
+        },
+        {
+          "from": 447,
+          "variant": "triple",
+          "note": {
+            "en": "Rebuilt in sixty days after the earthquake of 447, with an outer wall and a moat: the triple line.",
+            "zh": "447年地震后六十天内重建，并加筑外墙与护城壕，形成三重防线。"
+          }
+        },
+        {
+          "from": 1453,
+          "variant": "breached",
+          "note": {
+            "en": "Breached at the Gate of St Romanus, 29 May 1453.",
+            "zh": "1453年5月29日于圣罗曼努斯门被攻破。"
+          }
+        }
+      ]
+    },
+    {
+      "id": "marmara-sea-walls",
+      "kind": "sea-wall",
+      "name": {
+        "en": "Sea Walls of the Propontis",
+        "zh": "马尔马拉海海墙"
+      },
+      "from": 439,
+      "coast": {
+        "start": [28.92698, 40.99058],
+        "end": [28.98672, 41.01688],
+        "inset": 60
+      },
+      "stages": [
+        {
+          "from": 439,
+          "variant": "intact",
+          "note": {
+            "en": "Sea walls along the Propontis, built under the prefect Cyrus in 439.",
+            "zh": "沿普罗庞提斯海岸的海墙，439年由城市长官居鲁士主持修建。"
+          }
+        }
+      ]
+    },
+    {
+      "id": "golden-horn-sea-walls",
+      "kind": "sea-wall",
+      "name": {
+        "en": "Sea Walls of the Golden Horn",
+        "zh": "金角湾海墙"
+      },
+      "from": 439,
+      "coast": {
+        "start": [28.98672, 41.01688],
+        "end": [28.94356, 41.04081],
+        "inset": 60
+      },
+      "stages": [
+        {
+          "from": 439,
+          "variant": "intact"
+        }
+      ]
+    },
+    {
+      "id": "golden-gate",
+      "kind": "gate",
+      "name": {
+        "en": "Golden Gate",
+        "zh": "金门"
+      },
+      "from": 390,
+      "position": [28.9232, 40.9946],
+      "stages": [
+        {
+          "from": 390,
+          "variant": "arch",
+          "note": {
+            "en": "A marble triumphal arch of Theodosius I, standing alone outside the city.",
+            "zh": "狄奥多西一世的大理石凯旋门，孤立于城外。"
+          }
+        },
+        {
+          "from": 413,
+          "variant": "gate",
+          "note": {
+            "en": "Built into the Theodosian walls as the ceremonial entrance of emperors.",
+            "zh": "被纳入狄奥多西城墙，成为皇帝凯旋入城的礼仪之门。"
+          }
+        }
+      ]
+    },
+    {
+      "id": "gate-st-romanus",
+      "kind": "gate",
+      "name": {
+        "en": "Gate of St Romanus",
+        "zh": "圣罗曼努斯门"
+      },
+      "from": 413,
+      "position": [28.9217, 41.0212],
+      "stages": [
+        {
+          "from": 413,
+          "variant": "gate"
+        },
+        {
+          "from": 1453,
+          "variant": "breached",
+          "note": {
+            "en": "Where the Ottoman assault broke through on 29 May 1453.",
+            "zh": "1453年5月29日奥斯曼军队由此突破。"
+          }
+        }
+      ]
+    },
+    {
+      "id": "hagia-sophia",
+      "kind": "great-church",
+      "name": {
+        "en": "Hagia Sophia",
+        "zh": "圣索菲亚大教堂"
+      },
+      "from": 360,
+      "position": [28.98, 41.0086],
+      "stages": [
+        {
+          "from": 360,
+          "variant": "basilica",
+          "note": {
+            "en": "Constantius II's timber-roofed Great Church.",
+            "zh": "君士坦提乌斯二世所建木顶大教堂。"
+          }
+        },
+        {
+          "from": 404,
+          "variant": "ruin",
+          "note": {
+            "en": "Burned in the riots after John Chrysostom's exile.",
+            "zh": "金口约翰被流放后的骚乱中焚毁。"
+          }
+        },
+        {
+          "from": 415,
+          "variant": "basilica",
+          "note": {
+            "en": "Rebuilt by Theodosius II after the fire of 404.",
+            "zh": "404年火灾后由狄奥多西二世重建。"
+          }
+        },
+        {
+          "from": 532,
+          "variant": "ruin",
+          "note": {
+            "en": "Burned in the Nika riot.",
+            "zh": "毁于尼卡暴动。"
+          }
+        },
+        {
+          "from": 537,
+          "variant": "domed",
+          "note": {
+            "en": "Justinian's domed cathedral, dedicated 27 December 537.",
+            "zh": "查士丁尼的穹顶大教堂，537年12月27日祝圣。"
+          }
+        },
+        {
+          "from": 558,
+          "variant": "dome-fallen",
+          "note": {
+            "en": "An earthquake brings down the first, shallow dome.",
+            "zh": "地震震塌了最初较平缓的穹顶。"
+          }
+        },
+        {
+          "from": 562,
+          "variant": "high-domed",
+          "note": {
+            "en": "Rededicated under a higher, steeper dome by Isidore the Younger.",
+            "zh": "小伊西多尔以更高更陡的穹顶重建后再次祝圣。"
+          }
+        },
+        {
+          "from": 1317,
+          "variant": "buttressed",
+          "note": {
+            "en": "Massive buttresses are added under Andronikos II; the eastern dome is repaired in 1354.",
+            "zh": "安德罗尼卡二世时加筑巨大扶壁；东侧穹顶于1354年修复。"
+          }
+        }
+      ]
+    },
+    {
+      "id": "hagia-irene",
+      "kind": "church",
+      "name": {
+        "en": "Hagia Irene",
+        "zh": "神圣和平教堂"
+      },
+      "from": 330,
+      "position": [28.9813, 41.0095],
+      "stages": [
+        {
+          "from": 330,
+          "variant": "basilica"
+        },
+        {
+          "from": 532,
+          "variant": "ruin"
+        },
+        {
+          "from": 548,
+          "variant": "domed",
+          "note": {
+            "en": "Rebuilt by Justinian after the Nika riot.",
+            "zh": "尼卡暴动后由查士丁尼重建。"
+          }
+        }
+      ]
+    },
+    {
+      "id": "holy-apostles",
+      "kind": "church",
+      "name": {
+        "en": "Church of the Holy Apostles",
+        "zh": "圣使徒教堂"
+      },
+      "from": 330,
+      "position": [28.9497, 41.0193],
+      "stages": [
+        {
+          "from": 330,
+          "variant": "basilica",
+          "note": {
+            "en": "Constantine's mausoleum church of the emperors.",
+            "zh": "君士坦丁所建的皇帝陵墓教堂。"
+          }
+        },
+        {
+          "from": 550,
+          "variant": "cross-domed",
+          "note": {
+            "en": "Rebuilt by Justinian as a cross with five domes.",
+            "zh": "查士丁尼将其重建为十字形五穹顶教堂。"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sergius-bacchus",
+      "kind": "church",
+      "name": {
+        "en": "Sts Sergius and Bacchus",
+        "zh": "圣塞尔吉乌斯与巴库斯教堂"
+      },
+      "from": 536,
+      "position": [28.9727, 41.0027],
+      "stages": [
+        {
+          "from": 536,
+          "variant": "domed"
+        }
+      ]
+    },
+    {
+      "id": "st-polyeuctus",
+      "kind": "church",
+      "name": {
+        "en": "St Polyeuctus",
+        "zh": "圣波利埃乌克托斯教堂"
+      },
+      "from": 524,
+      "to": 1100,
+      "position": [28.9533, 41.0158],
+      "stages": [
+        {
+          "from": 524,
+          "variant": "basilica",
+          "note": {
+            "en": "Anicia Juliana's splendid church, the largest in the city until Hagia Sophia.",
+            "zh": "阿妮基娅·尤利安娜所建的华美教堂，在圣索菲亚之前为城中最大。"
+          }
+        }
+      ]
+    },
+    {
+      "id": "st-john-studios",
+      "kind": "church",
+      "name": {
+        "en": "St John of Stoudios",
+        "zh": "斯图狄奥斯圣约翰修道院"
+      },
+      "from": 463,
+      "position": [28.9285, 40.9968],
+      "stages": [
+        {
+          "from": 463,
+          "variant": "basilica"
+        }
+      ]
+    },
+    {
+      "id": "blachernae-church",
+      "kind": "church",
+      "name": {
+        "en": "St Mary of Blachernae",
+        "zh": "布拉赫奈圣母教堂"
+      },
+      "from": 450,
+      "position": [28.9448, 41.0395],
+      "stages": [
+        {
+          "from": 450,
+          "variant": "basilica",
+          "note": {
+            "en": "Shrine of the Virgin's robe, protector of the city.",
+            "zh": "供奉圣母长袍的圣所，被视为城市的守护。"
+          }
+        }
+      ]
+    },
+    {
+      "id": "st-euphemia",
+      "kind": "church",
+      "name": {
+        "en": "St Euphemia, Chalcedon",
+        "zh": "卡尔西顿圣尤菲米娅教堂"
+      },
+      "from": 400,
+      "to": 1204,
+      "position": [29.0262, 40.992],
+      "stages": [
+        {
+          "from": 400,
+          "variant": "basilica",
+          "note": {
+            "en": "Where the Council of Chalcedon met in 451.",
+            "zh": "451年卡尔西顿大公会议在此召开。"
+          }
+        }
+      ]
+    },
+    {
+      "id": "myrelaion",
+      "kind": "church",
+      "name": {
+        "en": "Myrelaion",
+        "zh": "米雷莱昂教堂"
+      },
+      "from": 922,
+      "position": [28.961, 41.0082],
+      "stages": [
+        {
+          "from": 922,
+          "variant": "cross-domed"
+        }
+      ]
+    },
+    {
+      "id": "pantokrator",
+      "kind": "church",
+      "name": {
+        "en": "Pantokrator Monastery",
+        "zh": "全能者修道院"
+      },
+      "from": 1136,
+      "position": [28.9567, 41.0212],
+      "stages": [
+        {
+          "from": 1136,
+          "variant": "cross-domed"
+        }
+      ]
+    },
+    {
+      "id": "chora",
+      "kind": "church",
+      "name": {
+        "en": "Chora Monastery",
+        "zh": "科拉修道院"
+      },
+      "from": 1081,
+      "position": [28.939, 41.031],
+      "stages": [
+        {
+          "from": 1081,
+          "variant": "cross-domed"
+        }
+      ]
+    },
+    {
+      "id": "hippodrome",
+      "kind": "hippodrome",
+      "name": {
+        "en": "Hippodrome",
+        "zh": "竞技场"
+      },
+      "from": 330,
+      "position": [28.9751, 41.0058],
+      "stages": [
+        {
+          "from": 330,
+          "variant": "intact",
+          "note": {
+            "en": "The chariot course, with the Serpent Column, the Obelisk of Theodosius and the bronze horses over the gates.",
+            "zh": "赛车场，场中有蛇柱、狄奥多西方尖碑，门楼上立着青铜驷马。"
+          }
+        },
+        {
+          "from": 1204,
+          "variant": "ruin",
+          "note": {
+            "en": "Stripped of its bronzes by the crusaders.",
+            "zh": "青铜像被十字军掠夺一空。"
+          }
+        }
+      ]
+    },
+    {
+      "id": "great-palace",
+      "kind": "palace",
+      "name": {
+        "en": "Great Palace",
+        "zh": "大皇宫"
+      },
+      "from": 330,
+      "position": [28.9768, 41.0038],
+      "stages": [
+        {
+          "from": 330,
+          "variant": "intact",
+          "note": {
+            "en": "Terraces of halls and gardens falling from the Hippodrome to the sea.",
+            "zh": "从赛车场一路层叠至海边的殿堂与园林。"
+          }
+        },
+        {
+          "from": 1204,
+          "variant": "ruin"
+        }
+      ]
+    },
+    {
+      "id": "blachernae-palace",
+      "kind": "palace",
+      "name": {
+        "en": "Palace of Blachernae",
+        "zh": "布拉赫奈宫"
+      },
+      "from": 1081,
+      "position": [28.9392, 41.0352],
+      "stages": [
+        {
+          "from": 1081,
+          "variant": "intact"
+        }
+      ]
+    },
+    {
+      "id": "column-of-constantine",
+      "kind": "column",
+      "name": {
+        "en": "Column of Constantine",
+        "zh": "君士坦丁纪念柱"
+      },
+      "from": 330,
+      "position": [28.9713, 41.0087],
+      "stages": [
+        {
+          "from": 330,
+          "variant": "statue",
+          "note": {
+            "en": "Porphyry drums bound with bronze wreaths, crowned by Constantine as the sun god.",
+            "zh": "以青铜花环箍住的斑岩石鼓，顶上是太阳神形象的君士坦丁像。"
+          }
+        },
+        {
+          "from": 1106,
+          "variant": "cross",
+          "note": {
+            "en": "A storm throws down the statue; Manuel I sets a cross in its place.",
+            "zh": "风暴吹落雕像，曼努埃尔一世以十字架取代。"
+          }
+        }
+      ]
+    },
+    {
+      "id": "column-of-theodosius",
+      "kind": "column",
+      "name": {
+        "en": "Column of Theodosius",
+        "zh": "狄奥多西纪念柱"
+      },
+      "from": 393,
+      "position": [28.9638, 41.0103],
+      "stages": [
+        {
+          "from": 393,
+          "variant": "statue"
+        }
+      ]
+    },
+    {
+      "id": "column-of-justinian",
+      "kind": "column",
+      "name": {
+        "en": "Column of Justinian",
+        "zh": "查士丁尼纪念柱"
+      },
+      "from": 543,
+      "position": [28.9785, 41.0078],
+      "stages": [
+        {
+          "from": 543,
+          "variant": "horseman",
+          "note": {
+            "en": "Justinian on horseback, holding the orb, faces east.",
+            "zh": "手持圣球、面朝东方的查士丁尼骑马像。"
+          }
+        }
+      ]
+    },
+    {
+      "id": "column-of-arcadius",
+      "kind": "column",
+      "name": {
+        "en": "Column of Arcadius",
+        "zh": "阿卡狄乌斯纪念柱"
+      },
+      "from": 421,
+      "position": [28.9398, 41.0062],
+      "stages": [
+        {
+          "from": 421,
+          "variant": "statue"
+        }
+      ]
+    },
+    {
+      "id": "forum-of-constantine",
+      "kind": "forum",
+      "name": {
+        "en": "Forum of Constantine",
+        "zh": "君士坦丁广场"
+      },
+      "from": 330,
+      "position": [28.9713, 41.0087],
+      "size": [120, 105],
+      "stages": [
+        {
+          "from": 330,
+          "variant": "oval",
+          "note": {
+            "en": "An oval forum ringed by two-storey colonnades.",
+            "zh": "四周环绕双层柱廊的椭圆形广场。"
+          }
+        }
+      ]
+    },
+    {
+      "id": "forum-of-theodosius",
+      "kind": "forum",
+      "name": {
+        "en": "Forum of Theodosius",
+        "zh": "狄奥多西广场"
+      },
+      "from": 393,
+      "position": [28.9643, 41.0105],
+      "size": [140, 100],
+      "stages": [
+        {
+          "from": 393,
+          "variant": "square"
+        }
+      ]
+    },
+    {
+      "id": "aqueduct-of-valens",
+      "kind": "aqueduct",
+      "name": {
+        "en": "Aqueduct of Valens",
+        "zh": "瓦伦斯水道桥"
+      },
+      "from": 368,
+      "path": [[28.9508, 41.0156], [28.9528, 41.0153], [28.9563, 41.0158], [28.9602, 41.0165]],
+      "stages": [
+        {
+          "from": 368,
+          "variant": "arcade"
+        }
+      ]
+    },
+    {
+      "id": "galata-walls",
+      "kind": "land-wall",
+      "name": {
+        "en": "Walls of Galata",
+        "zh": "加拉塔城墙"
+      },
+      "from": 1303,
+      "path": [[28.96957, 41.02302], [28.97, 41.0262], [28.9741, 41.0283], [28.979, 41.0262], [28.98186, 41.02453]],
+      "stages": [
+        {
+          "from": 1303,
+          "variant": "intact"
+        }
+      ]
+    },
+    {
+      "id": "galata-tower",
+      "kind": "tower",
+      "name": {
+        "en": "Galata Tower",
+        "zh": "加拉塔塔"
+      },
+      "from": 1348,
+      "position": [28.9741, 41.0256],
+      "stages": [
+        {
+          "from": 1348,
+          "variant": "tower",
+          "note": {
+            "en": "The Genoese Tower of Christ, 1348.",
+            "zh": "热那亚人于1348年建成的基督塔。"
+          }
+        }
+      ]
+    },
+    {
+      "id": "golden-horn-chain",
+      "kind": "chain",
+      "name": {
+        "en": "Chain of the Golden Horn",
+        "zh": "金角湾铁链"
+      },
+      "from": 717,
+      "path": [[28.9818, 41.0178], [28.9772, 41.0222]],
+      "stages": [
+        {
+          "from": 717,
+          "variant": "chain",
+          "note": {
+            "en": "A boom of iron links on floats, stretched from the city to the Kastellion of Galata.",
+            "zh": "以浮木托起的铁链，从城墙拉到加拉塔的城堡。"
+          }
+        }
+      ]
+    }
+  ],
+  "features": [
+    {
+      "id": "harbour-of-theodosius",
+      "kind": "harbour",
+      "name": {
+        "en": "Harbour of Theodosius",
+        "zh": "狄奥多西港"
+      },
+      "from": 390,
+      "to": 1100,
+      "ring": [[28.9462, 41.0035], [28.9468, 41.0058], [28.95, 41.0066], [28.9548, 41.0061], [28.9562, 41.0034], [28.9548, 41.0005], [28.9478, 41.0003]]
+    },
+    {
+      "id": "harbour-of-julian",
+      "kind": "harbour",
+      "name": {
+        "en": "Harbour of Julian (Kontoskalion)",
+        "zh": "尤利安港（孔托斯卡利昂）"
+      },
+      "from": 362,
+      "ring": [[28.9658, 41.0022], [28.9662, 41.0046], [28.9708, 41.0047], [28.9714, 41.002], [28.969, 41.0008]]
+    },
+    {
+      "id": "boukoleon-harbour",
+      "kind": "harbour",
+      "name": {
+        "en": "Boukoleon Harbour",
+        "zh": "布克列昂港"
+      },
+      "from": 330,
+      "ring": [[28.9738, 41.0012], [28.974, 41.003], [28.9764, 41.0031], [28.9767, 41.0012]]
+    },
+    {
+      "id": "neorion",
+      "kind": "harbour",
+      "name": {
+        "en": "Neorion",
+        "zh": "内奥里昂船坞"
+      },
+      "from": 330,
+      "ring": [[28.9742, 41.0186], [28.9744, 41.0166], [28.977, 41.0164], [28.9775, 41.0184]]
+    },
+    {
+      "id": "cistern-of-aetius",
+      "kind": "cistern",
+      "name": {
+        "en": "Cistern of Aetius",
+        "zh": "埃提乌斯蓄水池"
+      },
+      "from": 421,
+      "position": [28.9418, 41.0283],
+      "size": [244, 85],
+      "bearing": 65,
+      "shape": "rect"
+    },
+    {
+      "id": "cistern-of-aspar",
+      "kind": "cistern",
+      "name": {
+        "en": "Cistern of Aspar",
+        "zh": "阿斯帕尔蓄水池"
+      },
+      "from": 459,
+      "position": [28.9497, 41.0264],
+      "size": [152, 152],
+      "bearing": 0,
+      "shape": "rect"
+    },
+    {
+      "id": "cistern-of-mocius",
+      "kind": "cistern",
+      "name": {
+        "en": "Cistern of Mocius",
+        "zh": "莫基乌斯蓄水池"
+      },
+      "from": 500,
+      "position": [28.9392, 41.0086],
+      "size": [170, 147],
+      "bearing": 0,
+      "shape": "rect"
+    },
+    {
+      "id": "mese",
+      "kind": "avenue",
+      "name": {
+        "en": "Mese",
+        "zh": "中央大道"
+      },
+      "from": 330,
+      "path": [[28.9783, 41.0081], [28.9713, 41.0087], [28.9643, 41.0105], [28.956, 41.0122], [28.9495, 41.0098], [28.945, 41.0078], [28.9398, 41.0062], [28.9322, 41.0012], [28.9232, 40.9946]]
+    },
+    {
+      "id": "mese-north",
+      "kind": "avenue",
+      "name": {
+        "en": "Mese, northern branch",
+        "zh": "中央大道北支"
+      },
+      "from": 330,
+      "path": [[28.956, 41.0122], [28.9497, 41.0193], [28.9415, 41.0262], [28.9337, 41.03]]
+    },
+    {
+      "id": "augustaion",
+      "kind": "plaza",
+      "name": {
+        "en": "Augustaion",
+        "zh": "奥古斯都广场"
+      },
+      "from": 330,
+      "position": [28.9788, 41.0078],
+      "size": [90, 60],
+      "bearing": 0,
+      "shape": "rect"
+    },
+    {
+      "id": "forum-of-constantine-plaza",
+      "kind": "plaza",
+      "name": {
+        "en": "Forum of Constantine",
+        "zh": "君士坦丁广场"
+      },
+      "from": 330,
+      "position": [28.9713, 41.0087],
+      "size": [120, 105],
+      "bearing": 0,
+      "shape": "ellipse"
+    },
+    {
+      "id": "forum-of-theodosius-plaza",
+      "kind": "plaza",
+      "name": {
+        "en": "Forum of Theodosius",
+        "zh": "狄奥多西广场"
+      },
+      "from": 393,
+      "position": [28.9643, 41.0105],
+      "size": [140, 100],
+      "bearing": 10,
+      "shape": "rect"
+    },
+    {
+      "id": "forum-bovis",
+      "kind": "plaza",
+      "name": {
+        "en": "Forum Bovis",
+        "zh": "牛广场"
+      },
+      "from": 330,
+      "position": [28.9495, 41.0098],
+      "size": [90, 90],
+      "bearing": 0,
+      "shape": "rect"
+    },
+    {
+      "id": "forum-of-arcadius",
+      "kind": "plaza",
+      "name": {
+        "en": "Forum of Arcadius",
+        "zh": "阿卡狄乌斯广场"
+      },
+      "from": 403,
+      "position": [28.9398, 41.0062],
+      "size": [100, 90],
+      "bearing": 0,
+      "shape": "rect"
+    },
+    {
+      "id": "fire-of-1203",
+      "kind": "burnt",
+      "name": {
+        "en": "Burnt in the fires of 1203–1204",
+        "zh": "1203至1204年大火焚毁区"
+      },
+      "from": 1203,
+      "to": 1260,
+      "ring": [[28.9585, 41.0205], [28.97, 41.0195], [28.9785, 41.0158], [28.979, 41.011], [28.9735, 41.004], [28.962, 41.003], [28.9575, 41.011]]
+    }
+  ],
+  "labels": [
+    {
+      "id": "golden-horn",
+      "name": {
+        "en": "Golden Horn",
+        "zh": "金角湾"
+      },
+      "inscription": {
+        "greek": "ΚΕΡΑΣ",
+        "latin": "CHRYSOCERAS"
+      },
+      "position": [28.9505, 41.0355],
+      "angle": 32,
+      "size": "strait",
+      "from": 330
+    },
+    {
+      "id": "bosphorus",
+      "name": {
+        "en": "Bosphorus",
+        "zh": "博斯普鲁斯海峡"
+      },
+      "inscription": {
+        "greek": "ΒΟΣΠΟΡΟΣ",
+        "latin": "BOSPORUS"
+      },
+      "position": [29.0125, 41.042],
+      "angle": 52,
+      "size": "strait",
+      "from": 330
+    },
+    {
+      "id": "propontis",
+      "name": {
+        "en": "Sea of Marmara (Propontis)",
+        "zh": "马尔马拉海（普罗庞提斯）"
+      },
+      "inscription": {
+        "greek": "ΠΡΟΠΟΝΤΙΣ",
+        "latin": "PROPONTIS"
+      },
+      "position": [28.97, 40.98],
+      "angle": 0,
+      "size": "sea",
+      "from": 330
+    },
+    {
+      "id": "sykai",
+      "name": {
+        "en": "Sykai",
+        "zh": "西凯"
+      },
+      "inscription": {
+        "greek": "ΣΥΚΑΙ",
+        "latin": "SYCAE"
+      },
+      "position": [28.9745, 41.031],
+      "angle": 0,
+      "size": "place",
+      "from": 330,
+      "to": 1203
+    },
+    {
+      "id": "pera",
+      "name": {
+        "en": "Galata (Pera)",
+        "zh": "加拉塔（佩拉）"
+      },
+      "inscription": {
+        "greek": "ΓΑΛΑΤΑΣ",
+        "latin": "PERA"
+      },
+      "position": [28.9745, 41.031],
+      "angle": 0,
+      "size": "place",
+      "from": 1204
+    },
+    {
+      "id": "chrysopolis",
+      "name": {
+        "en": "Chrysopolis",
+        "zh": "克律索波利斯"
+      },
+      "inscription": {
+        "greek": "ΧΡΥΣΟΠΟΛΙΣ",
+        "latin": "CHRYSOPOLIS"
+      },
+      "position": [29.0215, 41.032],
+      "angle": 0,
+      "size": "place",
+      "from": 330
+    },
+    {
+      "id": "chalcedon",
+      "name": {
+        "en": "Chalcedon",
+        "zh": "卡尔西顿"
+      },
+      "inscription": {
+        "greek": "ΧΑΛΚΗΔΩΝ",
+        "latin": "CHALCEDON"
+      },
+      "position": [29.033, 40.999],
+      "angle": 0,
+      "size": "place",
+      "from": 330
+    }
+  ],
+  "vessels": [
+    {
+      "kind": "dromon",
+      "position": [28.96, 40.9905],
+      "from": 330
+    },
+    {
+      "kind": "merchant",
+      "position": [28.985, 40.9985],
+      "from": 330
+    },
+    {
+      "kind": "merchant",
+      "position": [28.999, 41.02],
+      "from": 330
+    },
+    {
+      "kind": "dromon",
+      "position": [28.966, 41.0262],
+      "from": 330
+    },
+    {
+      "kind": "merchant",
+      "position": [28.948, 41.0355],
+      "from": 330
+    },
+    {
+      "kind": "merchant",
+      "position": [28.935, 40.987],
+      "from": 330
+    },
+    {
+      "kind": "dromon",
+      "position": [29.005, 41.005],
+      "from": 330
+    }
+  ]
+}

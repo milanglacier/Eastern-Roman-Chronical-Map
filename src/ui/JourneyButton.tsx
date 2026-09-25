@@ -1,7 +1,7 @@
 import { JOURNEY_EVENT } from '../map/three/projection';
 import { useT } from '../i18n';
 
-/** Replays the guided opening flight. */
+/** Replays the guided opening flight to Constantinople. */
 export function JourneyButton() {
   const t = useT();
   return (
@@ -14,7 +14,7 @@ export function JourneyButton() {
       <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" aria-hidden="true">
         <path d="M7 4l13 8-13 8z" />
       </svg>
-      {t('journey')}
+      {t('flyToCity')}
     </button>
   );
 }

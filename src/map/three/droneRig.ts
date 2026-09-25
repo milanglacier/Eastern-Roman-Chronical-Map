@@ -103,8 +103,22 @@ export interface DroneRig {
 export function createDroneRig(
   domElement: HTMLElement,
   onChange: () => void,
-  options: { groundY: (x: number, z: number) => number; onUserInput?: () => void },
+  options: {
+    groundY: (x: number, z: number) => number;
+    onUserInput?: () => void;
+    /** Where the drone may fly (default: the world rect plus a margin). */
+    bounds?: { minX: number; maxX: number; minZ: number; maxZ: number };
+    /** Ceiling (default DRONE_MAX_Y) and clearance above the ground (default DRONE_MIN_CLEAR). */
+    maxY?: number;
+    minClear?: number;
+    /** Keyboard speed is (altitude + speedFloor) units per second, roughly. */
+    speedFloor?: number;
+  },
 ): DroneRig {
+  const bounds = options.bounds ?? { minX: -30, maxX: GROUND_W + 30, minZ: -30, maxZ: GROUND_H + 30 };
+  const maxY = options.maxY ?? DRONE_MAX_Y;
+  const minClear = options.minClear ?? DRONE_MIN_CLEAR;
+  const speedFloor = options.speedFloor ?? 0.8;
   const camera = new PerspectiveCamera(FOV, 1, 0.02, 3000);
   const s: DronePose = { x: GROUND_W / 2, y: 40, z: GROUND_H / 2, yaw: 0, pitch: -35 * DEG };
   let enabled = true;
@@ -116,10 +130,10 @@ export function createDroneRig(
 
   function apply(): void {
     s.pitch = clampDronePitch(s.pitch);
-    s.x = Math.min(GROUND_W + 30, Math.max(-30, s.x));
-    s.z = Math.min(GROUND_H + 30, Math.max(-30, s.z));
+    s.x = Math.min(bounds.maxX, Math.max(bounds.minX, s.x));
+    s.z = Math.min(bounds.maxZ, Math.max(bounds.minZ, s.z));
     const ground = Math.max(0, options.groundY(s.x, s.z));
-    s.y = Math.min(DRONE_MAX_Y, Math.max(ground + DRONE_MIN_CLEAR, s.y));
+    s.y = Math.min(maxY, Math.max(ground + minClear, s.y));
     altitude = s.y - ground;
     curvatureUniforms.uCurveCenter.value.set(s.x, s.z);
     curvatureUniforms.uCurveRadius.value = droneCurveRadius(altitude);
@@ -365,7 +379,7 @@ export function createDroneRig(
         return;
       }
       if (held.size) {
-        const speed = (altitude + 0.8) * 1.1 * dt;
+        const speed = (altitude + speedFloor) * 1.1 * dt;
         const fx = Math.sin(s.yaw);
         const fz = -Math.cos(s.yaw);
         if (held.has('w')) { s.x += fx * speed; s.z += fz * speed; }

@@ -38,4 +38,7 @@ is the **Eastern Roman Empire (东罗马帝国)**, or simply **Rome / the Empire
 - `npm test` — vitest (data validation + unit + component tests)
 - `npm run build` — static build
 - `npm run world:build` — rebake the world textures (heightmap/albedo/worldmask/granulation)
+  and the city pages
+- `npm run city:build` — rebake only the city pages (`public/city/<id>/`) from
+  `scripts/assets/city/<id>-plate.json` and the committed z13 DEM crop
 - `npm run world:fetch-dem` — re-download the DEM mosaic (only if bbox/zoom changes)

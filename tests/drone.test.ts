@@ -54,3 +54,12 @@ describe('free-look drone camera', () => {
     }
   });
 });
+
+describe('switching between the map and the city view', () => {
+  it('arrives on either side clear of the threshold that would switch back', async () => {
+    const { CITY_ENTER_ALTITUDE, MAP_RETURN_ALTITUDE } = await import('../src/map/three/worldScene');
+    const { CITY_ARRIVAL_ALTITUDE, CITY_EXIT_ALTITUDE } = await import('../src/map/three/chronicle/city/cityView');
+    expect(MAP_RETURN_ALTITUDE).toBeGreaterThan(CITY_ENTER_ALTITUDE * 1.3);
+    expect(CITY_ARRIVAL_ALTITUDE).toBeLessThan(CITY_EXIT_ALTITUDE * 0.7);
+  });
+});

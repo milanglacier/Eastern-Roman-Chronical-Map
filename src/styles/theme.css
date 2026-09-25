@@ -346,6 +346,21 @@ button {
   white-space: nowrap;
 }
 
+.city-marker.enterable {
+  pointer-events: auto;
+  cursor: zoom-in;
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+}
+
+.city-marker.enterable:focus-visible {
+  outline: 2px solid var(--gilt-bright);
+  outline-offset: 4px;
+}
+
 .city-marker.rank-1 .city-dot {
   width: 10px;
   height: 10px;
@@ -665,6 +680,30 @@ button {
   box-shadow: 0 0 14px rgba(236, 212, 138, 0.3);
 }
 
+.city-view-button {
+  position: absolute;
+  top: 128px;
+  right: 24px;
+  z-index: 18;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--gilt-bright);
+  border-radius: 999px;
+  padding: 7px 16px;
+  font-family: var(--font-display);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.city-view-button:hover {
+  background: rgba(216, 182, 74, 0.2);
+  box-shadow: 0 0 14px rgba(236, 212, 138, 0.3);
+}
+
+.app.ui-hidden .city-view-button,
 .app.ui-hidden .journey-button {
   opacity: 0;
   pointer-events: none;
@@ -675,6 +714,26 @@ button {
     top: 70px;
     right: 14px;
   }
+  .city-view-button {
+    top: 110px;
+    right: 14px;
+  }
+}
+
+/* ————— Veil between the map and a city view ————— */
+
+.city-veil {
+  position: absolute;
+  inset: -20%;
+  z-index: 5;
+  pointer-events: none;
+  opacity: 0;
+  background:
+    radial-gradient(38% 30% at 30% 35%, rgba(255, 252, 244, 0.95), rgba(255, 252, 244, 0) 70%),
+    radial-gradient(34% 28% at 70% 60%, rgba(247, 241, 228, 0.95), rgba(247, 241, 228, 0) 70%),
+    radial-gradient(45% 35% at 55% 25%, rgba(233, 239, 242, 0.9), rgba(233, 239, 242, 0) 72%),
+    radial-gradient(40% 32% at 25% 75%, rgba(238, 232, 218, 0.9), rgba(238, 232, 218, 0) 72%),
+    radial-gradient(120% 120% at 50% 50%, rgba(240, 236, 226, 0.92), rgba(214, 222, 228, 0.96));
 }
 
 /* ————— Compass ————— */

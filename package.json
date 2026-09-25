@@ -10,7 +10,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "world:fetch-dem": "node scripts/fetch-dem.mjs",
-    "world:build": "node scripts/build-world-textures.mjs"
+    "world:build": "node scripts/build-world-textures.mjs && node scripts/build-city-plate.mjs",
+    "city:build": "node scripts/build-city-plate.mjs"
   },
   "dependencies": {
     "@fontsource/cinzel": "^5.1.0",
