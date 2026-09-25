@@ -1,12 +1,13 @@
 # Eastern Roman Chronicle Map · 东罗马编年地图
 
-An interactive, bilingual (English / 中文) historical visualization of the **Eastern
-Roman Empire, AD 330–1453**: a Civilization-style isometric hex-tile map of the
-Mediterranean world showing the empire's changing borders across 26 era snapshots,
-with 100+ clickable event widgets covering politics, war, economy, culture, art,
-law, religion, and civilization — each placed at the location where it happened.
+An interactive, bilingual (English / 中文) journey through the **Eastern Roman Empire,
+AD 330–1453**. The Mediterranean world is a living chronicle map: an illuminated
+manuscript you fly through freely. The mountains are sculpted and drawn in ink, the
+sea is watercolour, and cities pop up out of the page. Light and weather change with
+each era. The empire's borders shift across 26 snapshots in imperial purple and gold,
+and 100+ bilingual events sit where they happened.
 
-![Eastern Roman Chronicle Map screenshot](docs/screenshot.jpg)
+![Living chronicle map: overview, imperial frontier, low flight, mountains, pop-up Constantinople by day and in 1453](docs/screenshots/chronicle-prototype.jpg)
 
 ## Running
 
@@ -17,21 +18,39 @@ npm test           # vitest: data validation + unit + component tests
 npm run build      # static production build (dist/)
 ```
 
+## Flying
+
+| Input | Action |
+|---|---|
+| drag | look around (360°, down to the ground, up to the sky) |
+| right-drag / shift-drag | move over the ground |
+| wheel / pinch | fly toward the cursor |
+| W A S D · Q E · arrows | move · descend/climb · look |
+| N · compass | face north |
+| **Begin the journey** | guided flight to Constantinople as it pops up |
+| H | hide the interface |
+
+The timeline scrubs or plays through eleven centuries (space toggles, arrows step).
+Clicking an event opens its account.
+
+URL options: `?quality=high|medium|low`, `?intro=0` (skip the opening flight), and
+`?theme=painted|clockwork` for the earlier looks.
+
 ## How it works
 
-- **Map** — `src/map/` renders a 90×56 pointy-top hex grid with PixiJS v8 in a
-  squashed isometric projection (Civ-style 45° view). Terrain is procedural:
-  mountains extrude with snow caps, hills mound, waves ripple. Drag to pan,
-  scroll to zoom.
-- **Territory** — each snapshot year has a hand-authored GeoJSON MultiPolygon in
-  `src/data/territories/<year>.json`. At runtime, land tiles whose centers fall
-  inside the polygon are tinted imperial purple with a gold Civ-style border;
-  snapshot changes crossfade.
-- **Events** — `src/data/events/era*.json` hold bilingual event entries (see
-  schema in `src/data/schema.ts`). Events appear as clickable widgets on the map
-  during their era; clicking one stops autoplay and opens the detail panel.
-- **Timeline** — scrub freely, click a snapshot diamond, or press play to sweep
-  through eleven centuries (space bar toggles; arrows step).
+- **World:** a Three.js scene (`src/map/three/`) built on a real DEM heightmap,
+  sculpted and bent over a curved horizon, and drawn in parchment, ink and
+  watercolour. See `docs/terrain-3d-spec.md` for the pipeline and
+  `docs/art-direction.md` for the look.
+- **Cities:** pop-up illustrations drawn procedurally on a canvas; there are no
+  image assets.
+- **Eras:** `src/data/moods.json` sets the light, sky, haze and colour grade per
+  year, from dawn in 330 to night in 1453.
+- **Territory:** a hand-authored GeoJSON MultiPolygon per snapshot, rasterized to a
+  land-clipped mask and drawn as an imperial-purple glaze with a purple-and-gold
+  frontier line.
+- **UI:** React (header, timeline, event panel, legend, markers) over the canvas;
+  zustand for the shared state.
 
 ## Editing the content (no code required)
 
@@ -41,26 +60,26 @@ All historical content is data, validated by zod schemas and tests:
 | --- | --- | --- |
 | Events | `src/data/events/era*.json` | bilingual title/summary/detail, category, `[lon, lat]`, importance |
 | Era snapshots | `src/data/snapshots.json` | year + bilingual label/note, sorted by year |
-| Borders | `src/data/territories/<year>.json` | GeoJSON MultiPolygon; may extend over sea — only land tiles paint |
+| Borders | `src/data/territories/<year>.json` | GeoJSON MultiPolygon; may extend over sea (only land is tinted) |
 | Cities | `src/data/cities.json` | name, `[lon, lat]`, visible year range, rank |
-| Terrain | `scripts/assets/terrain-config.json` | then `npm run generate:tiles` |
+| Era light | `src/data/moods.json` | per-year sky, light, haze and grade keyframes |
+| Terrain | `scripts/assets/terrain-config.json` | straits, rivers, regions; then `npm run world:build` |
 
-Add an event: append an object to the matching era file, run `npm test`.
-Add a snapshot: add a row to `snapshots.json` **and** a matching
-`territories/<year>.json`; the tests check the pairing.
+To add an event, append an object to the matching era file and run `npm test`. To
+add a snapshot, add a row to `snapshots.json` **and** a matching
+`territories/<year>.json`; the tests check that they pair up. Coordinates must lie
+within the map bbox: lon **−12…60**, lat **24…59**.
 
-Coordinates must lie within the map bbox: lon **−12…60**, lat **24…59**.
+## Regenerating the world textures
 
-## Regenerating the terrain
-
-`src/data/tiles.json` is generated — don't edit it by hand:
+`public/terrain/*` is baked. Don't edit it by hand:
 
 ```bash
-node scripts/fetch-coastline.mjs   # one-time: re-download & clip Natural Earth land
-npm run generate:tiles             # re-classify terrain from coastline + config
+npm run world:build       # deterministic, offline (the DEM mosaic is committed)
+npm run world:fetch-dem   # only if the bbox or zoom changes
 ```
 
 ## Stack
 
-Vite · React 18 · TypeScript · PixiJS 8 · zustand · zod · Vitest / Testing Library.
-Pure static output — deployable to any static host.
+Vite · React 18 · TypeScript · Three.js · zustand · zod · Vitest / Testing Library.
+The output is pure static files, deployable to any static host.

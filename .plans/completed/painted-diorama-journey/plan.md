@@ -1,5 +1,13 @@
 # Painted Diorama — a cinematic journey through the Roman East (v2)
 
+> **Status: superseded (2026-09-24).** Phases 0–2 were built: the render pipeline,
+> era moods, curved-earth camera, painted bake and cinematic UI. The user rejected
+> the look at the Phase 1 art gate: "it now has the painted art style, but still as
+> a map". Parts still live in the code: the post pipeline, moods, curvature, UI
+> chrome and bake. The look itself is reachable with `?theme=painted`. Screenshots
+> are in `docs/screenshots/archive/painted-*.jpg`. It was followed by
+> `clockwork-world-prototype`, then `.plans/active/chronicle-map-prototype`.
+
 ## Context
 
 The current map (master, 6f23245) reads as "a rough strategy game": 45° north-up

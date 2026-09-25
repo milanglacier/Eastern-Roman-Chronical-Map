@@ -1,5 +1,12 @@
 # Clockwork world: prototype (Game-of-Thrones-titles direction)
 
+> **Status: superseded (2026-09-24).** Built as specified (`?theme=clockwork`;
+> screenshots in `docs/screenshots/archive/clockwork-*.jpg`). The user rejected it:
+> "I want a free angle of rotation that can go up and down, left and right, not a
+> fixed angle; your current version is still a 2.5D god-like view." The orbit
+> camera around a ground target is what made it read as a map. It was followed by
+> `.plans/active/chronicle-map-prototype`.
+
 ## Why
 
 At the art gate, the user rejected the painted diorama (`.plans/active/painted-diorama-journey/plan.md`):

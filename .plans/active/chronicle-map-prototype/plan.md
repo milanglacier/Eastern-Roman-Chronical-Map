@@ -30,11 +30,11 @@ cities that rise like pop-up engravings.
    reachable).
    - **Land:** parchment ground, and watercolour washes taken from the painted albedo with soft,
      pigment-pooled edges. Ink hachures follow the slope, with density from steepness and
-     shading. Ink contour lines, gold-leaf rivers, and a vermilion ink coast line.
-   - **Territory:** a vermilion rubric line with a gilt edge plus a pale purple wash.
+     shading. Sepia contour lines, watercolour-blue rivers, and an inked coast line.
+   - **Territory:** an imperial-purple wash plus a purple frontier line with a gold edge.
    - **Sea:** watercolour blue-green, deeper offshore, with inked chart ripples along the coasts.
-   - **Sky:** parchment sky with watercolour clouds. The haze is parchment too, so the distance
-     dissolves into paper.
+   - **Sky:** the era's natural sky as a watercolour, with painted clouds and a gold-rimmed sun.
+     The haze is a light blue air with a little paper in it.
    - **Relief:** the sculpted relief with a coast distance field, a small slab and no terraces.
 3. **Pop-up Constantinople** (`src/map/three/chronicle/popupCity.ts`).
    - Three layered cards drawn procedurally on a Canvas with ink linework, watercolour fills,
@@ -52,4 +52,36 @@ cities that rise like pop-up engravings.
 
 - `npm test`: drone math (look clamps, ground clearance, path interpolation), the relief variant,
   and all existing tests.
-- Screenshots via `__ercmDebug` (`journeyAt(u)`, `setDrone(pose)`, `popRise(t)`).
+- Screenshots via `__ercmDebug` (`journeyAt(u)`, `setDrone(pose)`, `cityRise(t)`, `setYear`,
+  `freezeTime`). Pass `?intro=0` to skip the opening flight.
+
+## Status (2026-09-25)
+
+Prototype built and approved ("this is in general good"), committed as `8b7ae25`.
+
+**Colour decision.** The user tried an all-purple-gold scene: first a pastel lilac,
+which read "like neon, gouache", then a deep dark purple, which read "dead, lifeless".
+The final rule is recorded in `docs/art-direction.md`:
+
+- The **scene uses natural colours**: the era's sky, a blue-green watercolour sea,
+  and natural land pigments on parchment with sepia ink.
+- **Purple-gold is reserved** for:
+  - the UI chrome
+  - the empire's territory wash and purple/gold frontier line
+  - emblems (city name ribbons, roundel petals)
+
+## Next: build-out (not started)
+
+- **Pop-up vignettes for other cities:** Rome, Antioch, Alexandria, Thessalonica,
+  Ravenna, Carthage, Nicaea, Trebizond.
+- **Cities follow the eras:**
+  - Constantinople variants: the land walls from 413, the domed Hagia Sophia from
+    537, damage after 1204, the Ottoman camp in 1453.
+  - Cities fold down or burn when lost.
+- **The 1453 siege** as a pop-up tableau: armies, the great bombard, the fleet and
+  the chain. Also a smaller battle vignette for other military events.
+- **Guided journeys** through all eras, flying from event to event.
+- **Clean-up:**
+  - grainy hachures and visible mesh facets on close-up peaks
+  - the pale horizon at high altitude
+  - performance on mobile
