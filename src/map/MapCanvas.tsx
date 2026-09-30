@@ -145,8 +145,19 @@ export function MapCanvas() {
         world.setYear(year);
       };
       applyYear(moodYear);
+      // Playing the timeline flies the aerial tour over the map (not with
+      // reduced motion; the city view never tours).
+      const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+      let playing = false;
+      const applyPlaying = (next: boolean) => {
+        if (next === playing) return;
+        playing = next;
+        world.setTour(next && !reduceMotion);
+      };
+      applyPlaying(useAppStore.getState().isPlaying);
       const unsubscribe = useAppStore.subscribe((s) => {
         if (s.year !== moodYear) applyYear(s.year);
+        applyPlaying(s.isPlaying);
       });
 
       const resize = () => {
@@ -172,10 +183,6 @@ export function MapCanvas() {
       const onLeaveCity = () => void switchTo('world');
       window.addEventListener(ENTER_CITY_EVENT, onEnterCity);
       window.addEventListener(LEAVE_CITY_EVENT, onLeaveCity);
-      // Opening: fly in over the Aegean to Constantinople (skipped for
-      // scripted screenshots via ?intro=0).
-      const intro = new URLSearchParams(location.search).get('intro') !== '0';
-      if (intro) setTimeout(() => void world.playJourney(), 600);
 
       const setTier = (next: QualityTier) => {
         tier = next;

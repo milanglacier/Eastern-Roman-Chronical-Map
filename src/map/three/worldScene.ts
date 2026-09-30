@@ -11,6 +11,7 @@
  */
 import { Scene, Texture, Vector3, WebGLRenderer } from 'three';
 import { cities, cityPlans, snapshots } from '../../data';
+import { YEAR_MIN } from '../../data/schema';
 import { snapshotForYear } from '../../lib/timeline';
 import type { Mood } from '../../lib/mood';
 import { reliefY } from '../../lib/relief';
@@ -29,6 +30,7 @@ import { createDaylightEnvironment } from './environment';
 import { buildChronicleTerrain } from './chronicle/terrain';
 import { CITY_EXIT_ALTITUDE, createCityView, type CityView } from './chronicle/city/cityView';
 import { createDroneRig, dronePathPose, lookVector, type DronePose, type DroneRig } from './droneRig';
+import { createEmpireTour, createPoseFollower } from './aerialTour';
 
 export interface WorldAssets {
   heightField: HeightField;
@@ -66,7 +68,14 @@ export interface WorldView {
   setShadowMapSize(size: number): void;
   /** Lon/lat → CSS px in a viewport of the given size (bent + horizon-occluded). */
   project(lon: number, lat: number, width: number, height: number): ScreenPoint;
-  /** The opening flight to Constantinople. */
+  /**
+   * The aerial tour while the timeline plays: on, the map camera flies the
+   * era's shot; off, it glides to rest. Handing the camera over (any input,
+   * a guided flight) stops it until it is switched on again; leaving the
+   * city view while it is on picks it back up. Never runs in the city view.
+   */
+  setTour(on: boolean): void;
+  /** The guided flight from where the camera is, over the Aegean, to Constantinople. */
   playJourney(): Promise<boolean>;
   /** Screenshot/debug: pin the journey camera at progress u (0..1). */
   journeyAt(u: number): void;
@@ -94,11 +103,15 @@ const CITY_ENTER_REACH = 0.8;
 export const MAP_RETURN_ALTITUDE = 2.4;
 /** Seconds after a switch before the next one may be asked for. */
 const SWITCH_COOLDOWN = 1.5;
-/** Length of the opening flight to Constantinople. */
-const FLIGHT_SECONDS = 19;
+/** Length of the guided flight to Constantinople. */
+const FLIGHT_SECONDS = 12;
+/** Tour follower stiffness (1/s): a gentle pick-up, then a steady follow. */
+const TOUR_OMEGA_START = 0.8;
+const TOUR_OMEGA = 2.2;
+const TOUR_PICKUP_SECONDS = 3;
 
 /**
- * The opening flight: high over the Aegean → dive over the Dardanelles → skim
+ * The guided flight: high over the Aegean → dive over the Dardanelles → skim
  * the Marmara → low toward Constantinople, close enough to enter its city view.
  */
 function droneJourney(): DronePose[] {
@@ -200,9 +213,47 @@ export function createWorldView(
     viewDirty = true;
     options.onViewChange?.();
   };
-  const drone = createDroneRig(canvas, onRigChange, { groundY });
+  // Aerial tour state: `tourWanted` follows playback; `tour` is what the camera does now.
+  const empireTour = createEmpireTour();
+  const follower = createPoseFollower();
+  let tourWanted = false;
+  let tour: 'off' | 'flying' | 'coasting' = 'off';
+  let tourClock = 0;
+  let tourYear: number = YEAR_MIN;
+  const startTour = () => {
+    tour = 'flying';
+    tourClock = 0;
+    follower.reset(drone.drone);
+  };
+
+  const drone = createDroneRig(canvas, onRigChange, {
+    groundY,
+    // The user takes the camera: the tour yields until playback is restarted.
+    onUserInput: () => {
+      tour = 'off';
+    },
+  });
   const activeRig = (): DroneRig => (mode === 'city' && cityView ? cityView.rig : drone);
-  drone.setDrone(droneJourney()[0]);
+  // Open on the whole Empire, where the tour begins.
+  drone.setDrone(empireTour.poseAt(YEAR_MIN));
+
+  function updateTour(deltaSeconds: number): void {
+    if (tour === 'off') return;
+    // A guided flight (the journey, north-up) has taken the camera.
+    if (drone.flying) {
+      tour = 'off';
+      return;
+    }
+    if (tour === 'flying') {
+      tourClock += deltaSeconds;
+      const k = Math.min(1, tourClock / TOUR_PICKUP_SECONDS);
+      const omega = TOUR_OMEGA_START + (TOUR_OMEGA - TOUR_OMEGA_START) * k * k * (3 - 2 * k);
+      drone.setDrone(follower.step(empireTour.poseAt(tourYear), deltaSeconds, omega));
+    } else {
+      if (!follower.coast(deltaSeconds)) tour = 'off';
+      drone.setDrone(follower.pose);
+    }
+  }
 
   const probe = new Vector3();
   const viewSpace = new Vector3();
@@ -275,6 +326,7 @@ export function createWorldView(
         drone.enabled = false;
         cityView.rig.enabled = true;
         mode = 'city';
+        tour = 'off';
         // The city unfolds like a pop-up page as you arrive.
         cityView.page.setRise(0);
         startRise(0.15);
@@ -294,6 +346,7 @@ export function createWorldView(
         cityView.rig.enabled = false;
         drone.enabled = true;
         mode = 'world';
+        if (tourWanted) startTour();
       }
       viewDirty = true;
       options.onViewChange?.();
@@ -312,6 +365,7 @@ export function createWorldView(
       terrain.uniforms.uNight.value = mood.night;
     },
     setYear(year) {
+      tourYear = year;
       cityView?.setYear(year);
       const next = snapshotForYear(snapshots, year).year;
       if (next === snapYear) return;
@@ -336,6 +390,7 @@ export function createWorldView(
         return;
       }
       drone.update(deltaSeconds);
+      updateTour(deltaSeconds);
       terrain.uniforms.uTime.value = timeSeconds;
       water.setTime(timeSeconds);
       apron.setTime(timeSeconds);
@@ -372,10 +427,20 @@ export function createWorldView(
         visible: Math.abs(probe.x) <= 1.05 && Math.abs(probe.y) <= 1.05,
       };
     },
+    setTour(on) {
+      tourWanted = on;
+      if (on) {
+        if (mode === 'world' && tour !== 'flying') startTour();
+      } else if (tour === 'flying') {
+        tour = 'coasting';
+      }
+    },
     playJourney() {
-      // The flight ends low over the Marmara, close enough to enter the city.
+      // From wherever the camera is, join the flight over the Aegean; it ends
+      // low over the Marmara, close enough to enter the city.
       view.setMode('world');
-      return drone.playDronePath(droneJourney(), FLIGHT_SECONDS);
+      tour = 'off';
+      return drone.playDronePath([drone.drone, ...droneJourney()], FLIGHT_SECONDS);
     },
     journeyAt(u) {
       view.setMode('world');

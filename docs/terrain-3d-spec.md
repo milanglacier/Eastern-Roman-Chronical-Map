@@ -96,9 +96,10 @@ committed inputs: running it twice gives identical sha256, with all noise seeded
 - **`MapCanvas.tsx`** owns the renderer, the post pipeline, the loop, the era mood
   and the quality tiers. Its DEV handle is `globalThis.__ercmDebug`, with
   `setYear`, `setDrone`, `journeyAt(u)`, `cityRise(t)`, `freezeTime`,
-  `setTier` and `frames`. `?intro=0` skips the opening flight.
+  `setTier` and `frames`.
 - **`worldScene.ts`** builds the scene and exposes `project()` for the DOM
-  overlays and `playJourney()`.
+  overlays, `playJourney()` (12 s, starting from wherever the camera is) and
+  `setTour()`. The page opens on the whole Empire; nothing flies until asked.
 
 **Camera**
 - **`droneRig.ts`**: the free-look drone.
@@ -107,6 +108,16 @@ committed inputs: running it twice gives identical sha256, with all noise seeded
   - Touch: one finger looks, two fingers pinch to fly and drag to move.
   - Keys: WASD / QE and the arrows.
   - Guided journeys use `dronePathPose` (eased Catmull-Rom).
+- **`aerialTour.ts`**: the aerial tour flown while the timeline plays on the map.
+  - Each snapshot is framed on its territory (area centroid pulled a quarter of
+    the way toward Constantinople, RMS radius → height and pitch), the step
+    framings are Gaussian-smoothed over ±16 years, and a slow yaw drift circles the
+    shot, so the pose is a pure function of the fractional year.
+  - A critically damped follower picks the drone up from where it is, and coasts it
+    to rest on pause.
+  - Any input or guided flight hands the camera back until play is pressed again;
+    leaving the city view while playing picks the tour back up. The city view never
+    tours, and reduced motion turns it off.
 
 **Scene**
 - **`terrain.ts`**: the 1152×560-segment grid (`buildTerrainGeometry` takes a
@@ -173,6 +184,7 @@ light, sky, haze, exposure, grade, bloom and night. `src/lib/mood.ts`
 - `worldlib.test.ts`: height codec, EDT, PRNG, height shaping.
 - `curvature.test.ts`: the bend, and the exact ray ↔ bent-ground round trip.
 - `drone.test.ts`: look clamps, axes, horizon radius, path continuity.
+- `aerial-tour.test.ts`: framings, tour continuity and bounds, the follower.
 - `three-geo.test.ts`: ground mapping and heading deltas.
 - `relief.test.ts`: monotone relief and the smooth coast edge.
 - `easing.test.ts`: the fold-up overshoot and the flight easing.

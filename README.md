@@ -51,9 +51,11 @@ npm run build      # static production build (dist/)
 | H | hide the interface |
 
 The timeline scrubs or plays through eleven centuries (space toggles, arrows step).
+Let it play over the map and the camera takes to the air, drifting from era to era
+as the frontiers swell and shrink; inside Constantinople it stays with you.
 Clicking an event opens its account.
 
-URL options: `?quality=high|medium|low` and `?intro=0` (skip the opening flight).
+URL options: `?quality=high|medium|low`.
 (Earlier looks, a painted diorama and a Game-of-Thrones-style clockwork model, were
 tried and removed. See `docs/art-direction.md`.)
 
