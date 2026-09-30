@@ -32,6 +32,15 @@ is the **Eastern Roman Empire (东罗马帝国)**, or simply **Rome / the Empire
   `npm run world:build` instead of editing outputs by hand. The bake is deterministic
   and fully offline (DEM mosaic is committed); see `docs/terrain-3d-spec.md`.
 
+## README
+
+The README is written for visitors, not developers. When updating it, describe the
+**experience**: what it feels like to explore the map, fly over the Empire, and follow
+its history. Leave out technical details (rendering pipeline, bake steps, file layout,
+shaders). Also skip exact, literal accounts of what is on screen, such as panel
+positions, marker styles, or which button does what. Technical documentation belongs in
+`docs/`.
+
 ## Commands
 
 - `npm run dev` — dev server
