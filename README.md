@@ -9,6 +9,8 @@ where they happened. Fly down into Constantinople and the map gives way to the c
 itself, set like a floor mosaic, with its walls, churches and houses standing up
 from the page.
 
+**Live: [eastern-roman-chronical-map.vercel.app](https://eastern-roman-chronical-map.vercel.app)**
+
 ## Constantinople
 
 On the continental map, Constantinople is a city like the others. Fly low toward it,
