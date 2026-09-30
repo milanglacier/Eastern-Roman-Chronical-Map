@@ -1,42 +1,42 @@
 # Eastern Roman Chronicle Map · 东罗马编年地图
 
-An interactive, bilingual (English / 中文) journey through the **Eastern Roman Empire,
-AD 330–1453**. The Mediterranean world is a living chronicle map: an illuminated
-manuscript you fly through freely. The mountains are sculpted and drawn in ink, the
-sea is watercolour, and light and weather change with each era. The empire's borders
-shift across 26 snapshots in imperial purple and gold, and 100+ bilingual events sit
-where they happened. Fly down into Constantinople and the map gives way to the city
-itself, set like a floor mosaic, with its walls, churches and houses standing up
-from the page.
+Eleven centuries of the **Eastern Roman Empire, AD 330–1453**, told on a map you can
+fly through, in English and 中文.
+
+The Mediterranean world is drawn as a living chronicle map, like an illuminated
+manuscript come to life. Mountains rise in ink, the seas are washed in watercolour,
+and the Empire's lands glow in imperial purple and gold. You are free to fly anywhere,
+from high above the curve of the earth down among the mountain passes, and to follow
+the Empire's story as its frontiers swell and shrink.
 
 **Live: [eastern-roman-chronical-map.vercel.app](https://eastern-roman-chronical-map.vercel.app)**
 
-## Constantinople
-
-On the continental map, Constantinople is a city like the others. Fly low toward it,
-or click its name, and you pass through a veil of cloud into its **city view**. The
-peninsula, the Golden Horn, Galata and the Asian shore are laid out at their true
-shape as a floor mosaic, after the 6th-century Madaba map. The Theodosian walls,
-Hagia Sophia, the Hippodrome, the Great Palace, the columns, the harbours and
-thousands of houses stand up from the mosaic as pop-up drawings. The city follows
-the timeline: walls rise and fall, and Hagia Sophia is rebuilt. Climb high, or press
-**Back to the map**, to return.
-
 | The continental view | The city view |
 |---|---|
-| ![The continental map in AD 537: Greece, the Aegean and Asia Minor, with Constantinople as a city marker](docs/screenshots/constantinople-1-continental-537.jpg) | ![The city view of Constantinople in AD 537, set as a floor mosaic](docs/screenshots/constantinople-2-city-view-537.jpg) |
-| ![The continental map from higher up in AD 537: Italy, Greece, Asia Minor, the Levant and Egypt](docs/screenshots/constantinople-4-mediterranean-537.jpg) | ![Across the Golden Horn from Sykai (Galata) to the sea walls and Hagia Sophia](docs/screenshots/constantinople-3-golden-horn-537.jpg) |
+| ![The opening view in AD 330, under the title "Dedication of Constantinople": the whole Empire, from Britain and Hispania to Egypt and the Euphrates](docs/screenshots/continental-1-overview-330.jpg) | ![The city view of Constantinople in AD 537, set as a floor mosaic](docs/screenshots/constantinople-2-city-view-537.jpg) |
+| ![AD 1025, under the title "The Medieval Apogee": southern Italy, the Balkans to the Danube, and Anatolia to Armenia](docs/screenshots/continental-2-medieval-apogee-1025.jpg) | ![Across the Golden Horn from Sykai (Galata) to the sea walls and Hagia Sophia](docs/screenshots/constantinople-3-golden-horn-537.jpg) |
 
-## Running
+## Watch the centuries pass
 
-```bash
-npm install
-npm run dev        # dev server
-npm test           # vitest: data validation + unit + component tests
-npm run build      # static production build (dist/)
-```
+The story opens in 330, with the whole Roman world laid out beneath you on the day
+Constantine dedicates his new capital. Let time run, and the camera takes to the air
+like a helicopter following the Empire. It sweeps east as the West falls away, widens
+as Justinian wins back Italy and Africa, and comes down close over Anatolia and the
+Balkans as the frontiers draw in. Each age announces itself as it arrives, and the
+sky changes with it: a rose dawn at the founding, storms over the seventh century,
+bright noon at the height of the Middle Ages, a crimson dusk when Constantinople falls
+to the Crusaders, and night in 1453.
 
-## Flying
+Stop anywhere to look around. Battles and sieges, church councils, law codes,
+coinage and art wait where they happened, each with its own account of what took
+place.
+
+## Fly the Empire yourself
+
+The map is yours to explore. Skim low along the Dardanelles, look up at the Taurus
+from the valley floor, or climb until the whole Mediterranean curves away beneath
+you. When you want a guide, a short flight carries you over the Aegean, up the
+straits and down into the capital.
 
 | Input | Action |
 |---|---|
@@ -45,68 +45,27 @@ npm run build      # static production build (dist/)
 | wheel / pinch | fly toward the cursor |
 | W A S D · Q E · arrows | move · descend/climb · look |
 | N · compass | face north |
-| **Fly to Constantinople** | guided flight from the Aegean down into Constantinople's city view |
-| fly low toward Constantinople · click its name | enter its city view |
-| climb high · **Back to the map** | leave the city view |
+| **Fly to Constantinople** | a guided flight over the Aegean, down into the city |
+| fly low toward Constantinople · click its name | enter the city |
+| climb high · **Back to the map** | leave the city |
+| space · play | let time run, or stop it |
+| ← → on the timeline | step through the years (shift for bigger steps) |
 | H | hide the interface |
 
-The timeline scrubs or plays through eleven centuries (space toggles, arrows step).
-Let it play over the map and the camera takes to the air, drifting from era to era
-as the frontiers swell and shrink; inside Constantinople it stays with you.
-Clicking an event opens its account.
+## Constantinople
 
-URL options: `?quality=high|medium|low`.
-(Earlier looks, a painted diorama and a Game-of-Thrones-style clockwork model, were
-tried and removed. See `docs/art-direction.md`.)
+From far away, Constantinople is a city like the others. Fly down to it, and you pass
+through a veil of cloud into the city itself. The peninsula, the Golden Horn, Galata
+and the Asian shore are laid out in their true shape as a floor mosaic, in the manner
+of the 6th-century Madaba map. The Theodosian walls, Hagia Sophia, the Hippodrome, the
+Great Palace, the harbours and thousands of houses stand up from the mosaic like a
+pop-up book.
 
-## How it works
+The city lives through time as well. Walls rise and fall, and Hagia Sophia is rebuilt,
+while the view stays quietly where you left it. Climb high again, and the Empire opens
+out below you once more.
 
-- **World:** a Three.js scene (`src/map/three/`) built on a real DEM heightmap,
-  sculpted and bent over a curved horizon, and drawn in parchment, ink and
-  watercolour. See `docs/terrain-3d-spec.md` for the pipeline and
-  `docs/art-direction.md` for the look.
-- **The city view:** a separate scene (`src/map/three/chronicle/city/`). The coast
-  comes from a z13 elevation crop (`npm run city:build`). The mosaic is a shader
-  over canvas drawings, and the landmarks, walls and houses are pop-up cards drawn
-  procedurally on a canvas; there are no image assets.
-- **Eras:** `src/data/moods.json` sets the light, sky, haze and colour grade per
-  year, from dawn in 330 to night in 1453.
-- **Territory:** a hand-authored GeoJSON MultiPolygon per snapshot, rasterized to a
-  land-clipped mask and drawn as an imperial-purple glaze with a purple-and-gold
-  frontier line.
-- **UI:** React (header, timeline, event panel, legend, markers) over the canvas;
-  zustand for the shared state.
+## For developers
 
-## Editing the content (no code required)
-
-All historical content is data, validated by zod schemas and tests:
-
-| What | Where | Notes |
-| --- | --- | --- |
-| Events | `src/data/events/era*.json` | bilingual title/summary/detail, category, `[lon, lat]`, importance |
-| Era snapshots | `src/data/snapshots.json` | year + bilingual label/note, sorted by year |
-| Borders | `src/data/territories/<year>.json` | GeoJSON MultiPolygon; may extend over sea (only land is tinted) |
-| Cities | `src/data/cities.json` | name, `[lon, lat]`, visible year range, rank |
-| Constantinople's city view | `src/data/cities/constantinople.json` | structures with dated stages, harbours, cisterns, roads, built-up areas, labels, ships |
-| Era light | `src/data/moods.json` | per-year sky, light, haze and grade keyframes |
-| Terrain | `scripts/assets/terrain-config.json` | straits, rivers, regions; then `npm run world:build` |
-
-To add an event, append an object to the matching era file and run `npm test`. To
-add a snapshot, add a row to `snapshots.json` **and** a matching
-`territories/<year>.json`; the tests check that they pair up. Coordinates must lie
-within the map bbox: lon **−12…60**, lat **24…59**.
-
-## Regenerating the world textures
-
-`public/terrain/*` is baked. Don't edit it by hand:
-
-```bash
-npm run world:build       # deterministic, offline (the DEM mosaic is committed); also runs city:build
-npm run city:build        # only the city view's coast and hills (public/city/<id>/)
-npm run world:fetch-dem   # only if the bbox or zoom changes
-```
-
-## Stack
-
-Vite · React 18 · TypeScript · Three.js · zustand · zod · Vitest / Testing Library.
-The output is pure static files, deployable to any static host.
+To run it locally: `npm install`, then `npm run dev`. Architecture, content editing
+and the terrain bake are described in [`docs/development.md`](docs/development.md).
