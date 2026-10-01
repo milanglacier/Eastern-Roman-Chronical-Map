@@ -13,7 +13,21 @@ npm test           # vitest: data validation + unit + component tests
 npm run build      # static production build (dist/)
 ```
 
-URL options: `?quality=high|medium|low`.
+URL options:
+
+- `?quality=high|medium|low` forces a quality tier.
+- `?perf` shows a performance overlay (GPU, render size, frame and GPU times,
+  stalls); `?perf=bench` also runs a fixed benchmark. Both work on the live site.
+
+```bash
+npm run perf                    # the benchmark in headless Chrome, printed as a table
+npm run perf -- --headed        # in a visible window, synced to the display
+npm run perf -- --out perf.json # also write the JSON result
+```
+
+Chrome is found via `$CHROME_PATH` or the usual install locations. See
+`terrain-3d-spec.md` (`perf.ts`) and the performance plan in
+`.plans/active/render-performance/`.
 
 (Earlier looks, a painted diorama and a Game-of-Thrones-style clockwork model, were
 tried and removed. See `art-direction.md`.)

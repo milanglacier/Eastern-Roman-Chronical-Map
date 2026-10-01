@@ -134,13 +134,21 @@ committed inputs: running it twice gives identical sha256, with all noise seeded
     the scene and rig on screen (`scene`, `rig`, `mode`), asks the host to switch
     when the drone flies low toward the city or climbs out of it, and places the
     camera on the other side to continue the flight (`setMode`). `MapCanvas` veils
-    the switch with a cloud overlay.
+    the switch with a cloud overlay. On the map the city view is not updated: the
+    latest year and mood wait in `worldScene.ts` and are handed over on entering,
+    behind the veil.
   - `cityPage.ts` builds the city model: two ground layers (the detailed plan, fading
     at its edges, over a coarse outer ground 26 units wide), strips, cards and
     houses.
+    - The houses and trees are one `InstancedMesh`. Their scatter (land, clearances
+      around landmarks, walls, avenues and harbours) runs only when those inputs
+      change; the density then reselects from the cached spots in place.
   - `pageArt.ts` draws both ground layers from the baked plate
     (`public/city/<id>/plate.json` + `land.png`, from `npm run city:build`); past the
     baked land mask the coasts run straight on under the haze.
+    - The ground below the dated layers (sea, waves, ripples, land, hills and fields)
+      is cached per layer and redrawn only when the plate or the built-up areas
+      change.
   - `strips.ts` builds walls, the aqueduct and colonnades as paper strips with
     tower boxes; `cardArt.ts` draws the landmark, ship and house cards.
   - `mosaic.ts` sets drawings in tesserae (Voronoi cells, grout, gold smalti that
@@ -161,6 +169,9 @@ committed inputs: running it twice gives identical sha256, with all noise seeded
   camera-fitted, texel-snapped shadow cascade.
 - **`territory.ts`**: snapshot MultiPolygon → land-clipped RG8 mask, with a 550 ms
   crossfade.
+  - The rasterizer (`src/lib/territoryRaster.ts`, ~40 ms a snapshot) runs for every
+    snapshot at startup in a worker (`territoryWorker.ts`); a snapshot asked for
+    before its turn is rasterized on the spot.
 
 **Overlays and post**
 - **`projection.ts`**: `projectLonLat` for EventMarkers / CityMarkers; it also
@@ -172,6 +183,17 @@ committed inputs: running it twice gives identical sha256, with all noise seeded
     paper grain, vignette, letterbox and fade.
   - Quality tiers (`quality.ts`): `?quality=high|medium|low`, plus a frame-time
     probe that steps the tier down.
+- **`perf.ts`**: diagnostics, off unless the URL asks (production builds too).
+  - `?perf`: an overlay with the GPU name (and a warning on a software
+    rasterizer), tier, pixel ratio, render size, MSAA, frame and GPU times
+    (`EXT_disjoint_timer_query_webgl2` around the whole pipeline) and stalls.
+  - `?perf=bench`: a fixed benchmark (camera views, the city view, timeline sweeps
+    on the map with the tour and in the city view); JSON on
+    `globalThis.__ercmPerf.result`. `&perfsync` waits for the GPU every frame, for
+    browsers running without vsync.
+  - `npm run perf` (`scripts/perf.mjs`) runs the benchmark in Chrome over the
+    DevTools protocol and prints the table. Plan and history:
+    `.plans/active/render-performance/`.
 
 **Era moods.** `src/data/moods.json` (zod `MoodKeySchema`) holds keyframes for the key
 light, sky, haze, exposure, grade, bloom and night. `src/lib/mood.ts`
@@ -190,6 +212,8 @@ light, sky, haze, exposure, grade, bloom and night. `src/lib/mood.ts`
 - `easing.test.ts`: the fold-up overshoot and the flight easing.
 - `mood.test.ts`: keyframe coverage, interpolation, azimuth arc.
 - `postfx.test.ts`: log-depth linearization, tier ordering, frame probe.
+- `perf.test.ts`: frame statistics, the software-renderer check, and the exact
+  segment index and ring test behind the city's house scatter.
 - `territory.test.ts`, `data.test.ts` (including Rule #1) and `components.test.tsx`.
 - `hex.test.ts` stays byte-identical.
 

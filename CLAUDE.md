@@ -51,3 +51,6 @@ positions, marker styles, or which button does what. Technical documentation bel
 - `npm run city:build` — rebake only the city pages (`public/city/<id>/`) from
   `scripts/assets/city/<id>-plate.json` and the committed z13 DEM crop
 - `npm run world:fetch-dem` — re-download the DEM mosaic (only if bbox/zoom changes)
+- `npm run perf` — the in-page benchmark (`?perf=bench`) in Chrome, printed as a table;
+  `?perf` on any URL shows the performance overlay. Plan and status:
+  `.plans/active/render-performance/`

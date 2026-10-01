@@ -8,118 +8,31 @@
  * only and its frontier hugs the coastline, like the old hex renderer.
  * Snapshot changes crossfade by animating the uTerritoryMix uniform between
  * the A and B texture slots.
+ *
+ * Rasterizing costs ~40 ms a snapshot, so every snapshot is rasterized ahead
+ * of time in a worker (territoryWorker.ts); a snapshot asked for before its
+ * turn is rasterized on the spot.
  */
 import { DataTexture, LinearFilter, RGFormat, UnsignedByteType } from 'three';
 import { territories } from '../../data';
-import type { Territory as TerritoryGeometry } from '../../data/schema';
-import { distanceTransform } from '../../lib/distanceField';
-import { LON_MIN, LON_MAX, LAT_MIN, LAT_MAX } from '../../lib/hex';
+import { TERRITORY_TEX_H, TERRITORY_TEX_W, buildLandMask, rasterizeTerritoryData } from '../../lib/territoryRaster';
 import type { HeightField } from './heightField';
 import type { TerrainUniforms } from './terrain';
 import { blankTerritoryTexture } from './terrain';
+import type { TerritoryWorkerRequest, TerritoryWorkerResult } from './territoryWorker';
 
-export const TERRITORY_TEX_W = 1024;
-export const TERRITORY_TEX_H = 498; // same 288:140 aspect as the world rect
-/** Frontier glow half-width in territory-texture px (~1.7 world units). */
-const GLOW_PX = 6;
+export {
+  TERRITORY_TEX_H,
+  TERRITORY_TEX_W,
+  buildLandMask,
+  clipMaskToLand,
+  multiPolygonToPixelRings,
+} from '../../lib/territoryRaster';
+
 export const CROSSFADE_MS = 550;
 
-/**
- * MultiPolygon (lon/lat) → pixel rings in territory-texture space (row 0 =
- * north, matching every world texture). Pure — unit-testable in jsdom.
- */
-export function multiPolygonToPixelRings(
-  geometry: TerritoryGeometry,
-  width = TERRITORY_TEX_W,
-  height = TERRITORY_TEX_H,
-): number[][][] {
-  const rings: number[][][] = [];
-  for (const polygon of geometry.coordinates) {
-    for (const ring of polygon) {
-      rings.push(
-        ring.map(([lon, lat]) => [
-          ((lon - LON_MIN) / (LON_MAX - LON_MIN)) * width,
-          ((LAT_MAX - lat) / (LAT_MAX - LAT_MIN)) * height,
-        ]),
-      );
-    }
-  }
-  return rings;
-}
-
-/**
- * Land coverage in territory-texture space: 2×2 supersamples of the land
- * predicate per texel, averaged so the coast edge stays antialiased after
- * the clip. Pure — unit-testable in jsdom.
- */
-export function buildLandMask(
-  width: number,
-  height: number,
-  isLand: (lon: number, lat: number) => boolean,
-): Uint8Array {
-  const mask = new Uint8Array(width * height);
-  const offsets = [0.25, 0.75];
-  for (let y = 0; y < height; y++) {
-    for (let x = 0; x < width; x++) {
-      let hits = 0;
-      for (const oy of offsets) {
-        const lat = LAT_MAX - ((y + oy) / height) * (LAT_MAX - LAT_MIN);
-        for (const ox of offsets) {
-          const lon = LON_MIN + ((x + ox) / width) * (LON_MAX - LON_MIN);
-          if (isLand(lon, lat)) hits++;
-        }
-      }
-      mask[y * width + x] = Math.round((hits * 255) / 4);
-    }
-  }
-  return mask;
-}
-
-/** Intersect a polygon coverage mask with the land mask (null = no clip). */
-export function clipMaskToLand(mask: Uint8Array, land: Uint8Array | null): Uint8Array {
-  if (!land) return mask;
-  for (let i = 0; i < mask.length; i++) {
-    mask[i] = Math.round((mask[i] * land[i]) / 255);
-  }
-  return mask;
-}
-
-/** Rasterize a snapshot's territory into RG8 (R = mask, G = border glow). */
-function rasterizeTerritory(geometry: TerritoryGeometry, land: Uint8Array | null): DataTexture {
-  const w = TERRITORY_TEX_W;
-  const h = TERRITORY_TEX_H;
-  const canvas = document.createElement('canvas');
-  canvas.width = w;
-  canvas.height = h;
-  const ctx = canvas.getContext('2d', { willReadFrequently: true });
-  if (!ctx) return blankTerritoryTexture();
-  ctx.clearRect(0, 0, w, h);
-  ctx.fillStyle = '#fff';
-  ctx.beginPath();
-  for (const ring of multiPolygonToPixelRings(geometry)) {
-    ring.forEach(([x, y], i) => (i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y)));
-    ctx.closePath();
-  }
-  ctx.fill('evenodd');
-  const rgba = ctx.getImageData(0, 0, w, h).data;
-
-  // Antialiased inside mask from the canvas alpha channel, clipped to land
-  // BEFORE the distance fields so the frontier glow traces coastlines too.
-  const mask = new Uint8Array(w * h);
-  for (let i = 0; i < mask.length; i++) mask[i] = rgba[i * 4 + 3];
-  clipMaskToLand(mask, land);
-
-  // Frontier glow: falloff of the distance to the mask boundary (both sides).
-  const inside = distanceTransform(w, h, (i) => mask[i] > 127);
-  const outside = distanceTransform(w, h, (i) => mask[i] <= 127);
-  const data = new Uint8Array(w * h * 2);
-  for (let i = 0; i < mask.length; i++) {
-    const d = Math.max(inside[i], outside[i]) - 0.5; // px to the frontier
-    const glow = Math.max(0, 1 - d / GLOW_PX);
-    data[i * 2] = mask[i];
-    data[i * 2 + 1] = Math.round(glow * glow * 255); // quadratic falloff
-  }
-  const tex = new DataTexture(data, w, h, RGFormat, UnsignedByteType);
+function territoryTexture(data: Uint8Array): DataTexture {
+  const tex = new DataTexture(data, TERRITORY_TEX_W, TERRITORY_TEX_H, RGFormat, UnsignedByteType);
   tex.magFilter = LinearFilter;
   tex.minFilter = LinearFilter;
   tex.flipY = false;
@@ -132,6 +45,11 @@ export interface TerritoryController {
   setSnapshot(year: number, animate?: boolean): void;
   /** Advance the crossfade; call once per frame with seconds elapsed. */
   update(deltaSeconds: number): void;
+  /**
+   * Rasterize every snapshot ahead of time, in a worker (or, without one,
+   * one per idle slot), so playing the timeline never waits on it.
+   */
+  prewarm(): void;
   dispose(): void;
 }
 
@@ -141,6 +59,9 @@ export function createTerritoryController(
 ): TerritoryController {
   const cache = new Map<number, DataTexture>();
   let fading = false;
+  let idleHandle: number | null = null;
+  let worker: Worker | null = null;
+  let disposed = false;
 
   // Bake guarantee: land ≥ +4 m (LAND_MIN_M, river incisions floor there
   // too), sea/carved straits < 0 — so the height sign is an exact land test.
@@ -157,7 +78,8 @@ export function createTerritoryController(
     let tex = cache.get(year);
     if (!tex) {
       const geometry = territories.get(year);
-      tex = geometry ? rasterizeTerritory(geometry, landMask) : blankTerritoryTexture();
+      const data = geometry ? rasterizeTerritoryData(geometry, landMask) : null;
+      tex = data ? territoryTexture(data) : blankTerritoryTexture();
       cache.set(year, tex);
     }
     return tex;
@@ -192,7 +114,55 @@ export function createTerritoryController(
         uniforms.uTerritoryMix.value = next;
       }
     },
+    prewarm() {
+      if (worker || idleHandle !== null) return;
+      const pending = [...territories.keys()].filter((y) => !cache.has(y)).sort((a, b) => a - b);
+      if (!pending.length) return;
+      if (typeof Worker !== 'undefined' && typeof OffscreenCanvas !== 'undefined') {
+        try {
+          worker = new Worker(new URL('./territoryWorker.ts', import.meta.url), { type: 'module' });
+        } catch {
+          worker = null;
+        }
+      }
+      if (worker) {
+        worker.onmessage = (ev: MessageEvent<TerritoryWorkerResult>) => {
+          const { year, data } = ev.data;
+          // Already rasterized on the spot when it was asked for early.
+          if (disposed || !data || cache.has(year)) return;
+          cache.set(year, territoryTexture(data));
+        };
+        worker.onerror = () => {
+          worker?.terminate();
+          worker = null;
+        };
+        const post = (msg: TerritoryWorkerRequest) => worker!.postMessage(msg);
+        post({ land: landMask });
+        for (const year of pending) post({ year, geometry: territories.get(year)! });
+        return;
+      }
+      // No worker: one snapshot per idle slot, in timeline order.
+      const idle = (cb: () => void): number =>
+        typeof requestIdleCallback === 'function' ? requestIdleCallback(cb, { timeout: 2000 }) : window.setTimeout(cb, 50);
+      const next = () => {
+        idleHandle = null;
+        if (disposed) return;
+        const year = pending.find((y) => !cache.has(y));
+        if (year === undefined) return;
+        textureFor(year);
+        idleHandle = idle(next);
+      };
+      idleHandle = idle(next);
+    },
     dispose() {
+      disposed = true;
+      worker?.terminate();
+      worker = null;
+      if (idleHandle !== null) {
+        if (typeof cancelIdleCallback === 'function') cancelIdleCallback(idleHandle);
+        else window.clearTimeout(idleHandle);
+        idleHandle = null;
+      }
       for (const tex of cache.values()) tex.dispose();
       cache.clear();
     },

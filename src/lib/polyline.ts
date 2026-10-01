@@ -114,6 +114,77 @@ export function distanceToPolyline(pts: readonly XY[], q: XY): number {
   return best;
 }
 
+/** Distance from `q` to the segment a→b (the same arithmetic as distanceToPolyline). */
+function segmentDistance(ax: number, ay: number, bx: number, by: number, q: XY): number {
+  const dx = bx - ax;
+  const dy = by - ay;
+  const len2 = dx * dx + dy * dy || 1;
+  const t = Math.max(0, Math.min(1, ((q[0] - ax) * dx + (q[1] - ay) * dy) / len2));
+  return Math.hypot(q[0] - (ax + dx * t), q[1] - (ay + dy * t));
+}
+
+/**
+ * Many polylines bucketed on a uniform grid, for "is `q` within `margin` of
+ * any of them?" asked of many points. Exact: `near(q, m)` equals
+ * `lines.some((l) => distanceToPolyline(l, q) <= m)` for any `m <= reach`;
+ * each query only visits the segments that pass near its grid cell.
+ */
+export function createSegmentIndex(lines: readonly (readonly XY[])[], reach: number, cellSize = Math.max(reach, 1e-6) * 2) {
+  const buckets = new Map<string, number[]>();
+  const segs: number[] = [];
+  for (const line of lines) {
+    for (let i = 1; i < line.length; i++) {
+      const [ax, ay] = line[i - 1];
+      const [bx, by] = line[i];
+      const id = segs.length / 4;
+      segs.push(ax, ay, bx, by);
+      const i0 = Math.floor((Math.min(ax, bx) - reach) / cellSize);
+      const i1 = Math.floor((Math.max(ax, bx) + reach) / cellSize);
+      const j0 = Math.floor((Math.min(ay, by) - reach) / cellSize);
+      const j1 = Math.floor((Math.max(ay, by) + reach) / cellSize);
+      for (let j = j0; j <= j1; j++) {
+        for (let k = i0; k <= i1; k++) {
+          const key = `${k},${j}`;
+          const bucket = buckets.get(key);
+          if (bucket) bucket.push(id);
+          else buckets.set(key, [id]);
+        }
+      }
+    }
+  }
+  return {
+    near(q: XY, margin: number): boolean {
+      const bucket = buckets.get(`${Math.floor(q[0] / cellSize)},${Math.floor(q[1] / cellSize)}`);
+      if (!bucket) return false;
+      for (const id of bucket) {
+        const o = id * 4;
+        if (segmentDistance(segs[o], segs[o + 1], segs[o + 2], segs[o + 3], q) <= margin) return true;
+      }
+      return false;
+    },
+  };
+}
+
+/**
+ * `pointInRing` with a bounding-box reject in front, for rings tested against
+ * many points. Exact: outside the y range no edge is crossed, and left or
+ * right of the x range the ray crosses a closed ring an even number of times.
+ */
+export function createRingTest(ring: readonly XY[]): (q: XY) => boolean {
+  let minX = Infinity;
+  let maxX = -Infinity;
+  let minY = Infinity;
+  let maxY = -Infinity;
+  for (const [x, y] of ring) {
+    minX = Math.min(minX, x);
+    maxX = Math.max(maxX, x);
+    minY = Math.min(minY, y);
+    maxY = Math.max(maxY, y);
+  }
+  const pad = 1e-9 * (1 + Math.max(Math.abs(minX), Math.abs(maxX)));
+  return (q) => q[1] >= minY && q[1] <= maxY && q[0] >= minX - pad && q[0] <= maxX + pad && pointInRing(q, ring);
+}
+
 export function pointInRing(q: XY, ring: readonly XY[]): boolean {
   let inside = false;
   for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {

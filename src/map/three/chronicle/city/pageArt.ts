@@ -85,6 +85,12 @@ function newCanvas(w: number, h: number): HTMLCanvasElement {
   return c;
 }
 
+/** The canvas state the underlay leaves behind, so a cached underlay draws on identically. */
+type UnderlayStyle = Pick<CanvasRenderingContext2D, 'lineJoin' | 'lineCap' | 'lineWidth' | 'strokeStyle' | 'fillStyle' | 'globalAlpha'>;
+
+/** Cached underlays (see drawGround), one per target canvas pair. */
+const underlays = new WeakMap<PageCanvases, { plate: Plate | null; key: string; canvas: HTMLCanvasElement; style: UnderlayStyle }>();
+
 export function regionSize(r: GroundRegion): [number, number] {
   return [Math.round(r.width * r.ppu), Math.round(r.depth * r.ppu)];
 }
@@ -159,121 +165,31 @@ export function drawGround(input: GroundInput, region: GroundRegion, layer: 'det
   ctx.save();
   ctx.clearRect(0, 0, W, H);
 
-  /* ---- sea ---- */
-  ctx.fillStyle = PAL.sea;
-  ctx.fillRect(0, 0, W, H);
-  // Rows of zigzag waves, as on the Madaba map.
-  ctx.strokeStyle = PAL.seaDeep;
-  ctx.lineWidth = px(0.0065);
-  ctx.lineJoin = 'miter';
-  const k0 = Math.floor(region.z0 / WAVE_ROW) - 1;
-  const k1 = Math.ceil((region.z0 + region.depth) / WAVE_ROW) + 1;
-  const j0 = Math.floor(region.x0 / WAVE_TOOTH) - 2;
-  const j1 = Math.ceil((region.x0 + region.width) / WAVE_TOOTH) + 2;
-  for (let k = k0; k <= k1; k++) {
-    const z = (k + 0.5) * WAVE_ROW;
-    ctx.beginPath();
-    for (let j = j0; j <= j1; j++) {
-      const x = (j + (k & 1)) * WAVE_TOOTH;
-      const zz = z + (j & 1 ? -WAVE_TOOTH * 0.35 : WAVE_TOOTH * 0.35);
-      if (j === j0) ctx.moveTo(X(x), Z(zz));
-      else ctx.lineTo(X(x), Z(zz));
-    }
-    ctx.stroke();
-  }
-
-  /* ---- ripples along the coast (drawn wide, the land covers the inner half) ---- */
-  if (plate) {
-    const coasts = plate.coast.map((line) => line.map(P));
-    const rings = [0.022, 0.044];
-    ctx.lineJoin = 'round';
-    ctx.lineCap = 'round';
-    for (let i = rings.length - 1; i >= 0; i--) {
-      const d = px(rings[i]) * 2;
-      const lw = px(0.006);
-      for (const line of coasts) {
-        ctx.strokeStyle = PAL.ripple;
-        ctx.lineWidth = d + lw;
-        path(ctx, line);
-        ctx.stroke();
-        ctx.strokeStyle = PAL.sea;
-        ctx.lineWidth = d - lw;
-        path(ctx, line);
-        ctx.stroke();
-      }
-    }
-  }
-
-  /* ---- land ---- */
-  if (plate) {
-    onLand((c) => {
-      c.fillStyle = PAL.land;
-      c.fillRect(0, 0, W, H);
-      if (!detail) return;
-      /* hills */
-      for (const { level, lines } of plate.data.contours) {
-        c.strokeStyle = PAL.hill;
-        c.globalAlpha = 0.55 + Math.min(0.4, level / 400);
-        c.lineWidth = px(0.009);
-        for (const line of lines) {
-          path(c, line.map(L));
-          c.stroke();
-        }
-      }
-      c.globalAlpha = 1;
-    });
+  // The ground below the dated layers only changes with the plate and the
+  // built-up areas (the fields keep out of town), a couple of times over the
+  // whole timeline: keep it per target and redraw only what lies on top.
+  const underlayKey = state.urbanAreas.map((u) => u.id).join(',');
+  const cachedUnder = target ? underlays.get(target) : undefined;
+  if (cachedUnder && cachedUnder.plate === plate && cachedUnder.key === underlayKey) {
+    ctx.drawImage(cachedUnder.canvas, 0, 0);
+    Object.assign(ctx, cachedUnder.style);
   } else {
-    ctx.fillStyle = PAL.land;
-    ctx.fillRect(0, 0, W, H);
-  }
-
-  /* ---- fields, vineyards and orchards outside the built-up areas ---- */
-  if (plate) {
-    const urbanRings = state.urbanAreas.map((a) => a.ring.map(L));
-    const inTown = (p: Pt) => urbanRings.some((r) => pointInRing(p, r));
-    onLand((c) => {
-      const i0 = Math.floor(region.x0 / FIELD_STEP) - 1;
-      const i1 = Math.ceil((region.x0 + region.width) / FIELD_STEP) + 1;
-      const j0 = Math.floor(region.z0 / FIELD_STEP) - 1;
-      const j1 = Math.ceil((region.z0 + region.depth) / FIELD_STEP) + 1;
-      const step = px(FIELD_STEP);
-      for (let j = j0; j <= j1; j++) {
-        for (let i = i0; i <= i1; i++) {
-          const r = hash01(i, j, 31);
-          if (r > 0.42) continue;
-          const cx = X((i + 0.5 + (hash01(i, j, 32) - 0.5) * 0.6) * FIELD_STEP);
-          const cy = Z((j + 0.5 + (hash01(i, j, 33) - 0.5) * 0.6) * FIELD_STEP);
-          if (inTown([cx, cy])) continue;
-          const a = hash01(i, j, 34) * Math.PI;
-          const hw = step * (0.22 + hash01(i, j, 35) * 0.2);
-          const hh = step * (0.14 + hash01(i, j, 36) * 0.14);
-          const ca = Math.cos(a);
-          const sa = Math.sin(a);
-          const corner = (dx: number, dy: number): Pt => [cx + dx * ca - dy * sa, cy + dx * sa + dy * ca];
-          const parcel = [corner(-hw, -hh), corner(hw, -hh), corner(hw, hh), corner(-hw, hh)];
-          c.fillStyle = PAL.fields[Math.floor(hash01(i, j, 37) * PAL.fields.length)];
-          c.globalAlpha = 0.7;
-          path(c, parcel, true);
-          c.fill();
-          if (r < 0.14) {
-            // Vine or olive rows.
-            c.strokeStyle = PAL.rows;
-            c.globalAlpha = 0.9;
-            c.lineWidth = px(0.005);
-            for (let k = -2; k <= 2; k++) {
-              const o = (k / 2.5) * hh;
-              const p0 = corner(-hw * 0.85, o);
-              const p1 = corner(hw * 0.85, o);
-              c.beginPath();
-              c.moveTo(p0[0], p0[1]);
-              c.lineTo(p1[0], p1[1]);
-              c.stroke();
-            }
-          }
-          c.globalAlpha = 1;
-        }
-      }
-    });
+    drawUnderlay();
+    if (target) {
+      const copy = cachedUnder?.canvas ?? newCanvas(W, H);
+      const cc = copy.getContext('2d')!;
+      cc.clearRect(0, 0, W, H);
+      cc.drawImage(canvas, 0, 0);
+      const style: UnderlayStyle = {
+        lineJoin: ctx.lineJoin,
+        lineCap: ctx.lineCap,
+        lineWidth: ctx.lineWidth,
+        strokeStyle: ctx.strokeStyle,
+        fillStyle: ctx.fillStyle,
+        globalAlpha: ctx.globalAlpha,
+      };
+      underlays.set(target, { plate, key: underlayKey, canvas: copy, style });
+    }
   }
 
   /* ---- built-up areas and burnt districts ---- */
@@ -441,6 +357,126 @@ export function drawGround(input: GroundInput, region: GroundRegion, layer: 'det
       path(ctx, pts);
       ctx.stroke();
       ctx.globalAlpha = 1;
+    }
+  }
+
+  /** Sea, waves, coast ripples, land, hills and the fields outside the built-up areas. */
+  function drawUnderlay(): void {
+    /* ---- sea ---- */
+    ctx.fillStyle = PAL.sea;
+    ctx.fillRect(0, 0, W, H);
+    // Rows of zigzag waves, as on the Madaba map.
+    ctx.strokeStyle = PAL.seaDeep;
+    ctx.lineWidth = px(0.0065);
+    ctx.lineJoin = 'miter';
+    const k0 = Math.floor(region.z0 / WAVE_ROW) - 1;
+    const k1 = Math.ceil((region.z0 + region.depth) / WAVE_ROW) + 1;
+    const j0 = Math.floor(region.x0 / WAVE_TOOTH) - 2;
+    const j1 = Math.ceil((region.x0 + region.width) / WAVE_TOOTH) + 2;
+    for (let k = k0; k <= k1; k++) {
+      const z = (k + 0.5) * WAVE_ROW;
+      ctx.beginPath();
+      for (let j = j0; j <= j1; j++) {
+        const x = (j + (k & 1)) * WAVE_TOOTH;
+        const zz = z + (j & 1 ? -WAVE_TOOTH * 0.35 : WAVE_TOOTH * 0.35);
+        if (j === j0) ctx.moveTo(X(x), Z(zz));
+        else ctx.lineTo(X(x), Z(zz));
+      }
+      ctx.stroke();
+    }
+
+    /* ---- ripples along the coast (drawn wide, the land covers the inner half) ---- */
+    if (plate) {
+      const coasts = plate.coast.map((line) => line.map(P));
+      const rings = [0.022, 0.044];
+      ctx.lineJoin = 'round';
+      ctx.lineCap = 'round';
+      for (let i = rings.length - 1; i >= 0; i--) {
+        const d = px(rings[i]) * 2;
+        const lw = px(0.006);
+        for (const line of coasts) {
+          ctx.strokeStyle = PAL.ripple;
+          ctx.lineWidth = d + lw;
+          path(ctx, line);
+          ctx.stroke();
+          ctx.strokeStyle = PAL.sea;
+          ctx.lineWidth = d - lw;
+          path(ctx, line);
+          ctx.stroke();
+        }
+      }
+    }
+
+    /* ---- land ---- */
+    if (plate) {
+      onLand((c) => {
+        c.fillStyle = PAL.land;
+        c.fillRect(0, 0, W, H);
+        if (!detail) return;
+        /* hills */
+        for (const { level, lines } of plate.data.contours) {
+          c.strokeStyle = PAL.hill;
+          c.globalAlpha = 0.55 + Math.min(0.4, level / 400);
+          c.lineWidth = px(0.009);
+          for (const line of lines) {
+            path(c, line.map(L));
+            c.stroke();
+          }
+        }
+        c.globalAlpha = 1;
+      });
+    } else {
+      ctx.fillStyle = PAL.land;
+      ctx.fillRect(0, 0, W, H);
+    }
+
+    /* ---- fields, vineyards and orchards outside the built-up areas ---- */
+    if (plate) {
+      const urbanRings = state.urbanAreas.map((a) => a.ring.map(L));
+      const inTown = (p: Pt) => urbanRings.some((r) => pointInRing(p, r));
+      onLand((c) => {
+        const i0 = Math.floor(region.x0 / FIELD_STEP) - 1;
+        const i1 = Math.ceil((region.x0 + region.width) / FIELD_STEP) + 1;
+        const j0 = Math.floor(region.z0 / FIELD_STEP) - 1;
+        const j1 = Math.ceil((region.z0 + region.depth) / FIELD_STEP) + 1;
+        const step = px(FIELD_STEP);
+        for (let j = j0; j <= j1; j++) {
+          for (let i = i0; i <= i1; i++) {
+            const r = hash01(i, j, 31);
+            if (r > 0.42) continue;
+            const cx = X((i + 0.5 + (hash01(i, j, 32) - 0.5) * 0.6) * FIELD_STEP);
+            const cy = Z((j + 0.5 + (hash01(i, j, 33) - 0.5) * 0.6) * FIELD_STEP);
+            if (inTown([cx, cy])) continue;
+            const a = hash01(i, j, 34) * Math.PI;
+            const hw = step * (0.22 + hash01(i, j, 35) * 0.2);
+            const hh = step * (0.14 + hash01(i, j, 36) * 0.14);
+            const ca = Math.cos(a);
+            const sa = Math.sin(a);
+            const corner = (dx: number, dy: number): Pt => [cx + dx * ca - dy * sa, cy + dx * sa + dy * ca];
+            const parcel = [corner(-hw, -hh), corner(hw, -hh), corner(hw, hh), corner(-hw, hh)];
+            c.fillStyle = PAL.fields[Math.floor(hash01(i, j, 37) * PAL.fields.length)];
+            c.globalAlpha = 0.7;
+            path(c, parcel, true);
+            c.fill();
+            if (r < 0.14) {
+              // Vine or olive rows.
+              c.strokeStyle = PAL.rows;
+              c.globalAlpha = 0.9;
+              c.lineWidth = px(0.005);
+              for (let k = -2; k <= 2; k++) {
+                const o = (k / 2.5) * hh;
+                const p0 = corner(-hw * 0.85, o);
+                const p1 = corner(hw * 0.85, o);
+                c.beginPath();
+                c.moveTo(p0[0], p0[1]);
+                c.lineTo(p1[0], p1[1]);
+                c.stroke();
+              }
+            }
+            c.globalAlpha = 1;
+          }
+        }
+      });
     }
   }
 

@@ -39,7 +39,7 @@ import type { CityPlan, CityStructure } from '../../../../data/schema';
 import { createCityFrame } from '../../../../lib/cityFrame';
 import { resolveCity, type CityState } from '../../../../lib/cityTimeline';
 import { easeOutBack } from '../../../../lib/easing';
-import { distanceToPolyline, pointInRing, type XY } from '../../../../lib/polyline';
+import { createRingTest, createSegmentIndex, type XY } from '../../../../lib/polyline';
 import { hashStringSeed } from '../../../../lib/prng';
 import { applyCurvature } from '../../curvature';
 import { makePen } from '../illumination';
@@ -422,6 +422,22 @@ export function createCityPage(plan: CityPlan, options: CityPageOptions): CityPa
   content.add(housesHolder);
   let housesKey = '';
 
+  interface HouseItem {
+    at: XY;
+    size: number;
+    tile: number;
+  }
+  /** A free spot inside a built-up area; the density decides what (if anything) stands there. */
+  interface TownSpot {
+    at: XY;
+    i: number;
+    j: number;
+    h: number;
+    weight: number;
+  }
+  /** Every spot that could hold a house or a tree for one layout (areas, walls, landmarks). */
+  let scatter: { key: string; town: TownSpot[]; country: HouseItem[] } | null = null;
+
   const hash01 = (i: number, j: number, salt: number) => {
     let h = Math.imul(i, 374761393) + Math.imul(j, 668265263) + salt;
     h = Math.imul(h ^ (h >>> 13), 1274126177);
@@ -429,17 +445,8 @@ export function createCityPage(plan: CityPlan, options: CityPageOptions): CityPa
     return (h >>> 0) / 4294967296;
   };
 
-  function rebuildHouses(): void {
-    if (!plate) return;
-    const key = `${state.urbanAreas.map((a) => a.id).join(',')}|${Math.round(state.density * 40)}`;
-    if (key === housesKey) return;
-    housesKey = key;
-    if (houses) {
-      housesHolder.remove(houses);
-      houses.geometry.dispose();
-      houses.dispose();
-      houses = null;
-    }
+  /** What the scatter keeps clear of and fills, with a key that changes only when they do. */
+  function scatterInputs() {
     // Keep clear of landmarks, walls and the moat.
     const clear: Array<{ at: XY; r: number }> = [];
     for (const { structure, stage } of state.structures) {
@@ -453,23 +460,26 @@ export function createCityPage(plan: CityPlan, options: CityPageOptions): CityPa
         clear.push({ at: pagePoint(f.position), r: frame.units(Math.max(...f.size)) * 1.1 });
       }
     }
-    const lines: XY[][] = wallPaths.map((w) => w.path);
-    const centre = cityCentre();
-    for (const w of wallPaths) if (w.kind === 'land-wall') lines.push(offsetOutward(w.path, 0.05, centre));
-    const avenues = state.features.filter((f) => f.kind === 'avenue' && f.path).map((f) => f.path!.map(pagePoint));
-    const harbours = state.features.filter((f) => f.kind === 'harbour' && f.ring).map((f) => f.ring!.map(pagePoint));
-    const rings = state.urbanAreas.map((a) => ({ ring: a.ring.map(pagePoint), weight: a.weight }));
+    const avenueFeatures = state.features.filter((f) => f.kind === 'avenue' && f.path);
+    const harbourFeatures = state.features.filter((f) => f.kind === 'harbour' && f.ring);
+    const key = [
+      clear.map((c) => `${c.at[0].toFixed(5)},${c.at[1].toFixed(5)},${c.r.toFixed(5)}`).join(';'),
+      wallPaths.map((w) => `${w.id}:${w.variant}`).join(','),
+      avenueFeatures.map((f) => f.id).join(','),
+      harbourFeatures.map((f) => f.id).join(','),
+      state.urbanAreas.map((u) => `${u.id}:${u.weight}`).join(','),
+    ].join('|');
+    return { key, clear, avenueFeatures, harbourFeatures };
+  }
 
-    const items: Array<{ at: XY; size: number; tile: number }> = [];
-    const free = (p: XY, margin: number) =>
-      plate!.isLand(p[0], p[1]) &&
-      clear.every((c) => Math.hypot(p[0] - c.at[0], p[1] - c.at[1]) > c.r) &&
-      lines.every((l) => distanceToPolyline(l, p) > margin) &&
-      avenues.every((l) => distanceToPolyline(l, p) > 0.012) &&
-      harbours.every((r) => !pointInRing(p, r));
+  /** Scatter grid cells on land (the grid and the coast never change). */
+  let landCells: Array<{ p: XY; i: number; j: number; h: number }> | null = null;
+  function scatterLandCells(): Array<{ p: XY; i: number; j: number; h: number }> {
+    if (landCells) return landCells;
+    const cells: Array<{ p: XY; i: number; j: number; h: number }> = [];
     const step = 0.034;
     // The countryside runs over the whole baked crop, beyond the plan.
-    const [ow, os, oe, on] = plate.data.outerBbox;
+    const [ow, os, oe, on] = plate!.data.outerBbox;
     const nw = frame.toPage(ow, on);
     const se = frame.toPage(oe, os);
     const halfW = Math.max(-nw.x, se.x);
@@ -477,27 +487,69 @@ export function createCityPage(plan: CityPlan, options: CityPageOptions): CityPa
     for (let j = 0; j * step < 2 * halfD; j++) {
       for (let i = 0; i * step < 2 * halfW; i++) {
         const p: XY = [-halfW + (i + 0.5 + (hash01(i, j, 1) - 0.5) * 0.8) * step, -halfD + (j + 0.5 + (hash01(i, j, 2) - 0.5) * 0.8) * step];
-        const h = hash01(i, j, 3);
-        const area = rings.find((r) => pointInRing(p, r.ring));
-        if (area) {
-          if (!free(p, 0.022)) continue;
-          const fill = Math.min(1, state.density * area.weight * 1.15);
-          if (h < fill) {
-            const chapel = hash01(i, j, 4) < 0.035;
-            items.push({ at: p, size: chapel ? 0.042 : 0.03 + hash01(i, j, 5) * 0.014, tile: chapel ? ATLAS_CHAPEL : Math.floor(hash01(i, j, 6) * ATLAS_HOUSES) });
-          } else if (h > 1 - (1 - state.density) * 0.35) {
-            items.push({ at: p, size: 0.035 + hash01(i, j, 7) * 0.02, tile: ATLAS_CYPRESS[i % 2] });
-          }
-        } else if ((i + j) % 2 === 0 && h < 0.07 && free(p, 0.03)) {
-          // Countryside: cypresses and umbrella pines, now and then a farm.
-          const t = hash01(i, j, 8);
-          items.push({ at: p, size: 0.035 + t * 0.025, tile: t < 0.55 ? ATLAS_CYPRESS[j % 2] : t < 0.85 ? ATLAS_PINE : Math.floor(t * ATLAS_HOUSES) });
-        }
+        if (plate!.isLand(p[0], p[1])) cells.push({ p, i, j, h: hash01(i, j, 3) });
       }
     }
-    const mesh = new InstancedMesh(houseGeo, atlasMat, Math.max(1, items.length));
-    mesh.count = items.length;
-    const tiles = new Float32Array(Math.max(1, items.length) * 2);
+    landCells = cells;
+    return cells;
+  }
+
+  /**
+   * The expensive part: clearances around landmarks, walls, avenues and
+   * harbours, tested over every land cell. Depends on the layout only, not
+   * on the density.
+   */
+  function scatterSpots(inputs: ReturnType<typeof scatterInputs>): { town: TownSpot[]; country: HouseItem[] } {
+    const { clear } = inputs;
+    const lines: XY[][] = wallPaths.map((w) => w.path);
+    const centre = cityCentre();
+    for (const w of wallPaths) if (w.kind === 'land-wall') lines.push(offsetOutward(w.path, 0.05, centre));
+    const avenues = inputs.avenueFeatures.map((f) => f.path!.map(pagePoint));
+    // Walls, moats and avenues bucketed: ~50k cells each asking about ~1300 wall vertices.
+    const nearWall = createSegmentIndex(lines, 0.03);
+    const nearAvenue = createSegmentIndex(avenues, 0.012);
+    const inHarbour = inputs.harbourFeatures.map((f) => createRingTest(f.ring!.map(pagePoint)));
+    const rings = state.urbanAreas.map((a) => ({ inside: createRingTest(a.ring.map(pagePoint)), weight: a.weight }));
+
+    const town: TownSpot[] = [];
+    const country: HouseItem[] = [];
+    const free = (p: XY, margin: number) =>
+      clear.every((c) => {
+        const dx = p[0] - c.at[0];
+        const dy = p[1] - c.at[1];
+        return Math.abs(dx) > c.r || Math.abs(dy) > c.r || Math.hypot(dx, dy) > c.r;
+      }) &&
+      !nearWall.near(p, margin) &&
+      !nearAvenue.near(p, 0.012) &&
+      inHarbour.every((inside) => !inside(p));
+    for (const { p, i, j, h } of scatterLandCells()) {
+      const area = rings.find((r) => r.inside(p));
+      if (area) {
+        if (free(p, 0.022)) town.push({ at: p, i, j, h, weight: area.weight });
+      } else if ((i + j) % 2 === 0 && h < 0.07 && free(p, 0.03)) {
+        // Countryside: cypresses and umbrella pines, now and then a farm.
+        const t = hash01(i, j, 8);
+        country.push({ at: p, size: 0.035 + t * 0.025, tile: t < 0.55 ? ATLAS_CYPRESS[j % 2] : t < 0.85 ? ATLAS_PINE : Math.floor(t * ATLAS_HOUSES) });
+      }
+    }
+    return { town, country };
+  }
+
+  /** What stands at this density: cheap, rewrites the instances in place. */
+  function placeHouses(mesh: InstancedMesh, town: TownSpot[], country: HouseItem[]): void {
+    const items: HouseItem[] = [];
+    for (const { at, i, j, h, weight } of town) {
+      const fill = Math.min(1, state.density * weight * 1.15);
+      if (h < fill) {
+        const chapel = hash01(i, j, 4) < 0.035;
+        items.push({ at, size: chapel ? 0.042 : 0.03 + hash01(i, j, 5) * 0.014, tile: chapel ? ATLAS_CHAPEL : Math.floor(hash01(i, j, 6) * ATLAS_HOUSES) });
+      } else if (h > 1 - (1 - state.density) * 0.35) {
+        items.push({ at, size: 0.035 + hash01(i, j, 7) * 0.02, tile: ATLAS_CYPRESS[i % 2] });
+      }
+    }
+    items.push(...country);
+    const tileAttr = mesh.geometry.getAttribute('aTile') as InstancedBufferAttribute;
+    const tiles = tileAttr.array as Float32Array;
     const m = new Matrix4();
     items.forEach((it, k) => {
       m.makeScale(it.size, it.size, it.size);
@@ -508,11 +560,34 @@ export function createCityPage(plan: CityPlan, options: CityPageOptions): CityPa
       tiles[k * 2] = col;
       tiles[k * 2 + 1] = ATLAS_GRID[1] - 1 - row;
     });
-    mesh.geometry = houseGeo.clone();
-    mesh.geometry.setAttribute('aTile', new InstancedBufferAttribute(tiles, 2));
-    mesh.frustumCulled = false;
-    houses = mesh;
-    housesHolder.add(mesh);
+    mesh.count = items.length;
+    mesh.instanceMatrix.needsUpdate = true;
+    tileAttr.needsUpdate = true;
+  }
+
+  function rebuildHouses(): void {
+    if (!plate) return;
+    const inputs = scatterInputs();
+    const key = `${inputs.key}|${Math.round(state.density * 40)}`;
+    if (key === housesKey) return;
+    housesKey = key;
+    if (!scatter || scatter.key !== inputs.key || !houses) {
+      scatter = { key: inputs.key, ...scatterSpots(inputs) };
+      if (houses) {
+        housesHolder.remove(houses);
+        houses.geometry.dispose();
+        houses.dispose();
+      }
+      // Room for every spot, so density changes never reallocate.
+      const capacity = Math.max(1, scatter.town.length + scatter.country.length);
+      const mesh = new InstancedMesh(houseGeo, atlasMat, capacity);
+      mesh.geometry = houseGeo.clone();
+      mesh.geometry.setAttribute('aTile', new InstancedBufferAttribute(new Float32Array(capacity * 2), 2));
+      mesh.frustumCulled = false;
+      houses = mesh;
+      housesHolder.add(mesh);
+    }
+    placeHouses(houses, scatter.town, scatter.country);
   }
 
   /* ---------------- year sync ---------------- */

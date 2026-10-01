@@ -21,6 +21,7 @@ import {
   nextLowerTier,
   type QualityTier,
 } from './three/postfx/quality';
+import { createPerfMonitor, perfModeFromUrl, type PerfMonitor } from './three/perf';
 
 async function loadWorldTexture(url: string, srgb: boolean): Promise<Texture | null> {
   try {
@@ -193,6 +194,32 @@ export function MapCanvas() {
       };
       const probe = createFrameProbe();
 
+      // ?perf / ?perf=bench: diagnostics overlay and benchmark (three/perf.ts).
+      const perfMode = perfModeFromUrl();
+      const perf: PerfMonitor | null =
+        perfMode === 'off'
+          ? null
+          : createPerfMonitor(
+              {
+                renderer,
+                container: host,
+                world,
+                tier: () => tier,
+                msaa: () => pipeline.settings.msaa,
+                year: () => useAppStore.getState().year,
+                setYear: (y) => useAppStore.getState().setYear(y),
+                pause: () => useAppStore.getState().pause(),
+                enterCity: (name) => {
+                  if (world.setCityView(name)) useAppStore.getState().setCityView('constantinople');
+                },
+                leaveCity: () => {
+                  world.setMode('world');
+                  useAppStore.getState().setCityView(null);
+                },
+              },
+              perfMode,
+            );
+
       let frozenTime: number | null = null;
       let frames = 0;
       let lastTimeMs = 0;
@@ -202,6 +229,7 @@ export function MapCanvas() {
         const delta = Math.min(0.1, frameMs / 1000);
         lastTimeMs = timeMs;
         const t = frozenTime ?? timeMs / 1000;
+        const cpuStart = performance.now();
         world.update(delta, t);
         const cam = world.rig.camera;
         const camKey = `${cam.position.x.toFixed(4)},${cam.position.y.toFixed(4)},${cam.position.z.toFixed(4)},${cam.quaternion.w.toFixed(5)},${cam.quaternion.y.toFixed(5)}`;
@@ -213,9 +241,13 @@ export function MapCanvas() {
         // Tilt-shift focus on what the camera looks at.
         pipeline.params.focus = world.rig.distance;
         pipeline.params.dof = 0.3;
+        perf?.gpuBegin();
         pipeline.render(world.scene, cam);
+        perf?.gpuEnd();
+        perf?.frame(frameMs, performance.now() - cpuStart);
         frames++;
-        if (!tierInfo.forced && probe.push(frameMs)) {
+        // The benchmark holds the tier still so its numbers compare.
+        if (!tierInfo.forced && perfMode !== 'bench' && !perf?.benchRunning && probe.push(frameMs)) {
           const lower = nextLowerTier(tier);
           if (lower) {
             console.info(`render pipeline: stepping quality ${tier} → ${lower}`);
@@ -270,6 +302,7 @@ export function MapCanvas() {
         unsubscribe();
         observer.disconnect();
         renderer.setAnimationLoop(null);
+        perf?.dispose();
         world.dispose();
         pipeline.dispose();
         for (const tex of textures) tex?.dispose();

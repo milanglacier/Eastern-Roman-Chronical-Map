@@ -47,7 +47,7 @@ export interface ScreenPoint {
 }
 
 /** What the host needs from the camera on screen (the map's drone or the city's). */
-export type ViewRig = Pick<DroneRig, 'camera' | 'distance' | 'pose' | 'enabled' | 'flyTo' | 'update' | 'resize' | 'dispose'>;
+export type ViewRig = Pick<DroneRig, 'camera' | 'distance' | 'pose' | 'drone' | 'enabled' | 'flyTo' | 'update' | 'resize' | 'dispose'>;
 
 export type ViewMode = 'world' | 'city';
 
@@ -192,6 +192,18 @@ export function createWorldView(
     });
   }
   let mode: ViewMode = 'world';
+  // On the map the city view is not drawn: its year and mood wait here and
+  // are handed over on entering (behind the veil), since rebuilding the city
+  // page costs tens to hundreds of ms and the timeline plays at 15 years a second.
+  let cityYear: number | null = null;
+  let cityMood: Mood | null = null;
+  const syncCity = () => {
+    if (!cityView) return;
+    if (cityMood) cityView.setMood(cityMood);
+    if (cityYear !== null) cityView.setYear(cityYear);
+    cityMood = null;
+    cityYear = null;
+  };
   let sinceSwitch = SWITCH_COOLDOWN;
   let switchAsked = false;
   /** The city page, folding up as the city view is entered. */
@@ -203,6 +215,7 @@ export function createWorldView(
   };
 
   const territoryCtl = createTerritoryController(terrain.uniforms, heightField);
+  territoryCtl.prewarm();
   let snapYear: number | null = null;
 
   const groundY = (x: number, z: number) => {
@@ -322,6 +335,7 @@ export function createWorldView(
         const tz = d.z + lz * reach;
         // Looking elsewhere (entered by clicking the marker): arrive over the city's heart.
         const near = Math.hypot(tx - cityAt.x, tz - cityAt.z) < 1.2;
+        syncCity();
         cityView.arrive(near ? groundToLonLat(tx, tz) : null, d.yaw, d.pitch);
         drone.enabled = false;
         cityView.rig.enabled = true;
@@ -361,12 +375,14 @@ export function createWorldView(
       atmosphere.setMood(mood);
       water.setMood(mood);
       apron.setMood(mood);
-      cityView?.setMood(mood);
+      if (mode === 'city') cityView?.setMood(mood);
+      else cityMood = mood;
       terrain.uniforms.uNight.value = mood.night;
     },
     setYear(year) {
       tourYear = year;
-      cityView?.setYear(year);
+      if (mode === 'city') cityView?.setYear(year);
+      else cityYear = year;
       const next = snapshotForYear(snapshots, year).year;
       if (next === snapYear) return;
       const animate = snapYear !== null;
