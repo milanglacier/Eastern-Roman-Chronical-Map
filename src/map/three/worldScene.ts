@@ -194,7 +194,7 @@ export function createWorldView(
   let mode: ViewMode = 'world';
   // On the map the city view is not drawn: its year and mood wait here and
   // are handed over on entering (behind the veil), since rebuilding the city
-  // page costs tens to hundreds of ms and the timeline plays at 15 years a second.
+  // page costs tens to hundreds of ms and the timeline plays up to ~13 years a second.
   let cityYear: number | null = null;
   let cityMood: Mood | null = null;
   const syncCity = () => {

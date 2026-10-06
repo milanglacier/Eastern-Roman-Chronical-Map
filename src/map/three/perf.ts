@@ -100,7 +100,7 @@ export const BENCH_VIEWS: Array<{ name: string; pose: DronePose }> = [
 const BENCH_CITY_VIEW = 'marmara-north';
 const WARMUP_FRAMES = 30;
 const MEASURE_FRAMES = 120;
-/** Timeline sweep speed: one year per frame (real playback is 15 a second). */
+/** Timeline sweep speed: one year per frame (real playback peaks near 13 a second). */
 const SWEEP_YEARS_PER_FRAME = 1;
 
 function gpuName(renderer: WebGLRenderer): string {

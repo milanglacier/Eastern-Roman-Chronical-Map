@@ -110,9 +110,17 @@ committed inputs: running it twice gives identical sha256, with all noise seeded
   - Guided journeys use `dronePathPose` (eased Catmull-Rom).
 - **`aerialTour.ts`**: the aerial tour flown while the timeline plays on the map.
   - Each snapshot is framed on its territory (area centroid pulled a quarter of
-    the way toward Constantinople, RMS radius → height and pitch), the step
-    framings are Gaussian-smoothed over ±16 years, and a slow yaw drift circles the
-    shot, so the pose is a pure function of the fractional year.
+    the way toward Constantinople, RMS radius → height and pitch). The year is mapped
+    to playback seconds through the playback clock; the step framings are
+    Gaussian-smoothed there (σ = 0.375 × the 2.5 s era floor ≈ 0.94 s) and a slow yaw drift circles the shot on the
+    same axis, so every frontier change is a glide of the same length and the pose
+    stays a pure function of the fractional year.
+  - The playback clock (`src/lib/playback.ts`) paces autoplay: each era plays for
+    `2.5 s + years / 20` (about 119 s for all of history), and the year follows a
+    monotone cubic (PCHIP) through the era boundaries so the pace eases between
+    eras. The 2.5 s floor is the playback beat: the camera glides and the era
+    caption's fades scale from it, and the caption holds for as long as its era
+    plays.
   - A critically damped follower picks the drone up from where it is, and coasts it
     to rest on pause.
   - Any input or guided flight hands the camera back until play is pressed again;

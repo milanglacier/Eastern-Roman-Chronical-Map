@@ -4,7 +4,7 @@ import { YEAR_MAX, YEAR_MIN } from '../src/data/schema';
 import { createEmpireTour, createPoseFollower, territoryFraming } from '../src/map/three/aerialTour';
 import { DRONE_MAX_Y } from '../src/map/three/droneRig';
 import { GROUND_H, GROUND_W } from '../src/map/three/geo';
-import { YEARS_PER_SECOND } from '../src/lib/timeline';
+import { playbackClock } from '../src/lib/playback';
 
 const tour = createEmpireTour();
 
@@ -30,14 +30,31 @@ describe('aerial tour', () => {
   });
 
   it('never jumps between frames, even across a frontier change', () => {
-    const yearsPerFrame = YEARS_PER_SECOND / 60;
-    for (let year = YEAR_MIN; year < YEAR_MAX; year += yearsPerFrame * 3) {
-      const a = tour.poseAt(year);
-      const b = tour.poseAt(year + yearsPerFrame);
+    const frame = 1 / 60;
+    for (let t = 0; t < playbackClock.duration - frame; t += frame * 3) {
+      const a = tour.poseAt(playbackClock.yearAt(t));
+      const b = tour.poseAt(playbackClock.yearAt(t + frame));
       // Under 1.2 camera heights per second at 60 fps.
       expect(Math.hypot(b.x - a.x, b.y - a.y, b.z - a.z) / a.y).toBeLessThan(0.02);
       expect(Math.abs(b.yaw - a.yaw)).toBeLessThan(0.01);
     }
+  });
+
+  it('gives a short era its own shot instead of blurring it into its neighbours', () => {
+    // 626 (four years) and 630 sit 4 s apart in playback: the camera should
+    // have mostly arrived at each before moving on.
+    const mid = (a: number, b: number) => playbackClock.yearAt((playbackClock.timeAt(a) + playbackClock.timeAt(b)) / 2);
+    const f626 = tour.framingAt(mid(626, 630));
+    const target = territoryFraming(territories.get(626)!);
+    const before = territoryFraming(territories.get(600)!);
+    const dist = (f: { x: number; z: number }, g: { x: number; z: number }) => Math.hypot(f.x - g.x, f.z - g.z);
+    expect(dist(f626, target)).toBeLessThan(0.5 * dist(before, target) + 1);
+  });
+
+  it('keeps circling through the short eras', () => {
+    const a = tour.poseAt(626);
+    const b = tour.poseAt(629.9);
+    expect(Math.abs(b.yaw - a.yaw)).toBeGreaterThan(0.01);
   });
 
   it('is a pure function of the year', () => {

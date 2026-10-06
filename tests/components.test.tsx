@@ -7,6 +7,8 @@ import { EventMarkers } from '../src/map/EventMarkers';
 import { Header } from '../src/ui/Header';
 import { CityViewButton } from '../src/ui/CityViewButton';
 import { CityMarkers } from '../src/map/CityMarkers';
+import { EraCaption } from '../src/ui/EraCaption';
+import { playbackClock } from '../src/lib/playback';
 import { ENTER_CITY_EVENT, LEAVE_CITY_EVENT } from '../src/map/three/projection';
 import { useAppStore } from '../src/state/store';
 import { events, snapshots } from '../src/data';
@@ -151,5 +153,43 @@ describe('City view controls', () => {
     window.removeEventListener(LEAVE_CITY_EVENT, onLeave);
     expect(left).toBe(1);
     expect(screen.getByTestId('city-view-button').textContent).toContain('返回全图');
+  });
+});
+
+describe('EraCaption', () => {
+  const hold = () => parseFloat(screen.getByTestId('era-caption').style.getPropertyValue('--era-caption-hold'));
+
+  it('holds a long era longer than a short one while playing', () => {
+    useAppStore.setState({ isPlaying: true, year: 1330 });
+    const { unmount } = render(<EraCaption />);
+    const long = hold();
+    unmount();
+    useAppStore.setState({ isPlaying: true, year: 626 });
+    render(<EraCaption />);
+    const short = hold();
+    expect(long).toBeGreaterThan(short + 2.5);
+    expect(short).toBeGreaterThan(1);
+  });
+
+  it('keeps the standard card when the era is reached by hand', () => {
+    useAppStore.setState({ isPlaying: false, year: 1330 });
+    render(<EraCaption />);
+    expect(hold()).toBeCloseTo(2.1, 2);
+  });
+
+  it('fits the whole card inside even the shortest era while playing', () => {
+    useAppStore.setState({ isPlaying: true, year: 626 });
+    render(<EraCaption />);
+    const style = screen.getByTestId('era-caption').style;
+    const total = ['in', 'hold', 'out'].reduce((sum, k) => sum + parseFloat(style.getPropertyValue(`--era-caption-${k}`)), 0);
+    expect(total).toBeLessThan(playbackClock.eraSeconds(626));
+  });
+
+  it('keeps its timing when playback pauses mid-caption', () => {
+    useAppStore.setState({ isPlaying: true, year: 1330 });
+    render(<EraCaption />);
+    const before = hold();
+    act(() => useAppStore.setState({ isPlaying: false, year: 1340 }));
+    expect(hold()).toBe(before);
   });
 });

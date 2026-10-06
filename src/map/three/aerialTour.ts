@@ -6,11 +6,14 @@
  * to the next shot instead of cutting.
  *
  * The shot is a pure function of the (fractional) year: step framings per
- * snapshot, Gaussian-smoothed across years so a frontier change becomes a
- * glide. A critically damped follower carries the drone onto that path from
- * wherever it is and lets it coast to rest when playback stops.
+ * snapshot, Gaussian-smoothed in playback seconds (the year mapped through
+ * the playback clock) so every frontier change becomes a glide of the same
+ * length, whether its era spans four years or seventy. A critically damped
+ * follower carries the drone onto that path from wherever it is and lets it
+ * coast to rest when playback stops.
  */
 import { snapshots, territories } from '../../data';
+import { ERA_SECONDS_MIN, playbackClock } from '../../lib/playback';
 import type { Territory } from '../../data/schema';
 import { angleDelta, type DronePose } from './droneRig';
 import { UNITS_PER_DEGREE, lonLatToGround } from './geo';
@@ -29,8 +32,12 @@ const CAPITAL_PULL = 0.25;
 const CAPITAL_LONLAT: [number, number] = [28.955, 41.018];
 const RADIUS_MIN = 9;
 const RADIUS_MAX = 75;
-/** Years of smoothing either side of a frontier change (Gaussian σ). */
-const SMOOTH_YEARS = 16;
+/**
+ * Playback seconds of smoothing either side of a frontier change (Gaussian σ),
+ * scaled from the shortest era so even it gets its own shot: a glide takes
+ * about 4σ, a little longer than the shortest era.
+ */
+const SMOOTH_SECONDS = 0.375 * ERA_SECONDS_MIN;
 
 /**
  * Area centroid and RMS radius of a MultiPolygon (outer rings, lon/lat),
@@ -98,27 +105,34 @@ export interface AerialTour {
   poseAt(year: number): DronePose;
 }
 
-/** `framings` sorted by year ascending; each holds from its year to the next. */
-export function createAerialTour(framings: readonly { year: number; framing: Framing }[]): AerialTour {
+/**
+ * `framings` sorted by year ascending; each holds from its year to the next.
+ * `timeAt` maps a year to playback seconds, the axis the tour is paced on.
+ */
+export function createAerialTour(
+  framings: readonly { year: number; framing: Framing }[],
+  timeAt: (year: number) => number,
+): AerialTour {
   // Gaussian over the step function, in closed form: each frontier change
   // becomes an error-function ramp. Zoom blends in log space so a widening
   // and a narrowing shot feel equally paced.
   const first = framings[0].framing;
+  const t0 = timeAt(framings[0].year);
   const ramps = framings.slice(1).map((k, i) => {
     const prev = framings[i].framing;
     return {
-      year: k.year,
+      t: timeAt(k.year),
       dx: k.framing.x - prev.x,
       dz: k.framing.z - prev.z,
       dr: Math.log(k.framing.radius) - Math.log(prev.radius),
     };
   });
-  const framingAt = (year: number): Framing => {
+  const framingAtTime = (t: number): Framing => {
     let x = first.x;
     let z = first.z;
     let r = Math.log(first.radius);
     for (const k of ramps) {
-      const w = normalCdf((year - k.year) / SMOOTH_YEARS);
+      const w = normalCdf((t - k.t) / SMOOTH_SECONDS);
       x += k.dx * w;
       z += k.dz * w;
       r += k.dr * w;
@@ -126,16 +140,18 @@ export function createAerialTour(framings: readonly { year: number; framing: Fra
     return { x, z, radius: Math.exp(r) };
   };
   return {
-    framingAt,
+    framingAt: (year) => framingAtTime(timeAt(year)),
     poseAt(year) {
-      const f = framingAt(year);
-      // A slow banking drift around the shot, like a helicopter circling.
-      const phase = (year - framings[0].year) * 2 * Math.PI;
-      const yaw = 0.2 * Math.sin(phase / 290) + 0.07 * Math.sin(phase / 97 + 1.3);
-      const reach = f.radius * 1.5 * (1 + 0.05 * Math.sin(phase / 170 + 0.6));
+      const t = timeAt(year);
+      const f = framingAtTime(t);
+      // A slow banking drift around the shot, like a helicopter circling,
+      // on playback seconds so it keeps turning through the short eras.
+      const phase = (t - t0) * 2 * Math.PI;
+      const yaw = 0.2 * Math.sin(phase / 19.3) + 0.07 * Math.sin(phase / 6.5 + 1.3);
+      const reach = f.radius * 1.5 * (1 + 0.05 * Math.sin(phase / 11.3 + 0.6));
       // Steeper from high up, shallower as the shot comes down.
-      const t = (f.radius - RADIUS_MIN) / (RADIUS_MAX - RADIUS_MIN);
-      const down = (34 + 16 * t) * DEG;
+      const height = (f.radius - RADIUS_MIN) / (RADIUS_MAX - RADIUS_MIN);
+      const down = (34 + 16 * height) * DEG;
       const back = reach * Math.cos(down);
       return {
         x: f.x - Math.sin(yaw) * back,
@@ -154,6 +170,7 @@ export function createEmpireTour(): AerialTour {
     snapshots
       .filter((s) => territories.has(s.year))
       .map((s) => ({ year: s.year, framing: territoryFraming(territories.get(s.year)!) })),
+    playbackClock.timeAt,
   );
 }
 

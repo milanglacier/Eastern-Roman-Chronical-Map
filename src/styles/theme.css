@@ -203,7 +203,15 @@ button {
   transform: translate(-50%, -50%);
   text-align: center;
   pointer-events: none;
-  animation: era-caption 4.2s var(--ease) both;
+  /* The fades and the hold between them are set inline: during playback they
+     follow the era's length and the playback beat. The fade-out only fills
+     forwards, or it would override the fade-in while it waits. */
+  --era-caption-in: 0.9s;
+  --era-caption-hold: 2.1s;
+  --era-caption-out: 1.2s;
+  animation:
+    era-caption-in var(--era-caption-in) var(--ease) both,
+    era-caption-out var(--era-caption-out) var(--ease) calc(var(--era-caption-in) + var(--era-caption-hold)) forwards;
   width: min(90vw, 760px);
 }
 
@@ -231,20 +239,24 @@ button {
   text-shadow: 0 2px 22px rgba(0, 0, 0, 0.75), 0 0 2px rgba(0, 0, 0, 0.6);
 }
 
-@keyframes era-caption {
-  0% {
+@keyframes era-caption-in {
+  from {
     opacity: 0;
     letter-spacing: 0.02em;
     filter: blur(6px);
   }
-  18% {
+  to {
     opacity: 1;
     filter: blur(0);
   }
-  72% {
+}
+
+@keyframes era-caption-out {
+  from {
     opacity: 1;
+    filter: blur(0);
   }
-  100% {
+  to {
     opacity: 0;
     filter: blur(3px);
   }
@@ -956,7 +968,7 @@ button {
 
 @media (prefers-reduced-motion: reduce) {
   .era-caption {
-    animation-duration: 0.01s;
+    animation: none;
     opacity: 0;
   }
 }

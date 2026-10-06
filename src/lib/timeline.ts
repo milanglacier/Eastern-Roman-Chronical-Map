@@ -34,6 +34,3 @@ export function eventsForYear(
   const [start, end] = eraInterval(snapshots, year);
   return events.filter((e) => e.year < end && (e.endYear ?? e.year) >= start);
 }
-
-/** Autoplay sweep speed. Full 1123-year span plays in about 75 seconds. */
-export const YEARS_PER_SECOND = 15;
